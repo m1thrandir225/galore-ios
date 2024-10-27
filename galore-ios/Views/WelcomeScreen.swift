@@ -32,11 +32,11 @@ struct WelcomeScreen: View {
 						   .font(.system(size: 46))
 						   .fontWeight(.heavy)
 						   .offset(CGSize(width: 0, height: -24))
-						   .foregroundColor(Color("Primary"))
+						   .foregroundColor(Color("MainColor"))
 					   
 					   Text("Become your own mixology master")
 						   .font(.subheadline)
-						   .foregroundColor(Color("Primary"))
+						   .foregroundColor(Color("MainColor"))
 						   .opacity(0.8)
 				   }
 				   .padding(.bottom, 32)
@@ -46,7 +46,7 @@ struct WelcomeScreen: View {
 						   .foregroundColor(.white)
 						   .padding()
 						   .frame(maxWidth: 200)
-						   .background(Color("Primary"))
+						   .background(Color("MainColor"))
 						   .cornerRadius(12)
 				   }.padding(.bottom)
 			   }

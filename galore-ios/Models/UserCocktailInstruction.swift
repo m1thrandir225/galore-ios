@@ -4,14 +4,26 @@
 //
 //  Created by Sebastijan Zindl on 26.10.24.
 //
-public final class UserCocktailInstructionData: Codable {
+public final class UserCocktailInstructionData: Codable, Equatable, Hashable {
+	public static func ==(lhs: UserCocktailInstructionData, rhs: UserCocktailInstructionData) -> Bool {
+		lhs.instructions == rhs.instructions
+	}
+	
+	public func hash(into hasher: inout Hasher) {
+		hasher.combine(instructions)
+	}
 	public let instructions: [UserCocktailInstruction]
 }
 
 
-public final class UserCocktailInstruction: Codable, Equatable {
+public final class UserCocktailInstruction: Codable, Equatable, Hashable {
 	public static func == (lhs: UserCocktailInstruction, rhs: UserCocktailInstruction) -> Bool {
 		lhs.instruction == rhs.instruction && lhs.instructionImage == rhs.instructionImage
+	}
+	
+	public func hash(into hasher: inout Hasher) {
+		hasher.combine(instruction)
+		hasher.combine(instructionImage)
 	}
 	
 	public let instruction: String
