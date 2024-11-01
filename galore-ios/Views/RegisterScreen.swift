@@ -1,39 +1,49 @@
 //
-//  RegisterScreen.swift
+//  LoginScreen.swift
 //  galore-ios
 //
-//  Created by Sebastijan Zindl on 1.11.24.
+//  Created by Sebastijan Zindl on 26.10.24.
 //
-
 
 import SwiftUI
 import Lottie
 
-struct LoginScreen: View {
-	@State private var email: String = ""
-	@State private var password: String = ""
+struct RegisterScreen: View {
+	@State var name: String = ""
+	@State var email: String = "";
+	@State var password: String = "";
 	
 	var body: some View {
 		VStack {
-			VStack(alignment: .center, spacing: 4) {
+			VStack(alignment: .center, spacing: 12) {
 				Text("galore")
 					.font(.system(size: 46))
 					.fontWeight(.heavy)
 					.foregroundColor(Color("MainColor"))
 				
-				LottieView(animation: .named("loginLottie"))
+				LottieView(animation: .named("registerLottie"))
 					.playing(loopMode: .loop)
 					.scaledToFill()
-					.frame(height: 200)
+					.frame(height: 150)
 			}
-//			Spacer(minLength: 32.0)
 			VStack(alignment: .leading, spacing: 24) {
-				Text("Login")
+				Text("Register")
 					.font(.largeTitle)
 				TextField(
 					"",
+					text: $name,
+					prompt: Text("Your Name").foregroundStyle(.onBackground)
+				).padding(.all, 20)
+					.overlay(
+						RoundedRectangle(cornerRadius: 8)
+							.stroke(Color.gray, lineWidth: 1.5)
+					)
+					.keyboardType(.default)
+
+				TextField(
+					"",
 					text: $email,
-					prompt: Text("Email").foregroundStyle(.onBackground)
+					prompt: Text("Your Email").foregroundStyle(.onBackground)
 				).padding(.all, 20)
 					.overlay(
 						RoundedRectangle(cornerRadius: 8)
@@ -44,7 +54,7 @@ struct LoginScreen: View {
 				SecureField(
 					"",
 					text: $password,
-					prompt: Text("Password: ").foregroundStyle(.onBackground)
+					prompt: Text("Your Password").foregroundStyle(.onBackground)
 				)
 					.padding(.all, 20)
 						.overlay(
@@ -70,9 +80,9 @@ struct LoginScreen: View {
 				}.padding([.leading, .trailing], 24)
 				
 				HStack {
-					Text("Don't have an account?")
-					NavigationLink(destination: RegisterScreen()) {
-						Text("Register")
+					Text("Already have an account?")
+					NavigationLink(destination: LoginScreen()) {
+						Text("Login")
 							.foregroundColor(Color("MainColor"))
 							.fontWeight(.bold)
 					}
@@ -84,9 +94,9 @@ struct LoginScreen: View {
 			
 		}.background(Color("Background"))
 	
-	}
+    }
 }
 
 #Preview {
-	LoginScreen()
+	RegisterScreen()
 }

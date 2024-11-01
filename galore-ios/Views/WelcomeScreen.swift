@@ -40,7 +40,7 @@ struct WelcomeScreen: View {
 						   .opacity(0.8)
 				   }
 				   .padding(.bottom, 32)
-				   NavigationLink(destination: LoginScreen()) {
+				   NavigationLink(destination: RegisterScreen()) {
 					   Text("Get Started")
 						   .font(.headline)
 						   .foregroundColor(.white)

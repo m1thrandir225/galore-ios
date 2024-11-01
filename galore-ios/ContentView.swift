@@ -8,8 +8,10 @@
 import SwiftUI
 
 struct ContentView: View {
+	@ObservedObject var router = Router()
+	
     var body: some View {
-		NavigationView {
+		NavigationStack(root: $router.path) {
 			WelcomeScreen()
 		}
     }
