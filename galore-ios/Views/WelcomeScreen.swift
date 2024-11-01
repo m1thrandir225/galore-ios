@@ -8,6 +8,12 @@
 import SwiftUI
 
 struct WelcomeScreen: View {
+	@StateObject var router: Router<AuthRoutes>
+	
+	init(router: Router<AuthRoutes>) {
+		_router = StateObject(wrappedValue: router)
+	}
+	
 	var body: some View {
 		   ZStack {
 			   // Background image
@@ -40,7 +46,9 @@ struct WelcomeScreen: View {
 						   .opacity(0.8)
 				   }
 				   .padding(.bottom, 32)
-				   NavigationLink(destination: RegisterScreen()) {
+				   Button(action: {
+					   router.routeTo(.register)
+				   }) {
 					   Text("Get Started")
 						   .font(.headline)
 						   .foregroundColor(.white)
@@ -48,12 +56,13 @@ struct WelcomeScreen: View {
 						   .frame(maxWidth: 200)
 						   .background(Color("MainColor"))
 						   .cornerRadius(12)
-				   }.padding(.bottom)
-			   }
+				   }.padding(.bottom)}
 		   }
 	   }
 }
 
 #Preview {
-    WelcomeScreen()
+	@Previewable @State  var authRoute: AuthRoutes? = nil
+	let router = Router<AuthRoutes>(isPresented: Binding(projectedValue: $authRoute))
+	WelcomeScreen(router: router)
 }

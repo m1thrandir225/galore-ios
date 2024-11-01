@@ -6,3 +6,33 @@
 //
 
 import Foundation
+import SwiftUI
+
+enum AuthRoutes: Routable {
+	case login
+	case register
+	//	case forgotPassword
+	//	case resetPassword(token: String)
+	//	case verifyEmail(token: String)
+	//	case logout
+	case welcome
+	
+	@ViewBuilder
+	func viewToDisplay(router: Router<AuthRoutes>) -> some View {
+		switch self {
+		case .login:
+			LoginScreen(router: router)
+		case .register:
+			RegisterScreen(router: router)
+		case .welcome:
+			WelcomeScreen(router: router)
+		}
+	}
+	
+	var navigationType: NavigationType  {
+		switch self  {
+		case .login, .register, .welcome:
+				.push
+		}
+	}
+}

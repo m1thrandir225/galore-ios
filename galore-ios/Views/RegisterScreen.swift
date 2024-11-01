@@ -13,6 +13,12 @@ struct RegisterScreen: View {
 	@State var email: String = "";
 	@State var password: String = "";
 	
+	@StateObject var router: Router<AuthRoutes>
+	
+	init(router: Router<AuthRoutes>) {
+		_router = StateObject(wrappedValue: router)
+	}
+	
 	var body: some View {
 		VStack {
 			VStack(alignment: .center, spacing: 12) {
@@ -81,11 +87,14 @@ struct RegisterScreen: View {
 				
 				HStack {
 					Text("Already have an account?")
-					NavigationLink(destination: LoginScreen()) {
+					Button(action: {
+						router.replace(.login)
+					}) {
 						Text("Login")
 							.foregroundColor(Color("MainColor"))
 							.fontWeight(.bold)
 					}
+					
 				}
 			}
 			
@@ -98,5 +107,9 @@ struct RegisterScreen: View {
 }
 
 #Preview {
-	RegisterScreen()
+	
+	@Previewable @State  var authRoute: AuthRoutes? = nil
+	let router = Router<AuthRoutes>(isPresented: Binding(projectedValue: $authRoute))
+	
+	RegisterScreen(router: router)
 }
