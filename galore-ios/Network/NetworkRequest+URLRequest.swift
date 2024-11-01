@@ -27,6 +27,8 @@ extension NetworkRequest {
 		request.httpMethod = method.rawValue
 		request.allHTTPHeaderFields = headers
 		
+		request.cachePolicy = method == .get ? .returnCacheDataElseLoad : .reloadIgnoringLocalCacheData
+		
 		if method != .get, let parameters = parameters {
 			request.httpBody = try JSONSerialization.data(withJSONObject: parameters)
 		}

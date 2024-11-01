@@ -10,8 +10,20 @@ import Foundation
 class NetworkService {
 	private let urlSession: URLSession
 	
-	init(session: URLSession = .shared) {
+	init(session: URLSession = NetworkService.defaultSession) {
 		self.urlSession = session
+	}
+	
+	private static var defaultSession: URLSession {
+		let cacheSizeMemory = 50 * 1024 * 1024 //50mb
+		let cacheSizeDisk = 100 * 1024 * 1024
+		let urlCache = URLCache(memoryCapacity: cacheSizeMemory, diskCapacity: cacheSizeDisk)
+		
+		let configuration = URLSessionConfiguration.default
+		configuration.urlCache = urlCache
+		configuration.requestCachePolicy = .useProtocolCachePolicy
+		
+		return URLSession(configuration: configuration)
 	}
 	
 	func execute<T: NetworkRequest>(_ request: T) async throws -> T.Response {
