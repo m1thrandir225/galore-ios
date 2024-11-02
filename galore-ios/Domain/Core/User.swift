@@ -6,8 +6,8 @@
 //
 import Foundation
 
-public final class Account: Codable, Equatable, Sendable, Identifiable {
-	public static func == (lhs: Account, rhs: Account) -> Bool {
+public final class User: Codable, Equatable, Sendable, Identifiable {
+	public static func == (lhs: User, rhs: User) -> Bool {
 		lhs.id == rhs.id &&
 		lhs.email == rhs.email &&
 		lhs.name == rhs.name &&
@@ -41,7 +41,13 @@ public final class Account: Codable, Equatable, Sendable, Identifiable {
 		self.email = try container.decode(String.self, forKey: .email)
 		self.name = try container.decode(String.self, forKey: .name)
 		self.avatar = try container.decodeIfPresent(String.self, forKey: .avatar)
-		self.birthday = try container.decodeIfPresent(Date.self, forKey: .birthday)
+		if let birthdayString = try container.decodeIfPresent(String.self, forKey: .birthday) {
+			let dateFormatter = DateFormatter()
+			dateFormatter.dateFormat = "yyyy-MM-dd"
+			self.birthday = dateFormatter.date(from: birthdayString)
+		} else {
+			self.birthday = nil
+		}
 		self.enabledPushNotifications = try container.decode(Bool.self, forKey: .enabledPushNotifications)
 		self.enabledEmailNotifications = try container.decode(Bool.self, forKey: .enabledEmailNotifications)
 	}

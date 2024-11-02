@@ -25,13 +25,12 @@ struct LoginRequest: Codable, NetworkRequest {
 		return ["Content-Type": "application/json"]
 	}
 	
-	var parameters: [String : Any]? {
-		return nil
-	}
-	
-	
 	let email: String
 	let password: String
+	
+	var parameters: [String : Any]? {
+		return ["email": email, "password": password]
+	}
 	
 	private enum CodingKeys: String, CodingKey {
 		case email

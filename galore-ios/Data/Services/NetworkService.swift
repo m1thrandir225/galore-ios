@@ -31,12 +31,14 @@ class NetworkService {
 		let (data, response) = try await urlSession.data(for: urlRequest)
 		
 		guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
+			print("Request Failed")
 			throw NetworkError.requestFailed
 		}
 		
 		do {
 			return try JSONDecoder().decode(T.Response.self, from: data)
 		} catch {
+			print(String(describing: error))
 			throw NetworkError.decodingFailed
 		}
 	}

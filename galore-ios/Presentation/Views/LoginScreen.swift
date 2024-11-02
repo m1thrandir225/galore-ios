@@ -14,6 +14,7 @@ struct LoginScreen: View {
 	@State private var password: String = ""
 	
 	@StateObject var router: Router<AuthRoutes>
+	@StateObject private var viewModel = LoginViewModel(authService: AuthService(networkService: NetworkService()))
 	
 	init(router: Router<AuthRoutes>) {
 		_router = StateObject(wrappedValue: router)
@@ -38,7 +39,7 @@ struct LoginScreen: View {
 					.font(.largeTitle)
 				TextField(
 					"",
-					text: $email,
+					text: $viewModel.email,
 					prompt: Text("Email").foregroundStyle(.onBackground)
 				).padding(.all, 20)
 					.overlay(
@@ -49,7 +50,7 @@ struct LoginScreen: View {
 				
 				SecureField(
 					"",
-					text: $password,
+					text: $viewModel.password,
 					prompt: Text("Password: ").foregroundStyle(.onBackground)
 				)
 					.padding(.all, 20)
@@ -57,6 +58,10 @@ struct LoginScreen: View {
 							RoundedRectangle(cornerRadius: 8)
 								.stroke(Color.gray, lineWidth: 1.5)
 						)
+				if let errorMessage = viewModel.errorMessage {
+					Text(errorMessage)
+						.foregroundStyle(.red)
+				}
 			}
 			.padding(.all, 20)
 			
@@ -64,7 +69,9 @@ struct LoginScreen: View {
 			
 			VStack(alignment: .center, spacing: 24){
 				Button(action: {
-					print("Hello World")
+					Task {
+						await viewModel.login()
+					}
 				}) {
 					Text("Continue")
 						.font(.headline)
@@ -88,8 +95,6 @@ struct LoginScreen: View {
 			}
 			
 			Spacer()
-
-			
 		}.background(Color("Background"))
 	
 	}
