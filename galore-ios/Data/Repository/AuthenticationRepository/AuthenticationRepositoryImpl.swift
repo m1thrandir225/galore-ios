@@ -11,8 +11,8 @@ final class AuthenticationRepositoryImpl: AuthenticationRepository {
 	private let authService: AuthService
 	private let tokenManager: TokenManager
 	
-	init(authService: AuthService, tokenManager: TokenManager) {
-		self.authService = authService
+	init() {
+		self.authService = AuthService.shared
 		self.tokenManager = TokenManager.shared
 	}
 	

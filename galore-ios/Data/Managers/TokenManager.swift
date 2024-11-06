@@ -60,6 +60,7 @@ class TokenManager {
 		self.refreshToken = refreshToken
 		self.sessionId = sessionId
 		self.accessTokenExpiresAt = accessTokenExpiresAt
+		self.refreshTokenExpiresAt = refreshTokenExpiresAt
 	}
 	
 	func clearTokens() {
@@ -72,12 +73,18 @@ class TokenManager {
 	
 	func isAccessTokenValid() -> Bool {
 		guard let expiresAt = accessTokenExpiresAt else { return false }
+		print(Date() < expiresAt)
 		return Date() < expiresAt
 	}
 	
 	func isRefreshTokenValid() -> Bool {
 		guard let expiresAt = refreshTokenExpiresAt else { return false }
+		print(Date() < expiresAt)
 		return Date() < expiresAt
+	}
+	
+	func isAuthenticated() -> Bool {
+		return accessToken != nil
 	}
 	
 	func shouldRefreshToken() -> Bool {

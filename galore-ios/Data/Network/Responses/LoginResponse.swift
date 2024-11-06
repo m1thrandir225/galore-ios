@@ -36,6 +36,7 @@ struct LoginResponse: Codable {
 		
 		if let refreshTokenExpiresAtString = try container.decodeIfPresent(String.self, forKey: .refreshTokenExpiresAt) {
 			let dateFormatter = ISO8601DateFormatter()
+			dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
 			let formattedDate = dateFormatter.date(from: refreshTokenExpiresAtString)
 			guard let formattedDate else {
 				throw LoginError.invalidDate
@@ -47,6 +48,7 @@ struct LoginResponse: Codable {
 		}
 		if let accessTokenExpiresAt = try container.decodeIfPresent(String.self, forKey: .accessTokenExpiresAt) {
 			let dateFormatter = ISO8601DateFormatter()
+			dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
 			let formattedDate = dateFormatter.date(from: accessTokenExpiresAt)
 			guard let formattedDate else {
 				throw LoginError.invalidDate

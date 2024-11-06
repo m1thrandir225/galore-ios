@@ -6,25 +6,50 @@
 //
 import Foundation
 
-enum AuthError: Error {
-	case invalidCredentials
-	case invalidToken
-	case invalidRefreshToken
-	case userExists
-	case tokenExpired
-	case unknownError
-}
 
-class AuthService {
-	private let networkService: NetworkService
+
+@MainActor
+class AuthService : ObservableObject {
+	static let shared = AuthService()
 	
-	init(networkService: NetworkService) {
-		self.networkService = networkService
+	private let networkService: NetworkService
+	private let tokenManager: TokenManager
+	
+	@Published var isLoggedIn: Bool = false
+	@Published var isLoading: Bool = true
+	@Published var isRefreshing: Bool = false
+	
+	private init() {
+		self.networkService = NetworkService.shared
+		self.tokenManager = TokenManager.shared
 	}
+	
+	func checkAuthentication() async {
+		let hasToken = tokenManager.isAuthenticated()
+		let needsRefresh = tokenManager.shouldRefreshToken()
+		
+		if hasToken && !needsRefresh {
+			self.isLoading = false
+			self.isRefreshing = false
+			self.isLoggedIn = true
+		} else {
+			do {
+				try await refreshSession()
+			} catch {
+				self.isLoading = false
+				self.isRefreshing = false
+				self.isLoggedIn = false
+			}
+		}
+	}
+	
 	
 	func login(email: String, password: String) async throws -> LoginResponse {
 		do {
 			let request = LoginRequest(email: email, password: password)
+			
+			isLoggedIn = true
+			
 			return try await networkService.execute(request)
 		} catch NetworkError.requestFailed {
 			throw AuthError.invalidCredentials
@@ -50,6 +75,8 @@ class AuthService {
 		do {
 			let request = LogoutRequest(sessionId: sessionId)
 			
+			isLoggedIn = false
+			
 			return try await networkService.execute(request)
 		} catch {
 			throw AuthError.unknownError
@@ -59,10 +86,24 @@ class AuthService {
 	func refreshToken(refreshToken: String, sessionId: String) async throws -> RefreshTokenResponse {
 		do {
 			let request = RefreshTokenRequest(refreshToken: refreshToken, sessionId: sessionId)
-			
 			return try await networkService.execute(request)
+			
 		} catch {
 			throw AuthError.invalidRefreshToken
 		}
+	}
+	
+	func refreshSession() async throws {
+		self.isRefreshing = true
+		self.isLoading = true
+		
+		guard let refreshToken = tokenManager.refreshToken else { throw TokenManagerError.refreshTokenNotFound }
+		guard let sessionId = tokenManager.sessionId else { throw TokenManagerError.sessionIdNotFound }
+		let response = try await self.refreshToken(refreshToken: refreshToken, sessionId: sessionId)
+		
+		tokenManager.accessToken = response.accessToken
+		self.isLoggedIn = true
+		self.isLoading = false
+		self.isRefreshing = false
 	}
 }

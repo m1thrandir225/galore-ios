@@ -14,10 +14,10 @@ class LoginViewModel:  ObservableObject {
 	@Published var isLoading: Bool = false
 	@Published var errorMessage: String?
 	
-	private let authService: AuthService
+	private let authenticationRepository: AuthenticationRepository
 	
-	init(authService: AuthService) {
-		self.authService = authService
+	init(authenticationRepository: AuthenticationRepository) {
+		self.authenticationRepository = authenticationRepository
 	}
 	
 	func login() async {
@@ -25,17 +25,17 @@ class LoginViewModel:  ObservableObject {
 		errorMessage = nil
 		
 		do {
-			let response = try await authService.login(email:  email, password: password)
+			let response = try await authenticationRepository.login(email: email, password: password)
 			
-			handleLoginSuccess(response: response)
+			handleLoginSuccess(user: response)
 			
 		} catch {
 			handleLoginFailure(error: error)
 		}
 	}
 	
-	private func handleLoginSuccess(response: LoginResponse) {
-		print(response.accessToken)
+	private func handleLoginSuccess(user: User) {
+		print("Login successful")
 	}
 	
 	private func handleLoginFailure(error: Error) {

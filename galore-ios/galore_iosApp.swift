@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct galore_iosApp: App {
+	@StateObject private var authService = AuthService.shared
     var body: some Scene {
         WindowGroup {
             ContentView()
+				.environmentObject(authService)
         }
     }
 }

@@ -13,9 +13,9 @@ struct RegisterScreen: View {
 	@State var email: String = "";
 	@State var password: String = "";
 	
-	@StateObject var router: Router<AuthRoutes>
+	@StateObject var router: Router<Routes>
 	
-	init(router: Router<AuthRoutes>) {
+	init(router: Router<Routes>) {
 		_router = StateObject(wrappedValue: router)
 	}
 	
@@ -108,8 +108,8 @@ struct RegisterScreen: View {
 
 #Preview {
 	
-	@Previewable @State  var authRoute: AuthRoutes? = nil
-	let router = Router<AuthRoutes>(isPresented: Binding(projectedValue: $authRoute))
+	@Previewable @State  var authRoute: Routes? = nil
+	let router = Router<Routes>(isPresented: Binding(projectedValue: $authRoute))
 	
 	RegisterScreen(router: router)
 }

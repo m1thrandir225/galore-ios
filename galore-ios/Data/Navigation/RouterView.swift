@@ -9,6 +9,7 @@ import SwiftUI
 
 public struct RoutingView<Content: View, Destination: Routable>: View {
 	@StateObject var router: Router<Destination> = .init(isPresented: .constant(.none))
+	@EnvironmentObject var authService: AuthService
 	private let rootContent: (Router<Destination>) -> Content
 	
 	public init(_ routeType: Destination.Type, @ViewBuilder content: @escaping (Router<Destination>) -> Content) {

@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-enum AuthRoutes: Routable {
+enum Routes: Routable {
 	case login
 	case register
 	//	case forgotPassword
@@ -18,7 +18,7 @@ enum AuthRoutes: Routable {
 	case welcome
 	
 	@ViewBuilder
-	func viewToDisplay(router: Router<AuthRoutes>) -> some View {
+	func viewToDisplay(router: Router<Routes>) -> some View {
 		switch self {
 		case .login:
 			LoginScreen(router: router)

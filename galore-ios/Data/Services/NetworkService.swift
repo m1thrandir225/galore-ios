@@ -8,12 +8,13 @@
 import Foundation
 
 class NetworkService {
+	static let shared = NetworkService()
 	private let urlSession: URLSession
 	private let tokenManager: TokenManager
 	
-	init(session: URLSession = NetworkService.defaultSession, tokenManager: TokenManager) {
-		self.urlSession = session
-		self.tokenManager = tokenManager
+	private init() {
+		self.urlSession = NetworkService.defaultSession
+		self.tokenManager = TokenManager.shared
 	}
 	
 	private static var defaultSession: URLSession {
