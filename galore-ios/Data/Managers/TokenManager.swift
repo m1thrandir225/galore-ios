@@ -7,6 +7,17 @@
 
 import Foundation
 
+enum TokenManagerError: Error {
+	case refreshTokenExpired
+	case accessTokenExpired
+	case invalidToken
+	case invalidRefreshToken
+	case invalidSessionId
+	case refreshTokenNotFound
+	case accessTokenNotFound
+	case sessionIdNotFound
+}
+
 class TokenManager {
 	static let shared = TokenManager()
 	
@@ -16,6 +27,8 @@ class TokenManager {
 	private let sessionIdKey: String = "sessionId"
 	private let accessTokenExpiresAtKey = "accessTokenExpiresAt"
 	private let refreshTokenExpiresAtKey = "refreshTokenExpiresAt"
+	
+	private init() {}
 	
 	var accessToken: String? {
 		get { userDefaults.string(forKey: accessTokenKey) }
@@ -40,6 +53,13 @@ class TokenManager {
 	var refreshTokenExpiresAt: Date? {
 		get { userDefaults.object(forKey: refreshTokenExpiresAtKey) as? Date }
 		set { userDefaults.set(newValue, forKey: refreshTokenExpiresAtKey) }
+	}
+	
+	func storeTokens(accessToken: String, refreshToken: String, sessionId: String, accessTokenExpiresAt: Date, refreshTokenExpiresAt: Date) {
+		self.accessToken = accessToken
+		self.refreshToken = refreshToken
+		self.sessionId = sessionId
+		self.accessTokenExpiresAt = accessTokenExpiresAt
 	}
 	
 	func clearTokens() {

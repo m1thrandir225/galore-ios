@@ -11,5 +11,6 @@ enum NetworkError: Error {
 	case invalidURL
 	case requestFailed
 	case decodingFailed
+	case missingFiles
 	case unknown(Error)
 }

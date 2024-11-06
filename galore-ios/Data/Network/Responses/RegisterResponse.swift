@@ -1,17 +1,12 @@
 //
-//  LoginResponse.swift
+//  RegisterResponse.swift
 //  galore-ios
 //
-//  Created by Sebastijan Zindl on 1.11.24.
+//  Created by Sebastijan Zindl on 4.11.24.
 //
-
 import Foundation
 
-enum LoginError: Error {
-	case invalidDate
-}
-
-struct LoginResponse: Codable {
+struct RegisterResponse: Codable {
 	let user: User
 	let refreshToken: String
 	let accessToken: String
@@ -56,7 +51,7 @@ struct LoginResponse: Codable {
 		} else {
 			throw DecodingError.dataCorruptedError(forKey: .accessTokenExpiresAt, in: container, debugDescription: "Missing access token expiration date")
 		}
-	
+		
 		self.sessionId = try container.decode(String.self, forKey: .sessionId)
 	}
 }

@@ -35,4 +35,50 @@ extension NetworkRequest {
 		
 		return request
 	}
+	
+	func makeMultipartFormDataRequest() throws -> URLRequest {
+		guard let files = files else {
+			throw NetworkError.missingFiles
+		}
+		
+		let boundary = UUID().uuidString
+		var request = URLRequest(url: baseURL.appendingPathComponent(path))
+		request.httpMethod = method.rawValue
+		
+		request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+		
+		var body = Data()
+		
+		if let parameters = parameters {
+			for (key, value) in parameters {
+				body.appendString("--\(boundary)\r\n")
+				body.appendString("Content-Disposition: form-data; name=\"\(key)\"\r\n\r\n")
+				body.appendString("\(value)\r\n")			}
+		}
+		
+		for (key, fileURL) in files {
+			let filename = fileURL.lastPathComponent
+			let fileData = try Data(contentsOf: fileURL)
+			let mimeType = mimeType(for: fileURL)
+			
+			body.appendString("--\(boundary)\r\n")
+			body.appendString("Content-Disposition: form-data; name=\"\(key)\"; filename=\"\(filename)\"\r\n")
+			body.appendString("Content-Type: \(mimeType)\r\n\r\n")
+			body.append(fileData)
+			body.appendString("\r\n")
+		}
+		
+		body.appendString("--\(boundary)--\r\n")
+		request.httpBody = body
+		return request
+	}
+	
+	private func mimeType(for url: URL) -> String {
+		switch url.pathExtension {
+		case "jpg", "jpeg": return "image/jpeg"
+		case "png": return "image/png"
+		case "gif": return "image/gif"
+		default: return "application/octet-stream"
+		}
+	}
 }

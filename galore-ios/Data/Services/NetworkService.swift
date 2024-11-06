@@ -9,9 +9,11 @@ import Foundation
 
 class NetworkService {
 	private let urlSession: URLSession
+	private let tokenManager: TokenManager
 	
-	init(session: URLSession = NetworkService.defaultSession) {
+	init(session: URLSession = NetworkService.defaultSession, tokenManager: TokenManager) {
 		self.urlSession = session
+		self.tokenManager = tokenManager
 	}
 	
 	private static var defaultSession: URLSession {
@@ -27,7 +29,24 @@ class NetworkService {
 	}
 	
 	func execute<T: NetworkRequest>(_ request: T) async throws -> T.Response {
-		let urlRequest = try request.makeURLRequest()
+		var urlRequest: URLRequest;
+		
+		switch request.requestEncoding {
+		case .json:
+			urlRequest = try request.makeURLRequest()
+		case .multipartFormData:
+			guard let files = request.files else {
+				throw NetworkError.missingFiles
+			}
+			urlRequest = try request.makeMultipartFormDataRequest()
+		}
+		
+		if request.accessType == .privateAccess {
+			if let accessToken = tokenManager.accessToken {
+				urlRequest.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+			}
+		}
+		
 		let (data, response) = try await urlSession.data(for: urlRequest)
 		
 		guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {

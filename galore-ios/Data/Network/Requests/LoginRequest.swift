@@ -8,7 +8,13 @@
 import Foundation
 
 struct LoginRequest: Codable, NetworkRequest {
+
+	
 	typealias Response = LoginResponse
+	
+	var accessType: AcessType {
+		return .publicAccess
+	}
 	
 	var baseURL: URL {
 		return URL(string: "http://localhost:8080")!
@@ -25,12 +31,22 @@ struct LoginRequest: Codable, NetworkRequest {
 		return ["Content-Type": "application/json"]
 	}
 	
+	var requestEncoding: RequestEncoding {
+		return .json
+	}
+	
+	var files: [String : URL]? {
+		return nil
+	}
+	
 	let email: String
 	let password: String
 	
 	var parameters: [String : Any]? {
 		return ["email": email, "password": password]
 	}
+	
+	
 	
 	private enum CodingKeys: String, CodingKey {
 		case email

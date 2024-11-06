@@ -7,6 +7,16 @@
 
 import Foundation
 
+enum RequestEncoding {
+	case json
+	case multipartFormData
+}
+
+enum AcessType {
+	case publicAccess
+	case privateAccess
+}
+
 protocol NetworkRequest {
 	associatedtype Response: Decodable
 	
@@ -15,5 +25,8 @@ protocol NetworkRequest {
 	var method: HTTPMethod { get }
 	var headers: [String: String]? { get }
 	var parameters: [String: Any]? { get }
+	var requestEncoding: RequestEncoding { get }
+	var accessType: AcessType { get }
+	var files: [String: URL]? { get }
 	
 }
