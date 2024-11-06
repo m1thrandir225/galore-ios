@@ -12,6 +12,7 @@ struct RegisterScreen: View {
 	@State var name: String = ""
 	@State var email: String = "";
 	@State var password: String = "";
+	@State var birthday: Date?;
 	
 	@StateObject var router: Router<Routes>
 	
