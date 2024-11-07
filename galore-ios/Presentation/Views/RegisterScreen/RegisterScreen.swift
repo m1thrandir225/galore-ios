@@ -31,7 +31,7 @@ struct RegisterScreen: View {
 	@State var currentStep: RegisterStep = .info
 	
 	@StateObject var router: Router<Routes>
-	@StateObject private var viewModel = RegisterViewModel()
+	@StateObject private var viewModel = RegisterViewModel(authenticationRepository: AuthenticationRepositoryImpl())
 	
 	init(router: Router<Routes>) {
 		_router = StateObject(wrappedValue: router)
@@ -54,7 +54,11 @@ struct RegisterScreen: View {
 			
 			switch currentStep {
 			case .info:
-				RegisterInfoStep(name: $viewModel.name, email: $viewModel.email, password: $viewModel.password)
+				RegisterInfoStep(
+					name: $viewModel.name,
+					email: $viewModel.email,
+					password: $viewModel.password
+				)
 					.transition(.slide.combined(with: .blurReplace))
 			case .personalization:
 				RegisterPersonalizationStep(birthday: $viewModel.birthday, avatarURL: $viewModel.avatarURL)
@@ -85,16 +89,23 @@ struct RegisterScreen: View {
 							if let nextStep = currentStep.next {
 								currentStep = nextStep
 							} else {
-								viewModel.register()
+								Task {
+									try await viewModel.register()
+								}
 							}
 						}
 						
 					}) {
-						Text("Continue")
-							.font(.headline)
-							.padding(.all, 6)
-							.frame(maxWidth: .infinity)
-					}.disabled(!viewModel.canContinue(step: currentStep))
+						if viewModel.isLoading {
+							ProgressView()
+						} else {
+							Text("Continue")
+								.font(.headline)
+								.padding(.all, 6)
+								.frame(maxWidth: .infinity)
+						}
+						
+					}.disabled(!viewModel.canContinue(step: currentStep) || viewModel.isLoading)
 					.buttonStyle(MainButtonStyle(isDisabled: !viewModel.canContinue(step: currentStep)))
 				}
 				.padding([.leading, .trailing], 24)

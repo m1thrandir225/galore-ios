@@ -18,10 +18,9 @@ struct RegisterPersonalizationStep: View {
 			EditableCircularProfileImage(viewModel: imageModel)
 				.onChange(of: imageModel.imageState) { oldState, newState in
 					switch newState {
-								case .success(let profileImage):
+								case .success(_):
 									if let profileURL = imageModel.avatarFileURL {
 										avatarURL = profileURL // Update Binding when image successfully loaded
-										print(avatarURL)
 									}
 								default:
 									break // Ignore in this context.
