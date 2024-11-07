@@ -13,7 +13,7 @@ import PhotosUI
 
 
 struct CircularProfileImage: View {
-	let imageState: ProfileModel.ImageState
+	let imageState: ProfilePictureModel.ImageState
 	
 	var body: some View {
 		ProfileImage(imageState: imageState)

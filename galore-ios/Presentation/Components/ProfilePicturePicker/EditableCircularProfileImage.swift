@@ -11,7 +11,7 @@ import SwiftUI
 import PhotosUI
 
 struct EditableCircularProfileImage: View {
-	@ObservedObject var viewModel: ProfileModel
+	@ObservedObject var viewModel: ProfilePictureModel
 	
 	var body: some View {
 		CircularProfileImage(imageState: viewModel.imageState)

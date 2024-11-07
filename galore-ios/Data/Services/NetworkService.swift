@@ -36,7 +36,7 @@ class NetworkService {
 		case .json:
 			urlRequest = try request.makeURLRequest()
 		case .multipartFormData:
-			guard let files = request.files else {
+			guard request.files != nil else {
 				throw NetworkError.missingFiles
 			}
 			urlRequest = try request.makeMultipartFormDataRequest()

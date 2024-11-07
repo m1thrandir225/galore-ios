@@ -11,7 +11,7 @@ import SwiftUI
 import PhotosUI
 
 struct ProfileImage: View {
-	let imageState: ProfileModel.ImageState
+	let imageState: ProfilePictureModel.ImageState
 	
 	var body: some View {
 		switch imageState {

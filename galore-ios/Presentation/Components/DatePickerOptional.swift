@@ -39,7 +39,7 @@ struct DatePickerOptional: View {
 						displayedComponents: .date
 					)
 					.labelsHidden()
-					.onChange(of: hidenDate) { newDate in
+					.onChange(of: hidenDate) { oldDate, newDate in
 						date = newDate
 					}
 					Button {

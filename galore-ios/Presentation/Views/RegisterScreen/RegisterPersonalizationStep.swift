@@ -11,10 +11,22 @@ struct RegisterPersonalizationStep: View {
 	@Binding var birthday: Date?
 	@Binding var avatarURL: URL?
 	
-	@StateObject var imageModel = ProfileModel()
+	
+	@StateObject var imageModel = ProfilePictureModel()
     var body: some View {
 		VStack(alignment: .center, spacing: 24) {
 			EditableCircularProfileImage(viewModel: imageModel)
+				.onChange(of: imageModel.imageState) { oldState, newState in
+					switch newState {
+								case .success(let profileImage):
+									if let profileURL = imageModel.avatarFileURL {
+										avatarURL = profileURL // Update Binding when image successfully loaded
+										print(avatarURL)
+									}
+								default:
+									break // Ignore in this context.
+								}
+				}
 			DatePickerOptional("Birthday", prompt: "Add Date", in: ...Date(), selection: $birthday)
 		}
 		.padding(.all, 20)
