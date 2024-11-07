@@ -22,6 +22,17 @@ class ProfileModel : ObservableObject {
 	enum TransferError: Error {
 		case importFailed
 	}
+	@Published private(set) var imageState: ImageState = .empty
+	@Published var imageSelection: PhotosPickerItem? = nil {
+		didSet {
+			if let imageSelection {
+				let progress = loadTransferable(from: imageSelection)
+				imageState = .loading(progress)
+			} else {
+				imageState = .empty
+			}
+		}
+	}
 	
 	public struct ProfileImage: Transferable {
 		let image: Image
@@ -47,18 +58,7 @@ class ProfileModel : ObservableObject {
 		}
 	}
 	
-	@Published private(set) var imageState: ImageState = .empty
-	
-	@Published var imageSelection: PhotosPickerItem? = nil {
-		didSet {
-			if let imageSelection {
-				let progress = loadTransferable(from: imageSelection)
-				imageState = .loading(progress)
-			} else {
-				imageState = .empty
-			}
-		}
-	}
+
 	
 	private func loadTransferable(from imageSelection: PhotosPickerItem) -> Progress {
 		return imageSelection.loadTransferable(type: ProfileImage.self) { result in

@@ -7,6 +7,7 @@
 
 import Foundation
 
+@MainActor
 final class AuthenticationRepositoryImpl: AuthenticationRepository {
 	private let authService: AuthService
 	private let tokenManager: TokenManager

@@ -8,13 +8,15 @@
 import SwiftUI
 
 struct LoadingScreen: View {
-    var body: some View {
+	var body: some View {
 		VStack(alignment: .center) {
 			ProgressView(label: {
 				Text("Prepearing concoctions...")
-			})
-		}.background(Color("Backgrdoun"))
-    }
+			}).frame(maxWidth: .infinity, maxHeight: .infinity)
+		}
+		.background(Color("Background"))
+			
+	}
 }
 
 #Preview {
