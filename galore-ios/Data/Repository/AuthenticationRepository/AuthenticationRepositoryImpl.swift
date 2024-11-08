@@ -17,7 +17,7 @@ final class AuthenticationRepositoryImpl: AuthenticationRepository {
 		let response = try await authService.login(email: email, password: password)
 		
 		tokenManager.storeTokens(accessToken: response.accessToken, refreshToken: response.refreshToken, sessionId: response.sessionId, accessTokenExpiresAt: response.accessTokenExpiresAt, refreshTokenExpiresAt: response.refreshTokenExpiresAt)
-		
+		//TODO: store the user in the UserManager (not yet implemented)
 		return response.user
 	}
 	
@@ -32,10 +32,12 @@ final class AuthenticationRepositoryImpl: AuthenticationRepository {
 	
 	func logout() async throws {
 		//Get sessionId from tokenManager
-		
+	
 		guard let sessionId = tokenManager.sessionId else { throw TokenManagerError.sessionIdNotFound }
 		
 		let  _ = try await authService.logout(sessionId: sessionId)
+		
+		tokenManager.clearTokens()
 		
 	}
 	

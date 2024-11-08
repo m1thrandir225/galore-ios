@@ -13,5 +13,8 @@ class HomeViewModel: ObservableObject {
 		self.authenticationRepository = authenticationRepository
 	}
 	
+	func logout() async throws {
+		try await authenticationRepository.logout()
+	}
 
 }

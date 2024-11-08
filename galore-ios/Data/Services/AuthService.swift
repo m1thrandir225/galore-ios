@@ -75,12 +75,18 @@ class AuthService : ObservableObject {
 		}
 	}
 	func logout(sessionId: String) async throws  -> LogoutResponse {
+		self.isLoading = true
+		defer {
+			self.isLoading = false
+		}
 		do {
 			let request = LogoutRequest(sessionId: sessionId)
 			
 			self.isLoggedIn = false
 			
-			return try await networkService.execute(request)
+			 let response = try await networkService.execute(request)
+			
+			return response
 		} catch {
 			throw AuthError.unknownError
 		}
@@ -99,14 +105,17 @@ class AuthService : ObservableObject {
 	func refreshSession() async throws {
 		self.isRefreshing = true
 		self.isLoading = true
+		defer {
+			self.isRefreshing = false
+			self.isLoading = false
+		}
 		
 		guard let refreshToken = tokenManager.refreshToken else { throw TokenManagerError.refreshTokenNotFound }
 		guard let sessionId = tokenManager.sessionId else { throw TokenManagerError.sessionIdNotFound }
 		let response = try await self.refreshToken(refreshToken: refreshToken, sessionId: sessionId)
 		
 		tokenManager.accessToken = response.accessToken
+		
 		self.isLoggedIn = true
-		self.isLoading = false
-		self.isRefreshing = false
 	}
 }

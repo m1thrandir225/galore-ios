@@ -24,22 +24,15 @@ class LoginViewModel:  ObservableObject {
 		isLoading = true
 		errorMessage = nil
 		
+		defer {
+			isLoading = false
+		}
+		
 		do {
-			let response = try await authenticationRepository.login(email: email, password: password)
-			
-			handleLoginSuccess(user: response)
+			let _ = try await authenticationRepository.login(email: email, password: password)
 			
 		} catch {
-			handleLoginFailure(error: error)
+			errorMessage = error.localizedDescription
 		}
-	}
-	
-	private func handleLoginSuccess(user: User) {
-		print("Login successful")
-	}
-	
-	private func handleLoginFailure(error: Error) {
-		print(error.localizedDescription)
-		errorMessage = "\(error.localizedDescription)"
 	}
 }

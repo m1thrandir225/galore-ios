@@ -9,11 +9,14 @@ import SwiftUI
 
 struct HomeScreen: View {
 	@StateObject var router: Router<Routes>
-
+	
+	@StateObject var viewModel: HomeViewModel = HomeViewModel(authenticationRepository: AuthenticationRepositoryImpl())
 	
     var body: some View {
 		Button(action: {
-			
+			Task {
+				try await viewModel.logout()
+			}
 		}) {
 			Text("Logout")
 		}

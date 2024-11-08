@@ -105,6 +105,22 @@ struct RegisterInfoStep : View {
 				
 			}
 		}
+		.toolbar {
+			ToolbarItemGroup(placement: .keyboard) {
+				Spacer()
+				Button {
+					
+				} label: {
+					Image(systemName: "chevron.up")
+				}
+				
+				Button {
+					
+				} label: {
+					Image(systemName: "chevron.down")
+				}
+			}
+		}
 		.padding(.all, 20)
 		Spacer()
 	}

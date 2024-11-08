@@ -47,6 +47,7 @@ struct LoginScreen: View {
 							.stroke(Color.gray, lineWidth: 1.5)
 					)
 				.keyboardType(.emailAddress)
+				.autocapitalization(.none)
 				
 				SecureField(
 					"",

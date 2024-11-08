@@ -45,14 +45,11 @@ struct RegisterScreen: View {
 						.font(.system(size: 46))
 						.fontWeight(.heavy)
 						.foregroundColor(Color("MainColor"))
-					
 					LottieView(animation: .named("registerLottie"))
 						.playing(loopMode: .loop)
 						.scaledToFill()
 						.frame(height: 150)
 				}
-				
-				
 				switch currentStep {
 				case .info:
 					RegisterInfoStep(
