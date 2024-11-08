@@ -38,6 +38,7 @@ class ProfilePictureModel : ObservableObject {
 		case importFailed
 	}
 	@Published private(set) var imageState: ImageState = .empty
+	
 	@Published var imageSelection: PhotosPickerItem? = nil {
 		didSet {
 			if let imageSelection {
@@ -49,16 +50,21 @@ class ProfilePictureModel : ObservableObject {
 		}
 	}
 	
-	private(set) var avatarFileURL: URL? = nil
+	private(set) var networkFile: NetworkFile? = nil
+
 	
 	public struct ProfileImage: Transferable {
 		let image: Image
 		let url: URL
 		
+		func imageData() -> Data? {
+			return try? Data(contentsOf: url)
+		}
+		
 		static var transferRepresentation: some TransferRepresentation {
 				  FileRepresentation(importedContentType: .image) { file in
 					  // Here, we directly use the file URL from `file`
-					  let fileURL = file.file.standardizedFileURL
+					  let fileURL = file.file
 					  #if canImport(AppKit)
 					  guard let nsImage = NSImage(contentsOf: fileURL) else {
 						  throw TransferError.importFailed
@@ -66,7 +72,7 @@ class ProfilePictureModel : ObservableObject {
 					  let image = Image(nsImage: nsImage)
 					  return ProfileImage(image: image, url: fileURL)
 					  #elseif canImport(UIKit)
-					  guard let uiImage = UIImage(contentsOfFile: fileURL.path) else {
+					  guard let uiImage = UIImage(contentsOfFile: fileURL.path()) else {
 						  throw TransferError.importFailed
 					  }
 					  let image = Image(uiImage: uiImage)
@@ -90,14 +96,13 @@ class ProfilePictureModel : ObservableObject {
 				switch result {
 				case .success(let profileImage?):
 					self.imageState = .success(profileImage.image)
-					self.avatarFileURL = profileImage.url // Set the URL
-					
+					self.networkFile = NetworkFile(url: profileImage.url, data: profileImage.imageData()!)
 				case .success(nil):
 					self.imageState = .empty
-					self.avatarFileURL = nil
+					self.networkFile = nil
 				case .failure(let error):
 					self.imageState = .failure(error)
-					self.avatarFileURL = nil
+					self.networkFile = nil
 				}
 			}
 		}

@@ -32,22 +32,27 @@ struct RegisterRequest: NetworkRequest {
 	let password: String
 	let name: String
 	let birthday: Date
-	let avatarFileUrl: URL
+	let networkFile: NetworkFile
+	let dateFormatter: DateFormatter = {
+		let formatter = DateFormatter()
+		formatter.dateFormat = "yyyy-MM-dd"
+		return formatter
+	}()
 	
 	var parameters: [String : Any]? {
 		return [
 			"email": email,
 			"password": password,
 			"name": name,
-			"birthday": birthday,
+			"birthday": dateFormatter.string(from: birthday),
 		]
 	}
 	var requestEncoding: RequestEncoding {
 		return .multipartFormData
 	}
 	
-	var files: [String : URL]? {
-		return ["avatar_url" : avatarFileUrl]
+	var files: [String : NetworkFile]? {
+		return ["avatar_url" : networkFile]
 	}
 	
 }

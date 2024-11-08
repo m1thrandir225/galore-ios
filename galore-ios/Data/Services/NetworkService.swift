@@ -51,7 +51,7 @@ class NetworkService {
 		let (data, response) = try await urlSession.data(for: urlRequest)
 		
 		guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
-			print("Request Failed")
+			print(response as? HTTPURLResponse ?? response)
 			throw NetworkError.requestFailed
 		}
 		

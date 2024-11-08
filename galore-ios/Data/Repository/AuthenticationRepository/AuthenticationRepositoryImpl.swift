@@ -9,13 +9,8 @@ import Foundation
 
 @MainActor
 final class AuthenticationRepositoryImpl: AuthenticationRepository {
-	private let authService: AuthService
-	private let tokenManager: TokenManager
-	
-	init() {
-		self.authService = AuthService.shared
-		self.tokenManager = TokenManager.shared
-	}
+	private let authService: AuthService = AuthService.shared
+	private let tokenManager: TokenManager = TokenManager.shared
 	
 	func login(email: String, password: String) async throws -> User {
 		
@@ -26,9 +21,9 @@ final class AuthenticationRepositoryImpl: AuthenticationRepository {
 		return response.user
 	}
 	
-	func register(email: String, password: String, name: String, birthday: Date, avatarFileUrl: URL) async throws -> User {
+	func register(email: String, password: String, name: String, birthday: Date, networkFile: NetworkFile) async throws -> User {
 		
-		let response = try await authService.register(email: email, password: password, name: name, birthday: birthday, avatarFileUrl: avatarFileUrl)
+		let response = try await authService.register(email: email, password: password, name: name, birthday: birthday, networkFile: networkFile)
 		
 		tokenManager.storeTokens(accessToken: response.accessToken, refreshToken: response.refreshToken, sessionId: response.sessionId, accessTokenExpiresAt: response.accessTokenExpiresAt, refreshTokenExpiresAt: response.refreshTokenExpiresAt)
 		
@@ -40,7 +35,7 @@ final class AuthenticationRepositoryImpl: AuthenticationRepository {
 		
 		guard let sessionId = tokenManager.sessionId else { throw TokenManagerError.sessionIdNotFound }
 		
-		let response = try await authService.logout(sessionId: sessionId)
+		let  _ = try await authService.logout(sessionId: sessionId)
 		
 	}
 	

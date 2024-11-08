@@ -39,7 +39,7 @@ struct RefreshTokenRequest: NetworkRequest {
 		return .publicAccess
 	}
 	
-	var files: [String : URL]? {
+	var files: [String : NetworkFile]? {
 		return nil
 	}
 	

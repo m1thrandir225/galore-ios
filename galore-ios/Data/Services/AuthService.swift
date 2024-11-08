@@ -12,17 +12,14 @@ import Foundation
 class AuthService : ObservableObject {
 	static let shared = AuthService()
 	
-	private let networkService: NetworkService
-	private let tokenManager: TokenManager
+	private let networkService: NetworkService = NetworkService.shared
+	private let tokenManager: TokenManager = TokenManager.shared
 	
 	@Published var isLoggedIn: Bool = false
-	@Published var isLoading: Bool = true
+	@Published var isLoading: Bool = false
 	@Published var isRefreshing: Bool = false
 	
-	private init() {
-		self.networkService = NetworkService.shared
-		self.tokenManager = TokenManager.shared
-	}
+	private init() {}
 	
 	func checkAuthentication() async {
 		let hasToken = tokenManager.isAuthenticated()
@@ -47,11 +44,12 @@ class AuthService : ObservableObject {
 	func login(email: String, password: String) async throws -> LoginResponse {
 		do {
 			let request = LoginRequest(email: email, password: password)
-			
+		
+			let response = try await networkService.execute(request)
 			isLoggedIn = true
-			
-			return try await networkService.execute(request)
+			return response
 		} catch NetworkError.requestFailed {
+			isLoggedIn = false
 			throw AuthError.invalidCredentials
 		} catch  {
 			print(error.localizedDescription)
@@ -59,14 +57,19 @@ class AuthService : ObservableObject {
 		}
 	}
 	
-	func register(email: String, password: String, name: String, birthday: Date, avatarFileUrl: URL)  async throws -> RegisterResponse {
+	func register(email: String, password: String, name: String, birthday: Date, networkFile: NetworkFile)  async throws -> RegisterResponse {
 		do {
-			let request = RegisterRequest(email: email, password: password, name: name, birthday: birthday, avatarFileUrl: avatarFileUrl)
+			let request = RegisterRequest(email: email, password: password, name: name, birthday: birthday, networkFile: networkFile)
 			
-			return try await networkService.execute(request)
+			let response = try await networkService.execute(request)
+			
+			self.isLoggedIn = true
+			return response
 		} catch NetworkError.requestFailed {
+			self.isLoggedIn = false
 			throw AuthError.userExists
 		} catch {
+			self.isLoggedIn = false
 			print(error.localizedDescription)
 			throw AuthError.unknownError
 		}
@@ -75,7 +78,7 @@ class AuthService : ObservableObject {
 		do {
 			let request = LogoutRequest(sessionId: sessionId)
 			
-			isLoggedIn = false
+			self.isLoggedIn = false
 			
 			return try await networkService.execute(request)
 		} catch {

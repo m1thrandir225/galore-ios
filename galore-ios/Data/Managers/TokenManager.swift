@@ -73,13 +73,11 @@ class TokenManager {
 	
 	func isAccessTokenValid() -> Bool {
 		guard let expiresAt = accessTokenExpiresAt else { return false }
-		print(Date() < expiresAt)
 		return Date() < expiresAt
 	}
 	
 	func isRefreshTokenValid() -> Bool {
 		guard let expiresAt = refreshTokenExpiresAt else { return false }
-		print(Date() < expiresAt)
 		return Date() < expiresAt
 	}
 	

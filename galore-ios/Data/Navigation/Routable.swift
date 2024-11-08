@@ -14,6 +14,8 @@ public enum NavigationType {
 	case fullScreenCover
 }
 
+
+
 public protocol Routable: Hashable, Identifiable {
 	associatedtype ViewType: View
 	var navigationType: NavigationType { get }

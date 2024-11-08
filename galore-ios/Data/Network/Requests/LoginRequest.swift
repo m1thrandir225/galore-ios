@@ -35,7 +35,7 @@ struct LoginRequest: Codable, NetworkRequest {
 		return .json
 	}
 	
-	var files: [String : URL]? {
+	var files: [String : NetworkFile]? {
 		return nil
 	}
 	

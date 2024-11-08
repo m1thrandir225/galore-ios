@@ -10,25 +10,28 @@ import SwiftUI
 struct ContentView: View {
 	@EnvironmentObject private var authService: AuthService
 	
-    var body: some View {
-		RoutingView(Routes.self) { router in
+	
+	var body: some View {
+		Group {
 			if authService.isLoading || authService.isRefreshing {
 				LoadingScreen()
 			} else {
 				if authService.isLoggedIn {
-					HomeScreen(router: router)
+					RoutingView(Routes.self) { router in
+						HomeScreen(router: router)
+					}
 				} else {
-					WelcomeScreen(router: router)
+					RoutingView(Routes.self) { router in
+						WelcomeScreen(router: router)
+					}
 				}
 			}
-		}
-		.onAppear {
+		}.onAppear {
 			Task {
 				await authService.checkAuthentication()
-			}
+					 }
 		}
-		.environmentObject(authService)
-    }
+	}
 }
 
 #Preview {

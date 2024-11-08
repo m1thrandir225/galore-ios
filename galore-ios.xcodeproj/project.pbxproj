@@ -33,9 +33,22 @@
 		0EE739362CCA3B4F0075CBF6 /* galore-iosUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "galore-iosUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		0EEEC6742CDDF4A700DFE272 /* Exceptions for "galore-ios" folder in "galore-ios" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 0EE7391B2CCA3B4E0075CBF6 /* galore-ios */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		0EE7391E2CCA3B4E0075CBF6 /* galore-ios */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				0EEEC6742CDDF4A700DFE272 /* Exceptions for "galore-ios" folder in "galore-ios" target */,
+			);
 			path = "galore-ios";
 			sourceTree = "<group>";
 		};
@@ -416,6 +429,8 @@
 				DEVELOPMENT_TEAM = JVX857Q763;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "galore-ios/Info.plist";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "So you can upload a custom avatar";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -445,6 +460,8 @@
 				DEVELOPMENT_TEAM = JVX857Q763;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "galore-ios/Info.plist";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "So you can upload a custom avatar";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

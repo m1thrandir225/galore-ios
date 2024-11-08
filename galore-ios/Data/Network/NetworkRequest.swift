@@ -27,6 +27,6 @@ protocol NetworkRequest {
 	var parameters: [String: Any]? { get }
 	var requestEncoding: RequestEncoding { get }
 	var accessType: AcessType { get }
-	var files: [String: URL]? { get }
+	var files: [String: NetworkFile]? { get }
 	
 }

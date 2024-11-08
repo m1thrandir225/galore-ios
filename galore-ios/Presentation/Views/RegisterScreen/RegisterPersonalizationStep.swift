@@ -9,7 +9,7 @@ import SwiftUI
 
 struct RegisterPersonalizationStep: View {
 	@Binding var birthday: Date?
-	@Binding var avatarURL: URL?
+	@Binding var networkFile: NetworkFile?
 	
 	
 	@StateObject var imageModel = ProfilePictureModel()
@@ -19,8 +19,8 @@ struct RegisterPersonalizationStep: View {
 				.onChange(of: imageModel.imageState) { oldState, newState in
 					switch newState {
 								case .success(_):
-									if let profileURL = imageModel.avatarFileURL {
-										avatarURL = profileURL // Update Binding when image successfully loaded
+						if let file = imageModel.networkFile {
+							networkFile = file // Update Binding when image successfully loaded
 									}
 								default:
 									break // Ignore in this context.
@@ -34,5 +34,5 @@ struct RegisterPersonalizationStep: View {
 }
 
 #Preview {
-	RegisterPersonalizationStep(birthday: Binding<Date?>(get: { nil }, set: { _ in }), avatarURL: Binding<URL?>(get: { nil }, set: { _ in }))
+	RegisterPersonalizationStep(birthday: Binding<Date?>(get: { nil }, set: { _ in }), networkFile: Binding<NetworkFile?>(get: { nil }, set: { _ in }))
 }

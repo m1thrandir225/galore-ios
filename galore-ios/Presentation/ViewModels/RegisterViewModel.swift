@@ -13,7 +13,7 @@ class RegisterViewModel: ObservableObject {
 	@Published var email: String = ""
 	@Published var password: String = ""
 	@Published var birthday: Date?
-	@Published var avatarURL: URL?
+	@Published var networkFile: NetworkFile?
 	@Published var isLoading: Bool = false
 	
 	private let authenticationRepository: AuthenticationRepository
@@ -28,7 +28,7 @@ class RegisterViewModel: ObservableObject {
 	}
 	
 	var canContinueToRegistration: Bool {
-		canContinueToPersonalization && birthday != nil && avatarURL != nil
+		canContinueToPersonalization && birthday != nil && networkFile != nil
 	}
 	
 	func canContinue(step: RegisterStep) -> Bool {
@@ -41,22 +41,27 @@ class RegisterViewModel: ObservableObject {
 	}
 	
 	
-	func register() async throws {
+	func register(completion: () -> ()) async throws {
 		do {
 			self.isLoading = true
 			//TODO: implement
-			guard let avatarURL else { return }
+			guard let networkFile else { return }
 			guard let birthday else { return }
+			guard !email.isEmpty else { return }
+			guard !password.isEmpty else { return }
+			guard !name.isEmpty else { return }
+			
 			
 			let response = try await authenticationRepository.register(
 				email: email,
 				password: password,
 				name: name,
 				birthday: birthday,
-				avatarFileUrl: avatarURL
+				networkFile: networkFile
 			)
 			
 			self.isLoading = false
+			completion()
 			
 		} catch {
 			self.isLoading = false

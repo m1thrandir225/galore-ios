@@ -39,7 +39,7 @@ struct LogoutRequest: NetworkRequest {
 		return .privateAccess
 	}
 	
-	var files: [String : URL]? {
+	var files: [String : NetworkFile]? {
 		return nil
 
 	}

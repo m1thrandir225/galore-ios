@@ -27,7 +27,8 @@ enum RegisterStep {
 	}
 }
 
-struct RegisterScreen: View {	
+struct RegisterScreen: View {
+	@EnvironmentObject var authService: AuthService
 	@State var currentStep: RegisterStep = .info
 	
 	@StateObject var router: Router<Routes>
@@ -38,101 +39,100 @@ struct RegisterScreen: View {
 	}
 	
 	var body: some View {
-		VStack {
-			VStack(alignment: .center, spacing: 12) {
-				Text("galore")
-					.font(.system(size: 46))
-					.fontWeight(.heavy)
-					.foregroundColor(Color("MainColor"))
+			VStack {
+				VStack(alignment: .center, spacing: 12) {
+					Text("galore")
+						.font(.system(size: 46))
+						.fontWeight(.heavy)
+						.foregroundColor(Color("MainColor"))
+					
+					LottieView(animation: .named("registerLottie"))
+						.playing(loopMode: .loop)
+						.scaledToFill()
+						.frame(height: 150)
+				}
 				
-				LottieView(animation: .named("registerLottie"))
-					.playing(loopMode: .loop)
-					.scaledToFill()
-					.frame(height: 150)
-			}
-			
-			
-			switch currentStep {
-			case .info:
-				RegisterInfoStep(
-					name: $viewModel.name,
-					email: $viewModel.email,
-					password: $viewModel.password
-				)
+				
+				switch currentStep {
+				case .info:
+					RegisterInfoStep(
+						name: $viewModel.name,
+						email: $viewModel.email,
+						password: $viewModel.password
+					)
 					.transition(.slide.combined(with: .blurReplace))
-			case .personalization:
-				RegisterPersonalizationStep(birthday: $viewModel.birthday, avatarURL: $viewModel.avatarURL)
-					.transition(.slide.combined(with: .blurReplace))
-			}
-			
-			
-			VStack(alignment: .center, spacing: 24){
-				HStack {
-					if let previous = currentStep.previous {
+				case .personalization:
+					RegisterPersonalizationStep(birthday: $viewModel.birthday, networkFile: $viewModel.networkFile)
+						.transition(.slide.combined(with: .blurReplace))
+				}
+				
+				
+				VStack(alignment: .center, spacing: 24){
+					HStack {
+						if let previous = currentStep.previous {
+							Button(action: {
+								withAnimation {
+									currentStep = previous
+								}
+								
+							}) {
+								Text("Go Back")
+									.font(.headline)
+									.padding(.all, 6)
+									.frame(maxWidth: .infinity)
+							}
+							.frame(maxWidth: 120)
+							.buttonStyle(MainButtonStyle(isDisabled: false))
+						}
+						
 						Button(action: {
 							withAnimation {
-								currentStep = previous
-							}
-
-						}) {
-							Text("Go Back")
-								.font(.headline)
-								.padding(.all, 6)
-								.frame(maxWidth: .infinity)
-						}
-						.frame(maxWidth: 120)
-						.buttonStyle(MainButtonStyle(isDisabled: false))
-					}
-					
-					Button(action: {
-						withAnimation {
-							if let nextStep = currentStep.next {
-								currentStep = nextStep
-							} else {
-								Task {
-									try await viewModel.register()
+								if let nextStep = currentStep.next {
+									currentStep = nextStep
+								} else {
+									Task {
+										try await viewModel.register(completion: {
+											print("Success")
+										})
+									}
 								}
 							}
-						}
-						
-					}) {
-						if viewModel.isLoading {
-							ProgressView()
-						} else {
-							Text("Continue")
-								.font(.headline)
-								.padding(.all, 6)
-								.frame(maxWidth: .infinity)
-						}
-						
-					}.disabled(!viewModel.canContinue(step: currentStep) || viewModel.isLoading)
-					.buttonStyle(MainButtonStyle(isDisabled: !viewModel.canContinue(step: currentStep)))
-				}
-				.padding([.leading, .trailing], 24)
-				
-					
-					
-				
-				HStack {
-					Text("Already have an account?")
-					Button(action: {
-						withAnimation {
-							router.replace(.login)
-						}
-	
-					}) {
-						Text("Login")
-							.foregroundColor(Color("MainColor"))
-							.fontWeight(.bold)
+							
+						}) {
+							if viewModel.isLoading {
+								ProgressView()
+							} else {
+								Text("Continue")
+									.font(.headline)
+									.padding(.all, 6)
+									.frame(maxWidth: .infinity)
+							}
+							
+						}.disabled(!viewModel.canContinue(step: currentStep) || viewModel.isLoading)
+							.buttonStyle(MainButtonStyle(isDisabled: !viewModel.canContinue(step: currentStep)))
 					}
+					.padding([.leading, .trailing], 24)
 					
+					HStack {
+						Text("Already have an account?")
+						Button(action: {
+							withAnimation {
+								router.replace(.login)
+							}
+							
+						}) {
+							Text("Login")
+								.foregroundColor(Color("MainColor"))
+								.fontWeight(.bold)
+						}
+						
+					}
 				}
-			}
-			
-			Spacer()
-		}.background(Color("Background"))
-	
-    }
+				
+				Spacer()
+			}.background(Color("Background"))
+				.ignoresSafeArea(.keyboard)
+		}
 }
 
 
