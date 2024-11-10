@@ -21,7 +21,7 @@ struct LoginScreen: View {
 	}
 	
 	var body: some View {
-		VStack {
+		ScrollView {
 			VStack(alignment: .center, spacing: 4) {
 				Text("galore")
 					.font(.system(size: 46))
@@ -76,7 +76,7 @@ struct LoginScreen: View {
 				}) {
 					Text("Continue")
 						.font(.headline)
-						.foregroundColor(.white)
+						.foregroundColor(Color("OnMain"))
 						.padding(.all, 14)
 						.frame(maxWidth: .infinity)
 						.background(Color("MainColor"))
@@ -96,7 +96,7 @@ struct LoginScreen: View {
 			}
 			
 			Spacer()
-		}.background(Color("Background"))
+		}.navigationTitle("").navigationBarTitleDisplayMode(.inline).navigationBarBackButtonHidden(true).background(Color("Background"))
 	
 	}
 }

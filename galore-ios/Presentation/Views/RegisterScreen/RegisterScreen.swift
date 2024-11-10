@@ -119,7 +119,7 @@ struct RegisterScreen: View {
 							
 						}) {
 							Text("Login")
-								.foregroundColor(Color("MainColor"))
+								.foregroundStyle(Color("MainColor"))
 								.fontWeight(.bold)
 						}
 						

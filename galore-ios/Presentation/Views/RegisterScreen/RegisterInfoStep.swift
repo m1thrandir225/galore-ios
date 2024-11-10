@@ -93,7 +93,7 @@ struct RegisterInfoStep : View {
 					.focused($focus, equals: Field.name)
 				
 				if !name.isEmpty {
-					Text(namePrompt).font(.caption).foregroundStyle(.red)
+					Text(namePrompt).font(.caption).foregroundStyle(Color("Error"))
 						.fontWeight(.semibold).transition(.scale)
 				}
 				
@@ -112,7 +112,7 @@ struct RegisterInfoStep : View {
 					.focused($focus, equals: Field.email)
 				
 				if !email.isEmpty {
-					Text(emailPrompt).font(.caption).foregroundStyle(.red)
+					Text(emailPrompt).font(.caption).foregroundStyle(Color("Error"))
 						.fontWeight(.semibold).transition(.scale)
 				}
 				
@@ -130,7 +130,7 @@ struct RegisterInfoStep : View {
 				.focused($focus, equals: Field.password)
 				
 				if !password.isEmpty {
-					Text(passwordPrompt).font(.caption).foregroundStyle(.red)
+					Text(passwordPrompt).font(.caption).foregroundStyle(Color("Error"))
 						.fontWeight(.semibold).transition(.scale)
 				}
 				
@@ -141,7 +141,7 @@ struct RegisterInfoStep : View {
 				Button {
 					dismissKeyboard()
 				} label: {
-					Text("dismiss")
+					Image(systemName: "xmark")
 				}
 				
 				Spacer()
