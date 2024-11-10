@@ -13,7 +13,33 @@ struct RegisterInfoStep : View {
 	@Binding var name: String
 	@Binding var email: String
 	@Binding var password: String
-
+	
+	@FocusState private var focus: Field?
+	
+	private enum Field: Int, Hashable, CaseIterable {
+		case name
+		case email
+		case password
+	}
+	private func nextField() {
+		guard let currentInput = focus,
+				let lastIndex = Field.allCases.last?.rawValue else { return }
+		
+		let index = min(currentInput.rawValue + 1, lastIndex)
+		self.focus = Field(rawValue: index)
+	}
+	
+	private func previousField() {
+		guard let currentInput = focus,
+			  let firstIndex = Field.allCases.first?.rawValue else { return }
+		
+		let index = max(currentInput.rawValue - 1, firstIndex)
+		self.focus = Field(rawValue: index)
+	}
+	
+	private func dismissKeyboard() {
+		self.focus = nil
+	}
 	
 	func isEmailValid() -> Bool {
 		let emailTest = NSPredicate(format: "SELF MATCHES %@", "^\\w+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$")
@@ -63,6 +89,8 @@ struct RegisterInfoStep : View {
 							.stroke(Color.gray, lineWidth: 1.5)
 					)
 					.keyboardType(.default)
+					.autocapitalization(.none)
+					.focused($focus, equals: Field.name)
 				
 				if !name.isEmpty {
 					Text(namePrompt).font(.caption).foregroundStyle(.red)
@@ -81,7 +109,8 @@ struct RegisterInfoStep : View {
 							.stroke(Color.gray, lineWidth: 1.5)
 					)
 					.keyboardType(.emailAddress)
-					.autocapitalization(.none)
+					.focused($focus, equals: Field.email)
+				
 				if !email.isEmpty {
 					Text(emailPrompt).font(.caption).foregroundStyle(.red)
 						.fontWeight(.semibold).transition(.scale)
@@ -98,6 +127,8 @@ struct RegisterInfoStep : View {
 					RoundedRectangle(cornerRadius: 8)
 						.stroke(Color.gray, lineWidth: 1.5)
 				)
+				.focused($focus, equals: Field.password)
+				
 				if !password.isEmpty {
 					Text(passwordPrompt).font(.caption).foregroundStyle(.red)
 						.fontWeight(.semibold).transition(.scale)
@@ -107,15 +138,22 @@ struct RegisterInfoStep : View {
 		}
 		.toolbar {
 			ToolbarItemGroup(placement: .keyboard) {
-				Spacer()
 				Button {
-					
+					dismissKeyboard()
+				} label: {
+					Text("dismiss")
+				}
+				
+				Spacer()
+				
+				Button {
+					previousField()
 				} label: {
 					Image(systemName: "chevron.up")
 				}
 				
 				Button {
-					
+					nextField()
 				} label: {
 					Image(systemName: "chevron.down")
 				}

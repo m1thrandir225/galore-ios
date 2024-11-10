@@ -39,7 +39,7 @@ struct RegisterScreen: View {
 	}
 	
 	var body: some View {
-			VStack {
+		ScrollView(.vertical, showsIndicators: false) {
 				VStack(alignment: .center, spacing: 12) {
 					Text("galore")
 						.font(.system(size: 46))
@@ -127,8 +127,7 @@ struct RegisterScreen: View {
 				}
 				
 				Spacer()
-			}.background(Color("Background"))
-				.ignoresSafeArea(.keyboard)
+		}.navigationTitle("").navigationBarTitleDisplayMode(.inline).navigationBarBackButtonHidden(true).background(Color("Background"))
 		}
 }
 
