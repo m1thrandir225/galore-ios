@@ -52,7 +52,7 @@ class RegisterViewModel: ObservableObject {
 			guard !name.isEmpty else { return }
 			
 			
-			let response = try await authenticationRepository.register(
+			try await authenticationRepository.register(
 				email: email,
 				password: password,
 				name: name,

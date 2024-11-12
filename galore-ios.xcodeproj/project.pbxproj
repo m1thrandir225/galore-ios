@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		0E2DD5FC2CD3F4CC001C837F /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 0E2DD5FB2CD3F4CC001C837F /* Lottie */; };
+		0EC555342CE368C500F45B8F /* Nuke in Frameworks */ = {isa = PBXBuildFile; productRef = 0EC555332CE368C500F45B8F /* Nuke */; };
+		0EC555362CE368C500F45B8F /* NukeExtensions in Frameworks */ = {isa = PBXBuildFile; productRef = 0EC555352CE368C500F45B8F /* NukeExtensions */; };
+		0EC555382CE368C500F45B8F /* NukeUI in Frameworks */ = {isa = PBXBuildFile; productRef = 0EC555372CE368C500F45B8F /* NukeUI */; };
+		0EC5553A2CE368C500F45B8F /* NukeVideo in Frameworks */ = {isa = PBXBuildFile; productRef = 0EC555392CE368C500F45B8F /* NukeVideo */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,6 +74,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				0E2DD5FC2CD3F4CC001C837F /* Lottie in Frameworks */,
+				0EC555342CE368C500F45B8F /* Nuke in Frameworks */,
+				0EC5553A2CE368C500F45B8F /* NukeVideo in Frameworks */,
+				0EC555362CE368C500F45B8F /* NukeExtensions in Frameworks */,
+				0EC555382CE368C500F45B8F /* NukeUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -139,6 +147,10 @@
 			name = "galore-ios";
 			packageProductDependencies = (
 				0E2DD5FB2CD3F4CC001C837F /* Lottie */,
+				0EC555332CE368C500F45B8F /* Nuke */,
+				0EC555352CE368C500F45B8F /* NukeExtensions */,
+				0EC555372CE368C500F45B8F /* NukeUI */,
+				0EC555392CE368C500F45B8F /* NukeVideo */,
 			);
 			productName = "galore-ios";
 			productReference = 0EE7391C2CCA3B4E0075CBF6 /* galore-ios.app */;
@@ -224,6 +236,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				0E2DD5F92CD3F051001C837F /* XCRemoteSwiftPackageReference "lottie-spm" */,
+				0EC555322CE368C500F45B8F /* XCRemoteSwiftPackageReference "Nuke" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 0EE7391D2CCA3B4E0075CBF6 /* Products */;
@@ -602,6 +615,14 @@
 				minimumVersion = 4.5.0;
 			};
 		};
+		0EC555322CE368C500F45B8F /* XCRemoteSwiftPackageReference "Nuke" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kean/Nuke";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.8.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -609,6 +630,26 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 0E2DD5F92CD3F051001C837F /* XCRemoteSwiftPackageReference "lottie-spm" */;
 			productName = Lottie;
+		};
+		0EC555332CE368C500F45B8F /* Nuke */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0EC555322CE368C500F45B8F /* XCRemoteSwiftPackageReference "Nuke" */;
+			productName = Nuke;
+		};
+		0EC555352CE368C500F45B8F /* NukeExtensions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0EC555322CE368C500F45B8F /* XCRemoteSwiftPackageReference "Nuke" */;
+			productName = NukeExtensions;
+		};
+		0EC555372CE368C500F45B8F /* NukeUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0EC555322CE368C500F45B8F /* XCRemoteSwiftPackageReference "Nuke" */;
+			productName = NukeUI;
+		};
+		0EC555392CE368C500F45B8F /* NukeVideo */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0EC555322CE368C500F45B8F /* XCRemoteSwiftPackageReference "Nuke" */;
+			productName = NukeVideo;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

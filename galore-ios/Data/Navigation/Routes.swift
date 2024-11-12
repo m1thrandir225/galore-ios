@@ -32,8 +32,7 @@ enum Routes: Routable {
 		case .home:
 			HomeScreen(router: router)
 		case .menu:
-			Text("Menu")
-				.presentationDetents([.medium])
+			UserMenuSheet(router: router)
 		}
 	}
 	

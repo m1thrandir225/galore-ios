@@ -57,22 +57,18 @@ extension NetworkRequest {
 		}
 		
 		for (key, networkFile) in files {
-			do {
-				let filename = networkFile.url.lastPathComponent
-				print("Path extension: \(networkFile.url.pathExtension)")
-				let fileData = networkFile.data
-				print(fileData)
-				let mimeType = mimeType(for: networkFile.url)
-				
-				body.appendString("--\(boundary)\r\n")
-				body.appendString("Content-Disposition: form-data; name=\"\(key)\"; filename=\"\(filename)\"\r\n")
-				body.appendString("Content-Type: \(mimeType)\r\n\r\n")
-				body.append(fileData)
-				body.appendString("\r\n")
-			} catch {
-				print("Error reading file at \(networkFile.url): \(error.localizedDescription)")
-			}
-		
+			
+			let filename = networkFile.url.lastPathComponent
+			let fileData = networkFile.data
+			let mimeType = mimeType(for: networkFile.url)
+			
+			body.appendString("--\(boundary)\r\n")
+			body.appendString("Content-Disposition: form-data; name=\"\(key)\"; filename=\"\(filename)\"\r\n")
+			body.appendString("Content-Type: \(mimeType)\r\n\r\n")
+			body.append(fileData)
+			body.appendString("\r\n")
+			
+			
 		}
 		
 		body.appendString("--\(boundary)--\r\n")

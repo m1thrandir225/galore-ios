@@ -9,12 +9,18 @@ import Foundation
 class HomeViewModel: ObservableObject {
 	private var authenticationRepository: AuthenticationRepository
 	
+	@Published var errorMessage: String?
+	
 	init(authenticationRepository: AuthenticationRepository) {
 		self.authenticationRepository = authenticationRepository
 	}
 	
 	func logout() async throws {
-		try await authenticationRepository.logout()
+		do {
+			try await authenticationRepository.logout()
+		} catch {
+			errorMessage = error.localizedDescription
+		}
 	}
 
 }

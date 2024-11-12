@@ -14,6 +14,7 @@ class AuthService : ObservableObject {
 	
 	private let networkService: NetworkService = NetworkService.shared
 	private let tokenManager: TokenManager = TokenManager.shared
+	private let userManager: UserManager = UserManager.shared
 	
 	@Published var isLoggedIn: Bool = false
 	@Published var isLoading: Bool = false
@@ -40,14 +41,19 @@ class AuthService : ObservableObject {
 		}
 	}
 	
-	
-	func login(email: String, password: String) async throws -> LoginResponse {
+	//TODO: network error handling
+	func login(email: String, password: String) async throws  {
 		do {
 			let request = LoginRequest(email: email, password: password)
 		
 			let response = try await networkService.execute(request)
+			
+			tokenManager.storeTokens(accessToken: response.accessToken, refreshToken: response.refreshToken, sessionId: response.sessionId, accessTokenExpiresAt: response.accessTokenExpiresAt, refreshTokenExpiresAt: response.refreshTokenExpiresAt)
+			
+			userManager.setUser(response.user)
+			
 			isLoggedIn = true
-			return response
+		
 		} catch NetworkError.requestFailed {
 			isLoggedIn = false
 			throw AuthError.invalidCredentials
@@ -57,14 +63,17 @@ class AuthService : ObservableObject {
 		}
 	}
 	
-	func register(email: String, password: String, name: String, birthday: Date, networkFile: NetworkFile)  async throws -> RegisterResponse {
+	func register(email: String, password: String, name: String, birthday: Date, networkFile: NetworkFile)  async throws {
 		do {
 			let request = RegisterRequest(email: email, password: password, name: name, birthday: birthday, networkFile: networkFile)
 			
 			let response = try await networkService.execute(request)
 			
+			tokenManager.storeTokens(accessToken: response.accessToken, refreshToken: response.refreshToken, sessionId: response.sessionId, accessTokenExpiresAt: response.accessTokenExpiresAt, refreshTokenExpiresAt: response.refreshTokenExpiresAt)
+			
+			userManager.setUser(response.user)
+			
 			self.isLoggedIn = true
-			return response
 		} catch NetworkError.requestFailed {
 			self.isLoggedIn = false
 			throw AuthError.userExists
@@ -74,48 +83,72 @@ class AuthService : ObservableObject {
 			throw AuthError.unknownError
 		}
 	}
-	func logout(sessionId: String) async throws  -> LogoutResponse {
+	func logout() async throws {
 		self.isLoading = true
 		defer {
 			self.isLoading = false
 		}
 		do {
+			guard let sessionId = tokenManager.sessionId else { throw TokenManagerError.sessionIdNotFound }
+			
 			let request = LogoutRequest(sessionId: sessionId)
 			
 			self.isLoggedIn = false
 			
-			 let response = try await networkService.execute(request)
+			let response = try await networkService.execute(request)
+			if response.message.isEmpty { throw NetworkError.requestFailed }
 			
-			return response
+			tokenManager.clearTokens()
+			userManager.clearUser()
+			
 		} catch {
+			self.isLoggedIn = false
 			throw AuthError.unknownError
 		}
 	}
 	
-	func refreshToken(refreshToken: String, sessionId: String) async throws -> RefreshTokenResponse {
+	func refreshToken() async throws {
 		do {
+			guard let refreshToken = tokenManager.refreshToken else { throw TokenManagerError.refreshTokenNotFound }
+			guard let sessionId = tokenManager.sessionId else { throw TokenManagerError.sessionIdNotFound }
+			
 			let request = RefreshTokenRequest(refreshToken: refreshToken, sessionId: sessionId)
-			return try await networkService.execute(request)
+			let response = try await networkService.execute(request)
+			
+			tokenManager.accessToken = response.accessToken
 			
 		} catch {
 			throw AuthError.invalidRefreshToken
 		}
 	}
 	
+	func fetchUser() async throws {
+		do {
+			guard let userId = tokenManager.sessionId else { throw UserManagerError.userIdNotFound }
+		
+			let request = UserRequest(userId: userId)
+			let response = try await networkService.execute(request)
+				
+			userManager.setUser(response)
+		} catch {
+			throw AuthError.unknownError
+		}
+	}
+	
 	func refreshSession() async throws {
 		self.isRefreshing = true
 		self.isLoading = true
+		
 		defer {
 			self.isRefreshing = false
 			self.isLoading = false
 		}
+		try await self.refreshToken()
+		try await self.fetchUser()
 		
-		guard let refreshToken = tokenManager.refreshToken else { throw TokenManagerError.refreshTokenNotFound }
-		guard let sessionId = tokenManager.sessionId else { throw TokenManagerError.sessionIdNotFound }
-		let response = try await self.refreshToken(refreshToken: refreshToken, sessionId: sessionId)
-		
-		tokenManager.accessToken = response.accessToken
 		
 		self.isLoggedIn = true
 	}
+	
+
 }

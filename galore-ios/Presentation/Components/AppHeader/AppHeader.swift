@@ -22,8 +22,9 @@ struct AppHeader: View {
 					.frame(width: 28, height: 28)
 					.foregroundStyle(Color("MainColor"))
 			}
-		}.frame(width: .infinity, height: 100)
-			.padding()
+		}
+		.frame(maxWidth: .infinity)
+		.padding()
     }
 }
 

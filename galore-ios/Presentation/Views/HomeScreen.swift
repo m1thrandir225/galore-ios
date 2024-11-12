@@ -13,21 +13,23 @@ struct HomeScreen: View {
 	@StateObject var viewModel: HomeViewModel = HomeViewModel(authenticationRepository: AuthenticationRepositoryImpl())
 	
     var body: some View {
-		VStack(alignment: .center) {
-			AppHeader(openMenu: {
-				router.routeTo(Routes.menu)
-			})
-			ScrollView {
-				Button(action: {
-					Task {
-						try await viewModel.logout()
+		GeometryReader { geometry in
+			VStack(alignment: .center) {
+				AppHeader(openMenu: {
+					router.routeTo(Routes.menu)
+				})
+				.padding([.top], geometry.safeAreaInsets.top)
+				ScrollView {
+					Button(action: {
+						Task {
+							try await viewModel.logout()
+						}
+					}) {
+						Text("Logout")
 					}
-				}) {
-					Text("Logout")
 				}
-			}
-		}.ignoresSafeArea(.all)
-		
+			}.ignoresSafeArea(.all)
+		}
     }
 }
 
