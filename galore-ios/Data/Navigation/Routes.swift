@@ -17,6 +17,7 @@ enum Routes: Routable {
 	//	case verifyEmail(token: String)
 	//	case logout
 	case welcome
+	case menu
 	
 	
 	@ViewBuilder
@@ -30,6 +31,9 @@ enum Routes: Routable {
 			WelcomeScreen(router: router)
 		case .home:
 			HomeScreen(router: router)
+		case .menu:
+			Text("Menu")
+				.presentationDetents([.medium])
 		}
 	}
 	
@@ -37,6 +41,8 @@ enum Routes: Routable {
 		switch self  {
 		case .login, .register, .welcome, .home:
 				.push
+		case .menu:
+				.sheet
 		}
 	}
 

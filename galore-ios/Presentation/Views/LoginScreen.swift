@@ -16,6 +16,31 @@ struct LoginScreen: View {
 	@StateObject var router: Router<Routes>
 	@StateObject private var viewModel = LoginViewModel(authenticationRepository: AuthenticationRepositoryImpl())
 	
+	@FocusState private var focus: Field?
+	
+	private enum Field: Int, Hashable, CaseIterable {
+		case email
+		case password
+	}
+	
+	private func dismissKeyboard() {
+		self.focus = nil
+	}
+	
+	private func nextField() {
+		guard let currentIndex = focus,
+			  let lastIndex = Field.allCases.last?.rawValue else { return }
+		
+		let index = min(currentIndex.rawValue + 1, lastIndex)
+		self.focus = Field(rawValue: index)
+	}
+	private func previousField() {
+		guard let currentIndex = focus,
+			  let firstIndex = Field.allCases.first?.rawValue else { return }
+		
+		let index = max(currentIndex.rawValue - 1, firstIndex)
+		self.focus = Field(rawValue: index)
+	}
 	init(router: Router<Routes>) {
 		_router = StateObject(wrappedValue: router)
 	}
@@ -38,26 +63,26 @@ struct LoginScreen: View {
 				Text("Login")
 					.font(.largeTitle)
 				TextField(
-					"",
-					text: $viewModel.email,
-					prompt: Text("Email").foregroundStyle(.onBackground)
+					"Email",
+					text: $viewModel.email
 				).padding(.all, 20)
 					.overlay(
 						RoundedRectangle(cornerRadius: 8)
-							.stroke(Color.gray, lineWidth: 1.5)
+							.stroke(Color("Outline"), lineWidth: 1.5)
 					)
 				.keyboardType(.emailAddress)
 				.autocapitalization(.none)
+				.focused($focus, equals: Field.email)
 				
 				SecureField(
-					"",
-					text: $viewModel.password,
-					prompt: Text("Password: ").foregroundStyle(.onBackground)
+					"Password",
+					text: $viewModel.password
 				)
+					.focused($focus, equals: Field.password)
 					.padding(.all, 20)
 						.overlay(
 							RoundedRectangle(cornerRadius: 8)
-								.stroke(Color.gray, lineWidth: 1.5)
+								.stroke(Color("Outline"), lineWidth: 1.5)
 						)
 				if let errorMessage = viewModel.errorMessage {
 					Text(errorMessage)
@@ -65,6 +90,29 @@ struct LoginScreen: View {
 				}
 			}
 			.padding(.all, 20)
+			.toolbar {
+				ToolbarItemGroup(placement: .keyboard) {
+					Button {
+						dismissKeyboard()
+					} label: {
+						Image(systemName: "xmark")
+					}
+					
+					Spacer()
+					
+					Button {
+						previousField()
+					} label: {
+						Image(systemName: "chevron.up")
+					}
+					
+					Button {
+						nextField()
+					} label: {
+						Image(systemName: "chevron.down")
+					}
+				}
+			}
 			
 			Spacer(minLength: 64.0)
 			
@@ -76,15 +124,15 @@ struct LoginScreen: View {
 				}) {
 					Text("Continue")
 						.font(.headline)
-						.foregroundColor(Color("OnMain"))
-						.padding(.all, 14)
+						.padding(.all, 6)
 						.frame(maxWidth: .infinity)
-						.background(Color("MainColor"))
-						.cornerRadius(24)
 				}.padding([.leading, .trailing], 24)
+					.disabled(!viewModel.canContinue())
+					.buttonStyle(MainButtonStyle(isDisabled: !viewModel.canContinue()))
 				
 				HStack {
 					Text("Don't have an account?")
+					
 					Button(action: {
 						router.replace(.register)
 					}) {

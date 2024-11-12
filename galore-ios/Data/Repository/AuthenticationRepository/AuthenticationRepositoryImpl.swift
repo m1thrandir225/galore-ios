@@ -12,13 +12,12 @@ final class AuthenticationRepositoryImpl: AuthenticationRepository {
 	private let authService: AuthService = AuthService.shared
 	private let tokenManager: TokenManager = TokenManager.shared
 	
-	func login(email: String, password: String) async throws -> User {
+	func login(email: String, password: String) async throws {
 		
 		let response = try await authService.login(email: email, password: password)
 		
 		tokenManager.storeTokens(accessToken: response.accessToken, refreshToken: response.refreshToken, sessionId: response.sessionId, accessTokenExpiresAt: response.accessTokenExpiresAt, refreshTokenExpiresAt: response.refreshTokenExpiresAt)
 		//TODO: store the user in the UserManager (not yet implemented)
-		return response.user
 	}
 	
 	func register(email: String, password: String, name: String, birthday: Date, networkFile: NetworkFile) async throws -> User {

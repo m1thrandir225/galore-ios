@@ -40,95 +40,91 @@ struct RegisterScreen: View {
 	
 	var body: some View {
 		ScrollView(.vertical, showsIndicators: false) {
-				VStack(alignment: .center, spacing: 12) {
-					Text("galore")
-						.font(.system(size: 46))
-						.fontWeight(.heavy)
-						.foregroundColor(Color("MainColor"))
-					LottieView(animation: .named("registerLottie"))
-						.playing(loopMode: .loop)
-						.scaledToFill()
-						.frame(height: 150)
-				}
-				switch currentStep {
-				case .info:
-					RegisterInfoStep(
-						name: $viewModel.name,
-						email: $viewModel.email,
-						password: $viewModel.password
-					)
+			VStack(alignment: .center, spacing: 12) {
+				Text("galore")
+					.font(.system(size: 46))
+					.fontWeight(.heavy)
+					.foregroundColor(Color("MainColor"))
+				LottieView(animation: .named("registerLottie"))
+					.playing(loopMode: .loop)
+					.scaledToFill()
+					.frame(height: 150)
+			}
+			switch currentStep {
+			case .info:
+				RegisterInfoStep(
+					name: $viewModel.name,
+					email: $viewModel.email,
+					password: $viewModel.password
+				)
+				.transition(.slide.combined(with: .blurReplace))
+			case .personalization:
+				RegisterPersonalizationStep(birthday: $viewModel.birthday, networkFile: $viewModel.networkFile)
 					.transition(.slide.combined(with: .blurReplace))
-				case .personalization:
-					RegisterPersonalizationStep(birthday: $viewModel.birthday, networkFile: $viewModel.networkFile)
-						.transition(.slide.combined(with: .blurReplace))
-				}
-				
-				
-				VStack(alignment: .center, spacing: 24){
-					HStack {
-						if let previous = currentStep.previous {
-							Button(action: {
-								withAnimation {
-									currentStep = previous
-								}
-								
-							}) {
-								Text("Go Back")
-									.font(.headline)
-									.padding(.all, 6)
-									.frame(maxWidth: .infinity)
-							}
-							.frame(maxWidth: 120)
-							.buttonStyle(MainButtonStyle(isDisabled: false))
-						}
-						
+			}
+			
+			
+			VStack(alignment: .center, spacing: 24){
+				HStack {
+					if let previous = currentStep.previous {
 						Button(action: {
 							withAnimation {
-								if let nextStep = currentStep.next {
-									currentStep = nextStep
-								} else {
-									Task {
-										try await viewModel.register(completion: {
-											print("Success")
-										})
-									}
-								}
+								currentStep = previous
 							}
 							
 						}) {
-							if viewModel.isLoading {
-								ProgressView()
-							} else {
-								Text("Continue")
-									.font(.headline)
-									.padding(.all, 6)
-									.frame(maxWidth: .infinity)
-							}
-							
-						}.disabled(!viewModel.canContinue(step: currentStep) || viewModel.isLoading)
-							.buttonStyle(MainButtonStyle(isDisabled: !viewModel.canContinue(step: currentStep)))
+							Text("Go Back")
+								.font(.headline)
+								.padding(.all, 6)
+								.frame(maxWidth: .infinity)
+						}
+						.frame(maxWidth: 120)
+						.buttonStyle(MainButtonStyle(isDisabled: false))
 					}
-					.padding([.leading, .trailing], 24)
 					
-					HStack {
-						Text("Already have an account?")
-						Button(action: {
-							withAnimation {
-								router.replace(.login)
+					Button(action: {
+						withAnimation {
+							if let nextStep = currentStep.next {
+								currentStep = nextStep
+							} else {
+								Task {
+									try await viewModel.register(completion: {
+										print("Success")
+									})
+								}
 							}
-							
-						}) {
-							Text("Login")
-								.foregroundStyle(Color("MainColor"))
-								.fontWeight(.bold)
 						}
 						
-					}
+					}) {
+						Text("Continue")
+							.font(.headline)
+							.padding(.all, 6)
+							.frame(maxWidth: .infinity)
+						
+					}.disabled(!viewModel.canContinue(step: currentStep) || viewModel.isLoading)
+						.buttonStyle(MainButtonStyle(isDisabled: !viewModel.canContinue(step: currentStep)))
 				}
+				.padding([.leading, .trailing], 24)
 				
-				Spacer()
+				HStack {
+					Text("Already have an account?")
+					Button(action: {
+						withAnimation {
+							router.replace(.login)
+						}
+						
+					}) {
+						Text("Login")
+							.foregroundStyle(Color("MainColor"))
+							.fontWeight(.bold)
+					}
+					
+				}
+			}
+			
+			Spacer()
 		}.navigationTitle("").navigationBarTitleDisplayMode(.inline).navigationBarBackButtonHidden(true).background(Color("Background"))
-		}
+	}
 }
 
 

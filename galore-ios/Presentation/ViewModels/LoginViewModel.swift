@@ -20,6 +20,10 @@ class LoginViewModel:  ObservableObject {
 		self.authenticationRepository = authenticationRepository
 	}
 	
+	func canContinue() -> Bool {
+		return !email.isEmpty && !password.isEmpty
+	}
+	
 	func login() async {
 		isLoading = true
 		errorMessage = nil
@@ -30,7 +34,6 @@ class LoginViewModel:  ObservableObject {
 		
 		do {
 			let _ = try await authenticationRepository.login(email: email, password: password)
-			
 		} catch {
 			errorMessage = error.localizedDescription
 		}

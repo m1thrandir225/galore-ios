@@ -86,7 +86,7 @@ struct RegisterInfoStep : View {
 				).padding(.all, 20)
 					.overlay(
 						RoundedRectangle(cornerRadius: 8)
-							.stroke(Color.gray, lineWidth: 1.5)
+							.stroke(Color("Outline"), lineWidth: 1.5)
 					)
 					.keyboardType(.default)
 					.autocapitalization(.none)
@@ -106,7 +106,7 @@ struct RegisterInfoStep : View {
 				).padding(.all, 20)
 					.overlay(
 						RoundedRectangle(cornerRadius: 8)
-							.stroke(Color.gray, lineWidth: 1.5)
+							.stroke(Color("Outline"), lineWidth: 1.5)
 					)
 					.keyboardType(.emailAddress)
 					.focused($focus, equals: Field.email)
@@ -125,7 +125,7 @@ struct RegisterInfoStep : View {
 				.padding(.all, 20)
 				.overlay(
 					RoundedRectangle(cornerRadius: 8)
-						.stroke(Color.gray, lineWidth: 1.5)
+						.stroke(Color("Outline"), lineWidth: 1.5)
 				)
 				.focused($focus, equals: Field.password)
 				
