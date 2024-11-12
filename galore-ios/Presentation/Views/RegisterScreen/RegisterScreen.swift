@@ -32,7 +32,7 @@ struct RegisterScreen: View {
 	@State var currentStep: RegisterStep = .info
 	
 	@StateObject var router: Router<Routes>
-	@StateObject private var viewModel = RegisterViewModel(authenticationRepository: AuthenticationRepositoryImpl())
+	@StateObject private var viewModel = RegisterViewModel()
 	
 	init(router: Router<Routes>) {
 		_router = StateObject(wrappedValue: router)

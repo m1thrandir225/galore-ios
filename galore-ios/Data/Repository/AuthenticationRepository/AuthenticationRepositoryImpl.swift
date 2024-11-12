@@ -7,25 +7,53 @@
 
 import Foundation
 
-@MainActor
 final class AuthenticationRepositoryImpl: AuthenticationRepository {
-	
-	private let authService: AuthService = AuthService.shared
 	private let tokenManager: TokenManager = TokenManager.shared
 	private let userManager: UserManager = UserManager.shared
 	
-	func login(email: String, password: String) async throws {
-		try await authService.login(email: email, password: password)
+	func needsRefreshToken() -> Bool {
+		return tokenManager.shouldRefreshToken()
 	}
 	
-	func register(email: String, password: String, name: String, birthday: Date, networkFile: NetworkFile) async throws {
+	func isAuthenticated() -> Bool {
+		return tokenManager.isAuthenticated()
+	}
+	func getSessionToken() -> String? {
+		return tokenManager.sessionId
+	}
+	
+	func getRefreshToken() -> String? {
+		return tokenManager.refreshToken
+	}
+	
+	func setAccessToken(_ accessToken: String) {
+		tokenManager.accessToken = accessToken
+	}
+	
+	func getUserId() -> String? {
+		return userManager.userId
+	}
+	
+	func setUser(_ user: User) {
+		userManager.setUser(user)
+	}
+	
+	
+	func login(with response: LoginResponse) async throws {
+		tokenManager.storeTokens(accessToken: response.accessToken, refreshToken: response.refreshToken, sessionId: response.sessionId, accessTokenExpiresAt: response.accessTokenExpiresAt, refreshTokenExpiresAt: response.refreshTokenExpiresAt)
 		
-		try await authService.register(email: email, password: password, name: name, birthday: birthday, networkFile: networkFile)
+		userManager.setUser(response.user)
+	}
+	
+	func register(with response: RegisterResponse) async throws {
+		tokenManager.storeTokens(accessToken: response.accessToken, refreshToken: response.refreshToken, sessionId: response.sessionId, accessTokenExpiresAt: response.accessTokenExpiresAt, refreshTokenExpiresAt: response.refreshTokenExpiresAt)
 		
+		userManager.setUser(response.user)
 	}
 	
 	func logout() async throws {
-		 try await authService.logout()
+		tokenManager.clearTokens()
+		userManager.clearUser()
 	}
 	
 	

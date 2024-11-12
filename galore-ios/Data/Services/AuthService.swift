@@ -13,8 +13,7 @@ class AuthService : ObservableObject {
 	static let shared = AuthService()
 	
 	private let networkService: NetworkService = NetworkService.shared
-	private let tokenManager: TokenManager = TokenManager.shared
-	private let userManager: UserManager = UserManager.shared
+	private let authenticationRepository: AuthenticationRepository = AuthenticationRepositoryImpl()
 	
 	@Published var isLoggedIn: Bool = false
 	@Published var isLoading: Bool = false
@@ -23,8 +22,8 @@ class AuthService : ObservableObject {
 	private init() {}
 	
 	func checkAuthentication() async {
-		let hasToken = tokenManager.isAuthenticated()
-		let needsRefresh = tokenManager.shouldRefreshToken()
+		let hasToken = authenticationRepository.isAuthenticated()
+		let needsRefresh = authenticationRepository.needsRefreshToken()
 		
 		if hasToken && !needsRefresh {
 			self.isLoading = false
@@ -48,10 +47,8 @@ class AuthService : ObservableObject {
 		
 			let response = try await networkService.execute(request)
 			
-			tokenManager.storeTokens(accessToken: response.accessToken, refreshToken: response.refreshToken, sessionId: response.sessionId, accessTokenExpiresAt: response.accessTokenExpiresAt, refreshTokenExpiresAt: response.refreshTokenExpiresAt)
-			
-			userManager.setUser(response.user)
-			
+			try await authenticationRepository.login(with: response)
+
 			isLoggedIn = true
 		
 		} catch NetworkError.requestFailed {
@@ -69,9 +66,7 @@ class AuthService : ObservableObject {
 			
 			let response = try await networkService.execute(request)
 			
-			tokenManager.storeTokens(accessToken: response.accessToken, refreshToken: response.refreshToken, sessionId: response.sessionId, accessTokenExpiresAt: response.accessTokenExpiresAt, refreshTokenExpiresAt: response.refreshTokenExpiresAt)
-			
-			userManager.setUser(response.user)
+			try await authenticationRepository.register(with: response)
 			
 			self.isLoggedIn = true
 		} catch NetworkError.requestFailed {
@@ -89,7 +84,7 @@ class AuthService : ObservableObject {
 			self.isLoading = false
 		}
 		do {
-			guard let sessionId = tokenManager.sessionId else { throw TokenManagerError.sessionIdNotFound }
+			guard let sessionId = authenticationRepository.getSessionToken() else { throw TokenManagerError.sessionIdNotFound }
 			
 			let request = LogoutRequest(sessionId: sessionId)
 			
@@ -98,8 +93,8 @@ class AuthService : ObservableObject {
 			let response = try await networkService.execute(request)
 			if response.message.isEmpty { throw NetworkError.requestFailed }
 			
-			tokenManager.clearTokens()
-			userManager.clearUser()
+			
+			try await authenticationRepository.logout()
 			
 		} catch {
 			self.isLoggedIn = false
@@ -109,13 +104,14 @@ class AuthService : ObservableObject {
 	
 	func refreshToken() async throws {
 		do {
-			guard let refreshToken = tokenManager.refreshToken else { throw TokenManagerError.refreshTokenNotFound }
-			guard let sessionId = tokenManager.sessionId else { throw TokenManagerError.sessionIdNotFound }
+			guard let refreshToken = authenticationRepository.getSessionToken() else { throw TokenManagerError.refreshTokenNotFound }
+			guard let sessionId = authenticationRepository.getRefreshToken() else { throw TokenManagerError.sessionIdNotFound }
 			
 			let request = RefreshTokenRequest(refreshToken: refreshToken, sessionId: sessionId)
 			let response = try await networkService.execute(request)
 			
-			tokenManager.accessToken = response.accessToken
+			
+			authenticationRepository.setAccessToken(response.accessToken)
 			
 		} catch {
 			throw AuthError.invalidRefreshToken
@@ -124,12 +120,12 @@ class AuthService : ObservableObject {
 	
 	func fetchUser() async throws {
 		do {
-			guard let userId = tokenManager.sessionId else { throw UserManagerError.userIdNotFound }
+			guard let userId = authenticationRepository.getUserId() else { throw UserManagerError.userIdNotFound }
 		
 			let request = UserRequest(userId: userId)
 			let response = try await networkService.execute(request)
 				
-			userManager.setUser(response)
+			authenticationRepository.setUser(response)
 		} catch {
 			throw AuthError.unknownError
 		}

@@ -16,11 +16,7 @@ class RegisterViewModel: ObservableObject {
 	@Published var networkFile: NetworkFile?
 	@Published var isLoading: Bool = false
 	
-	private let authenticationRepository: AuthenticationRepository
-	
-	init(authenticationRepository: AuthenticationRepository) {
-		self.authenticationRepository = authenticationRepository
-	}
+	private let authService: AuthService = .shared
 	
 	// MARK: - Moving between steps
 	var canContinueToPersonalization: Bool {
@@ -52,7 +48,7 @@ class RegisterViewModel: ObservableObject {
 			guard !name.isEmpty else { return }
 			
 			
-			try await authenticationRepository.register(
+			try await authService.register(
 				email: email,
 				password: password,
 				name: name,

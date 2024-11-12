@@ -14,11 +14,9 @@ class LoginViewModel:  ObservableObject {
 	@Published var isLoading: Bool = false
 	@Published var errorMessage: String?
 	
-	private let authenticationRepository: AuthenticationRepository
+	private let authService: AuthService = .shared
 	
-	init(authenticationRepository: AuthenticationRepository) {
-		self.authenticationRepository = authenticationRepository
-	}
+
 	
 	func canContinue() -> Bool {
 		return !email.isEmpty && !password.isEmpty
@@ -33,7 +31,7 @@ class LoginViewModel:  ObservableObject {
 		}
 		
 		do {
-			let _ = try await authenticationRepository.login(email: email, password: password)
+			try await authService.login(email: email, password: password)
 		} catch {
 			errorMessage = error.localizedDescription
 		}

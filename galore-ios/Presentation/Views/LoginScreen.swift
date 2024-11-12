@@ -14,7 +14,7 @@ struct LoginScreen: View {
 	@State private var password: String = ""
 	
 	@StateObject var router: Router<Routes>
-	@StateObject private var viewModel = LoginViewModel(authenticationRepository: AuthenticationRepositoryImpl())
+	@StateObject private var viewModel = LoginViewModel()
 	
 	@FocusState private var focus: Field?
 	

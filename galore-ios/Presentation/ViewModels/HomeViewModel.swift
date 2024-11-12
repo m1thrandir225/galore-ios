@@ -6,18 +6,15 @@
 //
 import Foundation
 
+@MainActor
 class HomeViewModel: ObservableObject {
-	private var authenticationRepository: AuthenticationRepository
-	
+	private var authService: AuthService = .shared
 	@Published var errorMessage: String?
 	
-	init(authenticationRepository: AuthenticationRepository) {
-		self.authenticationRepository = authenticationRepository
-	}
 	
 	func logout() async throws {
 		do {
-			try await authenticationRepository.logout()
+			try await authService.logout()
 		} catch {
 			errorMessage = error.localizedDescription
 		}

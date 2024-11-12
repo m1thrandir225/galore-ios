@@ -7,7 +7,14 @@
 import Foundation
 
 protocol AuthenticationRepository {
-	func login(email: String, password: String) async throws
-	func register(email: String, password: String, name: String, birthday: Date, networkFile: NetworkFile) async throws
+	func login(with response: LoginResponse) async throws
+	func register(with response: RegisterResponse) async throws
 	func logout() async throws
+	func needsRefreshToken() -> Bool
+	func isAuthenticated() -> Bool
+	func getSessionToken() -> String?
+	func getRefreshToken() -> String?
+	func setAccessToken(_ accessToken: String)
+	func getUserId() -> String?
+	func setUser(_ user: User)
 }

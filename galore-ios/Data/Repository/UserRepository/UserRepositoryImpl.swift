@@ -6,14 +6,15 @@
 //
 import Foundation
 
-//final class UserRepositoryImpl: UserRepository {
-//	private let authService: AuthService
-//	private let networkService: NetworkService
-//	
-//	init(authService: AuthService, networkService: NetworkService) {
-//		self.authService = authService
-//		self.networkService = networkService
-//	}
-//	
-//	
-//}
+@MainActor
+final class UserRepositoryImpl: UserRepository {
+	private let userManager: UserManager = UserManager.shared
+	
+	func getUserDetails() async throws -> User {
+		guard let user = userManager.user else {
+			throw UserManagerError.noUserFound
+		}
+		return user
+	}
+	
+}

@@ -10,7 +10,7 @@ import SwiftUI
 struct HomeScreen: View {
 	@StateObject var router: Router<Routes>
 	
-	@StateObject var viewModel: HomeViewModel = HomeViewModel(authenticationRepository: AuthenticationRepositoryImpl())
+	@StateObject var viewModel: HomeViewModel = HomeViewModel()
 	
     var body: some View {
 		GeometryReader { geometry in
