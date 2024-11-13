@@ -7,21 +7,59 @@
 
 import SwiftUI
 
+struct UserMenuItem {
+	let title: String
+	let iconName: String
+}
+
+enum UserMenuSheetItems: CaseIterable {
+	case settings
+	case help
+	case logout
+	
+	var menuItem: UserMenuItem {
+		switch self {
+		case .settings:
+			return UserMenuItem(title: "Settings", iconName: "gear")
+		case .help:
+			return UserMenuItem(title: "Help", iconName: "questionmark.circle")
+		case .logout:
+			return UserMenuItem(title: "Logout", iconName: "rectangle.portrait.and.arrow.right")
+		}
+	}
+}
 struct UserMenuSheet: View {
 	
 	@StateObject  var router: Router<Routes>
-	
+	@StateObject var viewModel: UserMenuSheetViewModel = UserMenuSheetViewModel()
 	
 	init(router: Router<Routes>) {
 		_router = StateObject(wrappedValue: router)
 	}
 	var body: some View {
-		VStack {
-			UserCard(
-				name: .constant("Sebastijan Zindl"), email: .constant("sebastijanzindl@protonmail.com"), imageURL: .constant("https://images.unsplash.com/photo-1633957897986-70e83293f3ff?q=80&w=2163&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")
-			)
+		VStack(alignment: .center, spacing: 24) {
+			if let user = viewModel.user {
+				UserCard(
+					name: user.name,
+					email: user.email,
+					imageURL: user.avatar != nil ? "http://localhost:8080/\(user.avatar!)" : ""
+				)
+			}
+			VStack(alignment: .leading, spacing: 12) {
+				ForEach(UserMenuSheetItems.allCases, id: \.self) { item in
+					UserMenuSheetNavigationItem(iconName: item.menuItem.iconName, text: item.menuItem.title) {
+						print("hello wordl")
+					}
+				}
+			}.padding()
+			
+	
 			
 		}.presentationDetents([.medium])
+			.presentationDragIndicator(.visible)
+			.onAppear {
+				viewModel.getUser()
+			}
 
 	}
 }

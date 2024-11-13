@@ -8,9 +8,9 @@ import SwiftUI
 import NukeUI
 
 struct UserCard: View {
-	@Binding var name: String
-	@Binding var email: String
-	@Binding var imageURL: String
+	@State var name: String
+	@State var email: String
+	@State var imageURL: String
 	
 	var body: some View {
 		HStack(alignment: .center, spacing: 8) {
@@ -46,8 +46,8 @@ struct UserCard: View {
 
 #Preview {
 	UserCard(
-		name: .constant("Sebastijan Zindl"),
-		email: .constant("sebastijanzindl@gmail.com"),
-		imageURL: .constant("https://picsum.photos/64/64")
+		name: ("Sebastijan Zindl"),
+		email: ("sebastijanzindl@gmail.com"),
+		imageURL: ("https://picsum.photos/64/64")
 	)
 }

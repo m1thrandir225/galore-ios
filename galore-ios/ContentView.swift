@@ -28,8 +28,8 @@ struct ContentView: View {
 			}
 		}.onAppear {
 			Task {
-				await authService.checkAuthentication()
-					 }
+				try await authService.checkAuthentication()
+			}
 		}
 	}
 }

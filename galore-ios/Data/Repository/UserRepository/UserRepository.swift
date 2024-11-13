@@ -6,7 +6,10 @@
 //
 
 protocol UserRepository {
-	func getUserDetails() async throws -> User
+	func getUser() -> User?
+	func saveUser(of user: User) throws -> User
+	func getUserId()-> String?
+
 //	func getUserLikedFlavours(userId: String) async throws -> [Flavour]
 //	func getUserLikedCocktails(userId: String) async throws -> [Cocktail]
 //	func updateUserInformation() async throws -> User

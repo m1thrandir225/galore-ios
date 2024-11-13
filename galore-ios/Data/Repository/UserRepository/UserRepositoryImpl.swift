@@ -6,15 +6,21 @@
 //
 import Foundation
 
-@MainActor
+
 final class UserRepositoryImpl: UserRepository {
 	private let userManager: UserManager = UserManager.shared
 	
-	func getUserDetails() async throws -> User {
-		guard let user = userManager.user else {
-			throw UserManagerError.noUserFound
-		}
+	func getUser() -> User? {
+		return userManager.user
+	}
+	func saveUser(of user: User) throws -> User {
+		userManager.setUser(user)
+		
 		return user
+	}
+	
+	func getUserId() -> String? {
+		return userManager.userId
 	}
 	
 }

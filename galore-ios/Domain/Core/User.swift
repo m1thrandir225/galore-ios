@@ -20,6 +20,7 @@ public final class User: Codable, Equatable, Sendable, Identifiable {
 	public let email: String
 	public let name: String
 	public let avatar: String?
+	
 
 	public let birthday: Date?
 	public let enabledPushNotifications: Bool

@@ -11,7 +11,7 @@ final class AuthenticationRepositoryImpl: AuthenticationRepository {
 	private let tokenManager: TokenManager = TokenManager.shared
 	private let userManager: UserManager = UserManager.shared
 	
-	func needsRefreshToken() -> Bool {
+	func shouldRefreshToken() -> Bool {
 		return tokenManager.shouldRefreshToken()
 	}
 	

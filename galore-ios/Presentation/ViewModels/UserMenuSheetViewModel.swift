@@ -13,4 +13,10 @@ class UserMenuSheetViewModel: ObservableObject {
 	
 	@Published var user: User? = nil
 	
+	func getUser() {
+		user = repository.getUser()
+	}
+	
+	
+	
 }
