@@ -21,16 +21,23 @@ class AuthService : ObservableObject {
 	
 	private init() {}
 	
-	func checkAuthentication() async  throws {
+	func checkAuthentication() async {
 		let hasToken = authenticationRepository.isAuthenticated()
 		let needsRefresh = authenticationRepository.shouldRefreshToken()
+		
+		print(hasToken, needsRefresh)
 		
 		if hasToken && !needsRefresh {
 			self.isLoading = false
 			self.isRefreshing = false
 			//TODO: the user should be cached not initalized on every startup
-			try await self.fetchUser()
 			self.isLoggedIn = true
+			do {
+				try await self.fetchUser()
+			} catch {
+				print(error.localizedDescription)
+			}
+			
 		} else {
 			do {
 				try await refreshSession()

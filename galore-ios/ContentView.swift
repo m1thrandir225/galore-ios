@@ -28,7 +28,7 @@ struct ContentView: View {
 			}
 		}.onAppear {
 			Task {
-				try await authService.checkAuthentication()
+				await authService.checkAuthentication()
 			}
 		}
 	}

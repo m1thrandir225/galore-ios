@@ -43,12 +43,14 @@ final class AuthenticationRepositoryImpl: AuthenticationRepository {
 		tokenManager.storeTokens(accessToken: response.accessToken, refreshToken: response.refreshToken, sessionId: response.sessionId, accessTokenExpiresAt: response.accessTokenExpiresAt, refreshTokenExpiresAt: response.refreshTokenExpiresAt)
 		
 		userManager.setUser(response.user)
+		userManager.userId = response.user.id
 	}
 	
 	func register(with response: RegisterResponse) async throws {
 		tokenManager.storeTokens(accessToken: response.accessToken, refreshToken: response.refreshToken, sessionId: response.sessionId, accessTokenExpiresAt: response.accessTokenExpiresAt, refreshTokenExpiresAt: response.refreshTokenExpiresAt)
 		
 		userManager.setUser(response.user)
+		userManager.userId = response.user.id
 	}
 	
 	func logout() async throws {
