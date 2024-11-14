@@ -25,8 +25,6 @@ class AuthService : ObservableObject {
 		let hasToken = authenticationRepository.isAuthenticated()
 		let needsRefresh = authenticationRepository.shouldRefreshToken()
 		
-		print(hasToken, needsRefresh)
-		
 		if hasToken && !needsRefresh {
 			self.isLoading = false
 			self.isRefreshing = false

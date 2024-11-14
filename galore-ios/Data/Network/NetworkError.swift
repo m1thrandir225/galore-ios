@@ -12,5 +12,7 @@ enum NetworkError: Error {
 	case requestFailed
 	case decodingFailed
 	case missingFiles
+	case unauthorized
+	case serverError
 	case unknown(Error)
 }

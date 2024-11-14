@@ -17,12 +17,18 @@ struct UserMenuSheetNavigationItem : View {
 					.resizable()
 					.scaledToFit()
 					.frame(width: 32, height: 32)
+					.foregroundStyle(Color("Secondary"))
 			}
 			if let text {
 				Text(text)
+					.fontWeight(.medium)
+				
+					.foregroundStyle(Color("MainColor"))
+					
 			}
 			Spacer()
 			Image(systemName: "chevron.right")
+				.foregroundStyle(Color("Secondary"))
 		}
 		.onTapGesture {
 			onTap()
