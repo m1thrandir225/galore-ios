@@ -22,7 +22,7 @@ struct UserCard: View {
 						.clipShape(Circle())
 					
 				} else if state.isLoading {
-					ProgressView()
+						ProgressView()
 				} else {
 					Image(systemName: "person.crop.circle.fill")
 						.resizable()
