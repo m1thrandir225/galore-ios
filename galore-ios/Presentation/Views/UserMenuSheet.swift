@@ -29,12 +29,13 @@ enum UserMenuSheetItems: CaseIterable {
 	}
 }
 struct UserMenuSheet: View {
-	
+	var dismissSheet: () -> Void
 	@StateObject  var router: Router<Routes>
 	@StateObject var viewModel: UserMenuSheetViewModel = UserMenuSheetViewModel()
 	
-	init(router: Router<Routes>) {
+	init(router: Router<Routes>, dismissSheet: @escaping () -> Void ) {
 		_router = StateObject(wrappedValue: router)
+		self.dismissSheet = dismissSheet
 	}
 	var body: some View {
 		VStack(alignment: .center, spacing: 24) {
@@ -48,7 +49,26 @@ struct UserMenuSheet: View {
 			VStack(alignment: .leading, spacing: 12) {
 				ForEach(UserMenuSheetItems.allCases, id: \.self) { item in
 					UserMenuSheetNavigationItem(iconName: item.menuItem.iconName, text: item.menuItem.title) {
-						print("hello wordl")
+						switch item {
+						case .logout:
+							Task {
+									await viewModel.logout()
+							}
+						case .help:
+							Task {
+								dismissSheet()
+								try await Task.sleep(nanoseconds: 100)
+								router.routeTo(.help)
+							}
+							
+						case .settings:
+							Task {
+								dismissSheet()
+								try await Task.sleep(nanoseconds: 100)
+								router.routeTo(.settings)
+							}
+							
+						}
 					}
 				}
 			}.padding()
@@ -68,5 +88,5 @@ struct UserMenuSheet: View {
 	@Previewable @State  var route: Routes? = nil
 	let router = Router<Routes>(isPresented: Binding(projectedValue: $route))
 	
-	UserMenuSheet(router: router)
+	UserMenuSheet(router: router, dismissSheet: {})
 }

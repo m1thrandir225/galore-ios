@@ -43,11 +43,9 @@ public class Router<Destination: Routable>: ObservableObject {
 		}
 	}
 	
+	
 	func replaceStack(with destination: Destination) {
-		print(path)
 		path = NavigationPath([destination]) // Replace current stack with a single destination
-		print(path)
-
 	}
 	
 	public func replace(_ route: Destination) {

@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct HomeScreen: View {
+	@State var isPresented: Bool = false
 	@StateObject var router: Router<Routes>
 	
 	@StateObject var viewModel: HomeViewModel = HomeViewModel()
@@ -16,10 +17,15 @@ struct HomeScreen: View {
 		GeometryReader { geometry in
 			VStack(alignment: .center) {
 				AppHeader(openMenu: {
-					router.routeTo(Routes.menu)
+					isPresented = true
 				})
 				.padding([.top], geometry.safeAreaInsets.top)
 				ScrollView {
+					Button {
+						router.routeTo(.help)
+					} label: {
+						Text("Help")
+					}
 					Button(action: {
 						Task {
 							try await viewModel.logout()
@@ -29,8 +35,12 @@ struct HomeScreen: View {
 					}
 				}
 			}.ignoresSafeArea(.all)
+		}.sheet(isPresented: $isPresented) {
+			UserMenuSheet(router: router) {
+				isPresented = false
+			}
 		}
-    }
+	}
 }
 
 #Preview {

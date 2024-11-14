@@ -10,6 +10,7 @@ import SwiftUI
 @MainActor
 class UserMenuSheetViewModel: ObservableObject {
 	private var repository: UserRepository = UserRepositoryImpl()
+	private var authService: AuthService = AuthService.shared
 	
 	@Published var user: User? = nil
 	
@@ -17,6 +18,12 @@ class UserMenuSheetViewModel: ObservableObject {
 		user = repository.getUser()
 	}
 	
-	
+	func logout() async  {
+		do {
+			try await authService.logout()
+		} catch {
+			
+		}
+	}
 	
 }

@@ -17,7 +17,8 @@ enum Routes: Routable {
 	//	case verifyEmail(token: String)
 	//	case logout
 	case welcome
-	case menu
+	case help
+	case settings
 	
 	
 	@ViewBuilder
@@ -31,17 +32,19 @@ enum Routes: Routable {
 			WelcomeScreen(router: router)
 		case .home:
 			HomeScreen(router: router)
-		case .menu:
-			UserMenuSheet(router: router)
+		case .help:
+			HelpScreen(router: router)
+		case .settings:
+			SettingsScreen(router: router)
 		}
 	}
 	
 	var navigationType: NavigationType  {
 		switch self  {
-		case .login, .register, .welcome, .home:
+		case .login, .register, .welcome, .home, .help:
 				.push
-		case .menu:
-				.sheet
+		case .settings:
+				.fullScreenCover
 		}
 	}
 
