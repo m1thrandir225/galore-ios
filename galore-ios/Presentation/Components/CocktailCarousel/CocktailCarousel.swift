@@ -7,16 +7,35 @@
 import SwiftUI
 
 struct CocktailCarousel: View {
+	@State var title: String
 	@State var items: [Cocktail]
 	
-	init(items: [Cocktail]) {
+	init(items: [Cocktail], title: String) {
 		self.items = items
+		self.title = title
 	}
 	
 	var body: some View {
-		GeometryReader { reader in
-			SnapperView(size: reader.size, items: items)
+		VStack (alignment: .leading) {
+			HStack {
+				Text(title)
+					.font(.system(size: 28, weight: .bold))
+					.foregroundStyle(Color("OnBackground"))
+				Spacer()
+				Button {
+					
+				} label: {
+					Image(systemName: "chevron.right")
+						.foregroundStyle(Color("OnBackground"))
+				}
+			}.padding(.horizontal, 24)
+
+			
+			GeometryReader { reader in
+				SnapperView(size: reader.size, items: items)
+			}.frame(maxHeight: 300)
 		}
+		
 	}
 }
 
@@ -37,7 +56,7 @@ struct SnapperView: View {
 	init(size: CGSize, items: [Cocktail]) {
 		self.size = size
 		self.items = items
-		self.cardWidth = size.width * 0.80
+		self.cardWidth = size.width * 0.82
 		self.padding = (size.width - cardWidth) / 2.0
 		self.maxSwipeDistance = cardWidth + spacing
 	}
@@ -127,5 +146,5 @@ struct SnapperView: View {
 		)
 	]
 	
-	CocktailCarousel(items: cocktails)
+	CocktailCarousel(items: cocktails, title: "Packing a punch")
 }
