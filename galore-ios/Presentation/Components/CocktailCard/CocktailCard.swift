@@ -12,14 +12,16 @@ struct CocktailCard: View {
 	@State var title: String
 	@State var isLiked: Bool
 	@State var imageURL: URL
+	let width: CGFloat
 	
 	var onHeartPress: (Bool) -> Void
 	
-	init(title: String, isLiked: Bool, imageURL: URL, onHeartPress: @escaping (Bool) -> Void) {
+	init(title: String, isLiked: Bool, imageURL: URL, width: CGFloat = 300.0, onHeartPress: @escaping (Bool) -> Void) {
 		self.title = title
 		self.isLiked = isLiked
 		self.imageURL = imageURL
 		self.onHeartPress = onHeartPress
+		self.width = width
 	}
 	
 	var body: some View {
@@ -64,7 +66,7 @@ struct CocktailCard: View {
 				
 			}.padding(.all, 12)
 		}
-		.frame(width: 300)
+		.frame(width: width)
 		.background(Color("MainColor").opacity(0.1))
 		.clipShape(RoundedRectangle(cornerRadius: 12))
 		.overlay(
@@ -72,7 +74,6 @@ struct CocktailCard: View {
 				.stroke(Color("Outline"), lineWidth: 1)
 		)
 		.shadow(color: .gray.opacity(0.3), radius: 5, x: 0, y: 5)
-		.padding()
 		
 	}
 }
