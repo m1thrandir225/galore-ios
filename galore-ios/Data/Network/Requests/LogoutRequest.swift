@@ -11,10 +11,6 @@ struct LogoutRequest: NetworkRequest {
 	
 	let sessionId: String
 	
-	var baseURL: URL {
-		return URL(string: "http://localhost:8080")!
-	}
-	
 	var path: String {
 		return "/api/v1/logout"
 	}

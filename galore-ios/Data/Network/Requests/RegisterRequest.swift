@@ -13,9 +13,6 @@ struct RegisterRequest: NetworkRequest {
 		return .publicAccess
 	}
 	
-	var baseURL: URL {
-		return URL(string: "http://localhost:8080")!
-	}
 	var path: String {
 		return "/api/v1/register"
 	}

@@ -11,9 +11,6 @@ struct RefreshTokenRequest: NetworkRequest {
 	let refreshToken: String
 	let sessionId: String
 	
-	var baseURL: URL {
-		return URL(string: "http://localhost:8080")!
-	}
 	
 	var path: String {
 		return "/api/v1/refresh"

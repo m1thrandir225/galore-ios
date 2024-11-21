@@ -30,3 +30,10 @@ protocol NetworkRequest {
 	var files: [String: NetworkFile]? { get }
 	
 }
+
+
+extension NetworkRequest {
+	var baseURL: URL {
+		Config.apiBase.toUrl!
+	}
+}
