@@ -31,7 +31,6 @@ class UserManager {
 	
 	private(set) var user: User?
 	
-	
 	func setUser(_ user: User) {
 		self.user = user
 	}

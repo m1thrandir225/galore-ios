@@ -32,8 +32,4 @@ protocol NetworkRequest {
 }
 
 
-extension NetworkRequest {
-	var baseURL: URL {
-		Config.apiBase.toUrl!
-	}
-}
+
