@@ -12,6 +12,9 @@ struct CocktailCard: View {
 	@State var title: String
 	@State var isLiked: Bool
 	@State var imageURL: URL
+	
+	@State var opacity = 1.0
+	
 	let width: CGFloat
 	var onCardPress: () -> Void
 	
@@ -70,8 +73,23 @@ struct CocktailCard: View {
 				.stroke(Color("Outline"), lineWidth: 1)
 		)
 		.shadow(color: .gray.opacity(0.3), radius: 5, x: 0, y: 5)
+		.opacity(opacity)
 		.onTapGesture {
-			onCardPress()
+			Task {
+				withAnimation {
+					opacity = 0.5
+				}
+				onCardPress()
+				
+				try? await Task.sleep(nanoseconds: 500_000_000)
+				
+				withAnimation {
+					opacity = 1.0
+				}
+			}
+			
+			
+			
 		}
 	}
 }
