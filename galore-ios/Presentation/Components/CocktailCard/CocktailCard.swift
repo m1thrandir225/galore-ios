@@ -13,15 +13,16 @@ struct CocktailCard: View {
 	@State var isLiked: Bool
 	@State var imageURL: URL
 	let width: CGFloat
+	var onCardPress: () -> Void
 	
-	var onHeartPress: (Bool) -> Void
+
 	
-	init(title: String, isLiked: Bool, imageURL: URL, width: CGFloat = 300.0, onHeartPress: @escaping (Bool) -> Void) {
+	init(title: String, isLiked: Bool, imageURL: URL, width: CGFloat = 300.0, onCardPress: @escaping () -> Void) {
 		self.title = title
 		self.isLiked = isLiked
 		self.imageURL = imageURL
-		self.onHeartPress = onHeartPress
 		self.width = width
+		self.onCardPress = onCardPress
 	}
 	
 	var body: some View {
@@ -57,12 +58,7 @@ struct CocktailCard: View {
 				Text(title)
 					.font(.system(size: 16, weight: .semibold))
 					.foregroundStyle(Color("MainColor"))
-				
 				Spacer()
-				
-				HeartButton(isPressed: false) {
-					print("hello World")
-				}
 				
 			}.padding(.all, 12)
 		}
@@ -74,14 +70,19 @@ struct CocktailCard: View {
 				.stroke(Color("Outline"), lineWidth: 1)
 		)
 		.shadow(color: .gray.opacity(0.3), radius: 5, x: 0, y: 5)
-		
+		.onTapGesture {
+			onCardPress()
+		}
 	}
 }
 
 #Preview {
 	CocktailCard(
-		title: "Example Title", isLiked: true, imageURL: "https://images.unsplash.com/photo-1726853546098-380e29da9e31?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D".toUrl!	, onHeartPress: { _ in }
-	)
+		title: "Example Title", isLiked: true, imageURL: "https://images.unsplash.com/photo-1726853546098-380e29da9e31?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D".toUrl!,
+		width: 250
+	) {
+		print("hello world")
+	}
 }
 
 

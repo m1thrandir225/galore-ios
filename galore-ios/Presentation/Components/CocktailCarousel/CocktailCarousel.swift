@@ -9,10 +9,13 @@ import SwiftUI
 struct CocktailCarousel: View {
 	@State var title: String
 	@State var items: [Cocktail]
+	let isCarouselShowcase: Bool
 	
-	init(items: [Cocktail], title: String) {
+	
+	init(items: [Cocktail], title: String, isCarouselShowcase: Bool) {
 		self.items = items
 		self.title = title
+		self.isCarouselShowcase = isCarouselShowcase
 	}
 	
 	var body: some View {
@@ -32,8 +35,8 @@ struct CocktailCarousel: View {
 
 			
 			GeometryReader { reader in
-				SnapperView(size: reader.size, items: items)
-			}.frame(maxHeight: 300)
+				SnapperView(size: reader.size, items: items, isCarouselShowcase: isCarouselShowcase)
+			}.frame(height: 300)
 		}
 		
 	}
@@ -42,6 +45,7 @@ struct CocktailCarousel: View {
 struct SnapperView: View {
 	let size: CGSize
 	let items: [Cocktail]
+	let isCarouselShowcase: Bool
 	
 	private let padding: CGFloat
 	private let cardWidth: CGFloat
@@ -53,19 +57,20 @@ struct SnapperView: View {
 	@State private var totalDrag: CGFloat = 0.0
 	
 	
-	init(size: CGSize, items: [Cocktail]) {
+	init(size: CGSize, items: [Cocktail], isCarouselShowcase: Bool) {
 		self.size = size
 		self.items = items
-		self.cardWidth = size.width * 0.82
+		self.cardWidth = isCarouselShowcase ? size.width * 0.82 : 225
 		self.padding = (size.width - cardWidth) / 2.0
 		self.maxSwipeDistance = cardWidth + spacing
+		self.isCarouselShowcase = isCarouselShowcase
 	}
 	
 	var body: some View {
 		let offset: CGFloat = maxSwipeDistance - (maxSwipeDistance * CGFloat(currentCardIndex))
 		LazyHStack(spacing: spacing) {
 			ForEach(items, id: \.id) { item in
-				CocktailCard(title: item.name, isLiked: false, imageURL: item.imageUrl.toUrl!, width: cardWidth)  { _ in
+				CocktailCard(title: item.name, isLiked: false, imageURL: item.imageUrl.toUrl!, width: cardWidth) {
 					print("Hello World")
 				}
 				.offset(x: isDragging ? totalDrag : 0)
@@ -145,6 +150,12 @@ struct SnapperView: View {
 			instructions: "Combine all the ingredients in a highball glass with ice. Stir gently and garnish with celery."
 		)
 	]
+	ScrollView(.vertical, showsIndicators: false){
+		LazyVStack (alignment: .leading, spacing: 24){
+			CocktailCarousel(items: cocktails, title: "Packing a punch", isCarouselShowcase: true)
+			CocktailCarousel(items: cocktails, title: "Packing a punch", isCarouselShowcase: false)
+			CocktailCarousel(items: cocktails, title: "Packing a punch", isCarouselShowcase: false)
+		}
+	}.padding(.vertical)
 	
-	CocktailCarousel(items: cocktails, title: "Packing a punch")
 }
