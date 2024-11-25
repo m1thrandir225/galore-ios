@@ -10,12 +10,16 @@ struct CocktailCarousel: View {
 	@State var title: String
 	@State var items: [Cocktail]
 	let isCarouselShowcase: Bool
+	let onCardPress: () -> Void
+	let navigateToSection: () -> Void
 	
 	
-	init(items: [Cocktail], title: String, isCarouselShowcase: Bool) {
+	init(items: [Cocktail], title: String, isCarouselShowcase: Bool, navigateToSection: @escaping () -> Void, onCardPress: @escaping () -> Void) {
 		self.items = items
 		self.title = title
 		self.isCarouselShowcase = isCarouselShowcase
+		self.onCardPress = onCardPress
+		self.navigateToSection = navigateToSection
 	}
 	
 	var body: some View {
@@ -26,7 +30,7 @@ struct CocktailCarousel: View {
 					.foregroundStyle(Color("OnBackground"))
 				Spacer()
 				Button {
-					
+					navigateToSection()
 				} label: {
 					Image(systemName: "chevron.right")
 						.foregroundStyle(Color("OnBackground"))
@@ -35,7 +39,11 @@ struct CocktailCarousel: View {
 
 			
 			GeometryReader { reader in
-				SnapperView(size: reader.size, items: items, isCarouselShowcase: isCarouselShowcase)
+				SnapperView(size: reader.size,
+							items: items,
+							isCarouselShowcase: isCarouselShowcase,
+							onCardPress: onCardPress
+				)
 			}.frame(height: 300)
 		}
 		
@@ -46,6 +54,7 @@ struct SnapperView: View {
 	let size: CGSize
 	let items: [Cocktail]
 	let isCarouselShowcase: Bool
+	let onCardPress: () -> Void
 	
 	private let padding: CGFloat
 	private let cardWidth: CGFloat
@@ -57,22 +66,21 @@ struct SnapperView: View {
 	@State private var totalDrag: CGFloat = 0.0
 	
 	
-	init(size: CGSize, items: [Cocktail], isCarouselShowcase: Bool) {
+	init(size: CGSize, items: [Cocktail], isCarouselShowcase: Bool, onCardPress: @escaping() -> Void) {
 		self.size = size
 		self.items = items
 		self.cardWidth = isCarouselShowcase ? size.width * 0.82 : 225
 		self.padding = (size.width - cardWidth) / 2.0
 		self.maxSwipeDistance = cardWidth + spacing
 		self.isCarouselShowcase = isCarouselShowcase
+		self.onCardPress = onCardPress
 	}
 	
 	var body: some View {
 		let offset: CGFloat = maxSwipeDistance - (maxSwipeDistance * CGFloat(currentCardIndex))
 		LazyHStack(spacing: spacing) {
 			ForEach(items, id: \.id) { item in
-				CocktailCard(title: item.name, isLiked: false, imageURL: item.imageUrl.toUrl!, width: cardWidth) {
-					print("Hello World")
-				}
+				CocktailCard(title: item.name, isLiked: false, imageURL: item.imageUrl.toUrl!, width: cardWidth, onCardPress: onCardPress)
 				.offset(x: isDragging ? totalDrag : 0)
 				.animation(.snappy(duration: 0.4, extraBounce: 0.2), value: isDragging)
 			}
@@ -152,9 +160,23 @@ struct SnapperView: View {
 	]
 	ScrollView(.vertical, showsIndicators: false){
 		LazyVStack (alignment: .leading, spacing: 24){
-			CocktailCarousel(items: cocktails, title: "Packing a punch", isCarouselShowcase: true)
-			CocktailCarousel(items: cocktails, title: "Packing a punch", isCarouselShowcase: false)
-			CocktailCarousel(items: cocktails, title: "Packing a punch", isCarouselShowcase: false)
+			CocktailCarousel(items: cocktails,
+							 title: "Packing a punch",
+							 isCarouselShowcase: true,
+							 navigateToSection: {},
+							 onCardPress: {}
+			)
+			CocktailCarousel(items: cocktails,
+							 title: "Packing a punch",
+							 isCarouselShowcase: false,
+							 navigateToSection: {},
+							 onCardPress: {})
+			
+			CocktailCarousel(items: cocktails,
+							 title: "Packing a punch",
+							 isCarouselShowcase: false,
+							 navigateToSection: {},
+							 onCardPress: {})
 		}
 	}.padding(.vertical)
 	
