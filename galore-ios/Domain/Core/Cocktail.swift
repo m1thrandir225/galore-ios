@@ -46,15 +46,23 @@ public final class Cocktail: Identifiable, Codable, Equatable {
 		self.instructions = instructions
 	}
 	
+	public enum IngredientsCodingKeys: String, CodingKey {
+		 case ingredients
+	 }
+	
 	public init(from decoder: any Decoder) throws {
 		let container = try decoder.container(keyedBy: CodingKeys.self)
 		self.id = try container.decode(String.self, forKey: .id)
 		self.name = try container.decode(String.self, forKey: .name)
 		self.isAlchoholic = try container.decode(Bool.self, forKey: .isAlchoholic)
 		self.glass = try container.decode(String.self, forKey: .glass)
-		self.imageUrl = try container.decode(String.self, forKey: .imageUrl)
+		self.imageUrl = "http://localhost:8080/\(try container.decode(String.self, forKey: .imageUrl))"
 		self.embedding = try container.decode([Float32].self, forKey: .embedding)
-		self.ingredients = try container.decode([CocktailIngredient].self, forKey: .ingredients)
+		
+		let ingredientsContainer = try container.nestedContainer(keyedBy: IngredientsCodingKeys.self, forKey: .ingredients)
+		self.ingredients = try ingredientsContainer.decode([CocktailIngredient].self, forKey: .ingredients)
+		
+		
 		self.instructions = try container.decode(String.self, forKey: .instructions)
 	}
 }
