@@ -13,7 +13,7 @@ struct LoginScreen: View {
 	@State private var email: String = ""
 	@State private var password: String = ""
 	
-	@StateObject var router: Router<Routes>
+	@StateObject var router: Router<AuthRoutes>
 	@StateObject private var viewModel = LoginViewModel()
 	
 	@FocusState private var focus: Field?
@@ -41,7 +41,7 @@ struct LoginScreen: View {
 		let index = max(currentIndex.rawValue - 1, firstIndex)
 		self.focus = Field(rawValue: index)
 	}
-	init(router: Router<Routes>) {
+	init(router: Router<AuthRoutes>) {
 		_router = StateObject(wrappedValue: router)
 	}
 	
@@ -150,7 +150,7 @@ struct LoginScreen: View {
 }
 
 #Preview {
-	@Previewable @State  var authRoute: Routes? = nil
-	let router = Router<Routes>(isPresented: Binding(projectedValue: $authRoute))
+	@Previewable @State  var authRoute: AuthRoutes? = nil
+	let router = Router<AuthRoutes>(isPresented: Binding(projectedValue: $authRoute))
 	LoginScreen(router: router)
 }

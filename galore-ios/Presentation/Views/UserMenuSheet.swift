@@ -30,10 +30,10 @@ enum UserMenuSheetItems: CaseIterable {
 }
 struct UserMenuSheet: View {
 	var dismissSheet: () -> Void
-	@StateObject  var router: Router<Routes>
+	@StateObject  var router: Router<TabRoutes>
 	@StateObject var viewModel: UserMenuSheetViewModel = UserMenuSheetViewModel()
 	
-	init(router: Router<Routes>, dismissSheet: @escaping () -> Void ) {
+	init(router: Router<TabRoutes>, dismissSheet: @escaping () -> Void ) {
 		_router = StateObject(wrappedValue: router)
 		self.dismissSheet = dismissSheet
 	}
@@ -65,7 +65,7 @@ struct UserMenuSheet: View {
 							Task {
 								dismissSheet()
 								try await Task.sleep(nanoseconds: 100)
-								router.routeTo(.settings)
+								router.routeTo(.settingsOverview)
 							}
 							
 						}
@@ -85,8 +85,8 @@ struct UserMenuSheet: View {
 }
 
 #Preview {
-	@Previewable @State  var route: Routes? = nil
-	let router = Router<Routes>(isPresented: Binding(projectedValue: $route))
+	@Previewable @State  var route: TabRoutes? = nil
+	let router = Router<TabRoutes>(isPresented: Binding(projectedValue: $route))
 	
 	UserMenuSheet(router: router, dismissSheet: {})
 }

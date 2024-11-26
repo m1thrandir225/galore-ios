@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct WelcomeScreen: View {
-	@StateObject var router: Router<Routes>
+	@StateObject var router: Router<AuthRoutes>
 	
-	init(router: Router<Routes>) {
+	init(router: Router<AuthRoutes>) {
 		_router = StateObject(wrappedValue: router)
 	}
 	
@@ -62,7 +62,7 @@ struct WelcomeScreen: View {
 }
 
 #Preview {
-	@Previewable @State  var authRoute: Routes? = nil
-	let router = Router<Routes>(isPresented: Binding(projectedValue: $authRoute))
+	@Previewable @State  var authRoute: AuthRoutes? = nil
+	let router = Router<AuthRoutes>(isPresented: Binding(projectedValue: $authRoute))
 	WelcomeScreen(router: router)
 }

@@ -31,10 +31,10 @@ struct RegisterScreen: View {
 	@EnvironmentObject var authService: AuthService
 	@State var currentStep: RegisterStep = .info
 	
-	@StateObject var router: Router<Routes>
+	@StateObject var router: Router<AuthRoutes>
 	@StateObject private var viewModel = RegisterViewModel()
 	
-	init(router: Router<Routes>) {
+	init(router: Router<AuthRoutes>) {
 		_router = StateObject(wrappedValue: router)
 	}
 	
@@ -132,8 +132,8 @@ struct RegisterScreen: View {
 
 
 #Preview {
-	@Previewable @State  var authRoute: Routes? = nil
-	let router = Router<Routes>(isPresented: Binding(projectedValue: $authRoute))
+	@Previewable @State  var authRoute: AuthRoutes? = nil
+	let router = Router<AuthRoutes>(isPresented: Binding(projectedValue: $authRoute))
 	
 	RegisterScreen(router: router)
 }

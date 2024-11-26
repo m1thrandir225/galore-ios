@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct HelpScreen: View {
-	@StateObject  var router: Router<Routes>
+	@StateObject  var router: Router<TabRoutes>
 	
-	init(router: Router<Routes>) {
+	init(router: Router<TabRoutes>) {
 		_router = StateObject(wrappedValue: router)
 	}
     var body: some View {
@@ -19,7 +19,7 @@ struct HelpScreen: View {
 }
 
 #Preview {
-	@Previewable @State  var route: Routes? = nil
-	let router = Router<Routes>(isPresented: Binding(projectedValue: $route))
+	@Previewable @State  var route: TabRoutes? = nil
+	let router = Router<TabRoutes>(isPresented: Binding(projectedValue: $route))
 	HelpScreen(router: router)
 }
