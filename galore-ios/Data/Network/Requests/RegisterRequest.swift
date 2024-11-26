@@ -14,7 +14,7 @@ struct RegisterRequest: NetworkRequest {
 	}
 	
 	var path: String {
-		return "/api/v1/register"
+		return "/register"
 	}
 	
 	var method: HTTPMethod {

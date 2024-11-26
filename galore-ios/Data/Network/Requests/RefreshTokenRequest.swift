@@ -13,7 +13,7 @@ struct RefreshTokenRequest: NetworkRequest {
 	
 	
 	var path: String {
-		return "/api/v1/refresh"
+		return "/refresh"
 	}
 	
 	var method: HTTPMethod {

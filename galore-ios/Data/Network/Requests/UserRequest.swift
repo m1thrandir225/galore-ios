@@ -12,7 +12,7 @@ struct UserRequest : NetworkRequest {
 	let userId: String
 	
 	var path: String {
-		return "/api/v1/users/\(userId)"
+		return "/users/\(userId)"
 	}
 	
 	var method: HTTPMethod {

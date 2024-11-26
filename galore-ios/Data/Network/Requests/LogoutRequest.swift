@@ -12,7 +12,7 @@ struct LogoutRequest: NetworkRequest {
 	let sessionId: String
 	
 	var path: String {
-		return "/api/v1/logout"
+		return "/logout"
 	}
 	
 	var method: HTTPMethod {

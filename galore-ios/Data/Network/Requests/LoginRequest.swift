@@ -17,7 +17,7 @@ struct LoginRequest: Codable, NetworkRequest {
 	}
 	
 	var path: String {
-		return "/api/v1/login"
+		return "/login"
 	}
 
 	var method: HTTPMethod {
