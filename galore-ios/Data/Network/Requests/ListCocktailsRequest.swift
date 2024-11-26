@@ -1,18 +1,18 @@
 //
-//  UserRequest.swift
+//  ListCocktails.swift
 //  galore-ios
 //
-//  Created by Sebastijan Zindl on 12.11.24.
+//  Created by Sebastijan Zindl on 26.11.24.
 //
 import Foundation
 
-struct UserRequest : NetworkRequest {
-	typealias Response = User
+struct ListCocktailsRequest : NetworkRequest {
+	typealias Response = [Cocktail]
 	
-	let userId: String
+	var searchQuery: String = ""
 	
 	var path: String {
-		return "/users/\(userId)"
+		return "/cocktails"
 	}
 	
 	var method: HTTPMethod {
@@ -24,7 +24,7 @@ struct UserRequest : NetworkRequest {
 	}
 	
 	var parameters: [String : Any]? {
-		return nil
+		return ["search": searchQuery]
 	}
 	
 	var requestEncoding: RequestEncoding {
@@ -32,12 +32,14 @@ struct UserRequest : NetworkRequest {
 	}
 	
 	var accessType: AcessType {
-		.privateAccess
+		return .privateAccess
 	}
 	
 	var files: [String : NetworkFile]? {
 		return nil
 	}
 	
-	
+	init(searchQuery: String = "") {
+		self.searchQuery = searchQuery
+	}
 }

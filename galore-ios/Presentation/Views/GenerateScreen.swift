@@ -1,25 +1,28 @@
 //
-//  HelpScreen.swift
+//  GenerateScreen.swift
 //  galore-ios
 //
-//  Created by Sebastijan Zindl on 14.11.24.
+//  Created by Sebastijan Zindl on 26.11.24.
 //
-
 import SwiftUI
 
-struct HelpScreen: View {
+struct GenerateScreen :  View {
 	@StateObject  var router: Router<TabRoutes>
 	
 	init(router: Router<TabRoutes>) {
 		_router = StateObject(wrappedValue: router)
 	}
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-    }
+	
+	var body: some View {
+		ScrollView {
+			Text("Generate Screen")
+		}
+	}
 }
 
 #Preview {
 	@Previewable @State  var route: TabRoutes? = nil
 	let router = Router<TabRoutes>(isPresented: Binding(projectedValue: $route))
-	HelpScreen(router: router)
+	
+	GenerateScreen(router: router)
 }
