@@ -8,21 +8,19 @@
 import Foundation
 import SwiftUI
 
-enum Routes: Routable {
+enum AuthRoutes: Routable {
+	case welcome
 	case login
 	case register
-	case home
 	//	case forgotPassword
 	//	case resetPassword(token: String)
 	//	case verifyEmail(token: String)
 	//	case logout
-	case welcome
-	case help
-	case settings
+
 	
 	
 	@ViewBuilder
-	func viewToDisplay(router: Router<Routes>) -> some View {
+	func viewToDisplay(router: Router<AuthRoutes>) -> some View {
 		switch self {
 		case .login:
 			LoginScreen(router: router)
@@ -30,21 +28,13 @@ enum Routes: Routable {
 			RegisterScreen(router: router)
 		case .welcome:
 			WelcomeScreen(router: router)
-		case .home:
-			HomeScreen(router: router)
-		case .help:
-			HelpScreen(router: router)
-		case .settings:
-			SettingsScreen(router: router)
 		}
 	}
 	
 	var navigationType: NavigationType  {
 		switch self  {
-		case .login, .register, .welcome, .home, .help:
+		case .login, .register, .welcome:
 				.push
-		case .settings:
-				.fullScreenCover
 		}
 	}
 

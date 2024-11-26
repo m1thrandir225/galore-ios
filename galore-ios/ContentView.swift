@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
 	@EnvironmentObject private var authService: AuthService
-	
+	@State private var isPresented: Bool = false
 	
 	var body: some View {
 		Group {
@@ -17,13 +17,9 @@ struct ContentView: View {
 				LoadingScreen()
 			} else {
 				if authService.isLoggedIn {
-					RoutingView(Routes.self) { router in
-						HomeScreen(router: router)
-					}
+					TabRoutesView()
 				} else {
-					RoutingView(Routes.self) { router in
-						WelcomeScreen(router: router)
-					}
+					AuthRoutesView()
 				}
 			}
 		}.onAppear {
