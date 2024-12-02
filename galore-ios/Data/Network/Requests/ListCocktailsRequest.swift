@@ -9,7 +9,7 @@ import Foundation
 struct ListCocktailsRequest : NetworkRequest {
 	typealias Response = [Cocktail]
 	
-	var searchQuery: String = ""
+	var searchQuery: String
 	
 	var path: String {
 		return "/cocktails"

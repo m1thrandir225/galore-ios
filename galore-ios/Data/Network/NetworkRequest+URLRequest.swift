@@ -19,9 +19,12 @@ extension NetworkRequest {
 			}
 		}
 		
+		
 		guard let url = urlComponents.url else {
 			throw NetworkError.invalidURL
 		}
+		print(url)
+		
 		
 		var request = URLRequest(url: url)
 		request.httpMethod = method.rawValue

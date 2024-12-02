@@ -8,33 +8,50 @@ import SwiftUI
 
 struct CocktailGrid : View {
 	@State var items: [Cocktail]
-	@State var title: String
+	var title: String? = nil
 	var onCardPress: () -> Void
 	
 	let columns = [GridItem(.fixed(180)), GridItem(.fixed(180))]
 
-	init(items: [Cocktail], title: String, onCardPress: @escaping () -> Void) {
+	init(items: [Cocktail], title: String? = nil, onCardPress: @escaping () -> Void) {
 		self.items = items
 		self.title = title
 		self.onCardPress = onCardPress
 	}
 	
 	var body: some View {
-		ScrollView {
-			LazyVGrid(columns: columns, alignment: .center, spacing: 24){
-				ForEach(items, id: \.id) { item in
-					CocktailCard (
-						title: item.name,
-						isLiked: false,
-						imageURL: item.imageUrl.toUrl!,
-						width: 180,
-						onCardPress: onCardPress
-					)
+		if let title = title {
+			ScrollView {
+				LazyVGrid(columns: columns, alignment: .center, spacing: 24){
+					ForEach(items, id: \.id) { item in
+						CocktailCard (
+							title: item.name,
+							isLiked: false,
+							imageURL: item.imageUrl.toUrl!,
+							width: 180,
+							onCardPress: onCardPress
+						)
+					}
+				}
+			}
+			.navigationBarTitle(title)
+			.navigationBarTitleDisplayMode(.large)
+		} else {
+			ScrollView {
+				LazyVGrid(columns: columns, alignment: .center, spacing: 24){
+					ForEach(items, id: \.id) { item in
+						CocktailCard (
+							title: item.name,
+							isLiked: false,
+							imageURL: item.imageUrl.toUrl!,
+							width: 180,
+							onCardPress: onCardPress
+						)
+					}
 				}
 			}
 		}
-		.navigationBarTitle(title)
-		.navigationBarTitleDisplayMode(.large)
+		
 	}
 }
 

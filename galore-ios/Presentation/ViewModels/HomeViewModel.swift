@@ -9,10 +9,11 @@ import Foundation
 @MainActor
 class HomeViewModel: ObservableObject {
 	private var authService: AuthService = .shared
-	private var networkService: NetworkService = .shared
+	private var cocktailService: CocktailService = CocktailService.shared
 	
 	@Published var errorMessage: String?
-	@Published var cocktails: [Cocktail]? = nil
+	@Published var isLoading: Bool = false
+	@Published var results: [Cocktail]? = nil
  
 	
 	func logout() async throws {
@@ -23,12 +24,16 @@ class HomeViewModel: ObservableObject {
 		}
 	}
 	
-	func getHomeScreen() async throws {
+	func getCocktails() async{
+		isLoading = true
+		defer {
+			isLoading = false
+		}
+		
 		do {
-			let request = ListCocktailsRequest()
-			let response = try await networkService.execute(request)
-			cocktails = response
+			let cocktails = try await cocktailService.searchCocktails()
 			
+			results = cocktails
 		} catch {
 			errorMessage = error.localizedDescription
 		}

@@ -26,12 +26,12 @@ struct HomeScreen: View {
 			}) {
 				Text("Logout")
 			}
-			if let cocktails = viewModel.cocktails {
+			if let cocktails = viewModel.results {
 				CocktailGrid(items: cocktails, title: "Items", onCardPress: {})
 			}
 		}.onAppear {
 			Task {
-				try await viewModel.getHomeScreen()
+				await viewModel.getCocktails()
 			}
 		}
 		

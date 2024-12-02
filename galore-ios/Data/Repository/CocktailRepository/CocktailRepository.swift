@@ -7,9 +7,9 @@
 import Foundation
 
 protocol CocktailRepository {
-	func saveCocktails(with items: [Cocktail]) async throws //save them to in-memory store
 	func addCocktails(_ new: [Cocktail])
-	func getCocktails() async throws -> [Cocktail] //fetch them from in-memory
-	func getCocktail(for id: String) async throws -> Cocktail? // fetch single cocktail
-	func searchCocktails(for query: String) throws -> [Cocktail]
+	func addCocktail(_ cocktail: Cocktail)
+	func getCocktails() -> [Cocktail] //fetch them from in-memory
+	func getCocktail(with id: String) throws -> Cocktail? // fetch single cocktail
+	func searchCocktails(with query: String) throws -> [Cocktail]
 }

@@ -8,7 +8,6 @@ import SwiftUI
 
 struct TabRoutesView : View {
 	@State var isPresented: Bool = false
-	private var cocktailRepository = CocktailRepositoryImpl.shared
 	private var networkService = NetworkService.shared
 	var body: some View {
 		RoutingView(TabRoutes.self) { router in
@@ -34,12 +33,6 @@ struct TabRoutesView : View {
 				UserMenuSheet(router: router, dismissSheet: {
 					isPresented=false
 				})
-			}
-		}.onAppear {
-			Task {
-				let request = ListCocktailsRequest()
-				let response = try await networkService.execute(request)
-				cocktailRepository.addCocktails(response)
 			}
 		}
 
