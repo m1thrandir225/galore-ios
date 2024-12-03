@@ -62,7 +62,13 @@ struct RegisterScreen: View {
 				RegisterPersonalizationStep(birthday: $viewModel.birthday, networkFile: $viewModel.networkFile)
 					.transition(.slide.combined(with: .blurReplace))
 			}
-			
+			if let errorMessage = viewModel.errorMessage {
+				Text(errorMessage)
+					.foregroundStyle(.red)
+					.onAppear {
+						currentStep = .info
+					}
+			}
 			
 			VStack(alignment: .center, spacing: 24){
 				HStack {

@@ -9,7 +9,7 @@ import Foundation
 struct ListCocktailsRequest : NetworkRequest {
 	typealias Response = [Cocktail]
 	
-	var searchQuery: String = ""
+	var searchQuery: String? = nil
 	
 	var path: String {
 		return "/cocktails"
@@ -24,7 +24,10 @@ struct ListCocktailsRequest : NetworkRequest {
 	}
 	
 	var parameters: [String : Any]? {
-		return ["search": searchQuery]
+		if let searchQuery = searchQuery {
+			return ["search": searchQuery]
+		}
+		return nil
 	}
 	
 	var requestEncoding: RequestEncoding {
@@ -39,7 +42,7 @@ struct ListCocktailsRequest : NetworkRequest {
 		return nil
 	}
 	
-	init(searchQuery: String = "") {
+	init(searchQuery: String? = nil) {
 		self.searchQuery = searchQuery
 	}
 }

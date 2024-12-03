@@ -32,8 +32,10 @@ class LoginViewModel:  ObservableObject {
 		
 		do {
 			try await authService.login(email: email, password: password)
+		} catch AuthError.invalidCredentials {
+			errorMessage = "Your credentials are invalid. Please try again"
 		} catch {
-			errorMessage = error.localizedDescription
+			errorMessage = "Something went wrong. Please try again"
 		}
 	}
 }
