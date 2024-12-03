@@ -15,6 +15,7 @@ class RegisterViewModel: ObservableObject {
 	@Published var birthday: Date?
 	@Published var networkFile: NetworkFile?
 	@Published var isLoading: Bool = false
+	@Published var errorMessage: String? = nil
 	
 	private let authService: AuthService = .shared
 	
@@ -38,8 +39,11 @@ class RegisterViewModel: ObservableObject {
 	
 	
 	func register(completion: () -> ()) async throws {
+		self.isLoading = true
+		defer {
+			self.isLoading = false
+		}
 		do {
-			self.isLoading = true
 			//TODO: implement
 			guard let networkFile else { return }
 			guard let birthday else { return }
@@ -59,9 +63,10 @@ class RegisterViewModel: ObservableObject {
 			self.isLoading = false
 			completion()
 			
+		} catch AuthError.userExists {
+			errorMessage = "A user with this email already exists."
 		} catch {
-			self.isLoading = false
-			
+			errorMessage = "Something went wrong."
 		}
 		
 	}

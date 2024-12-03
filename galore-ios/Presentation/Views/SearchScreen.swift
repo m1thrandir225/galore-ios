@@ -9,12 +9,13 @@ import SwiftUI
 struct SearchScreen: View {
 	@StateObject  var router: Router<TabRoutes>
 	@StateObject var viewModel: SearchScreenViewModel = SearchScreenViewModel()
-	
+
 	@State var searchText: String = ""
-	
 	@State private var showingHeader = true
-	@State private var turningPoint = CGFloat.zero // ADDED
-	let thresholdScrollDistance: CGFloat = 50 // ADDED
+	@State private var turningPoint = CGFloat.zero
+	
+	let thresholdScrollDistance: CGFloat = 10
+	let columns = [GridItem(.fixed(180)), GridItem(.fixed(180))]
 	
 	@FocusState private var focus: Field?
 	
@@ -22,7 +23,7 @@ struct SearchScreen: View {
 		case search
 	}
 	
-	let columns = [GridItem(.fixed(180)), GridItem(.fixed(180))]
+	
 	
 	init(router: Router<TabRoutes>) {
 		_router = StateObject(wrappedValue: router)
@@ -77,6 +78,7 @@ struct SearchScreen: View {
 				ProgressView()
 			}
 			
+			
 			if let cocktails = viewModel.results {
 				GeometryReader { outerReader in
 					let outerHeight = outerReader.size.height
@@ -100,18 +102,23 @@ struct SearchScreen: View {
 								)
 								Color.clear
 									.onChange(of: minY) { oldVal, newVal in
-										if (showingHeader && newVal > oldVal) || (!showingHeader && newVal < oldVal) {
-											   turningPoint = newVal
-										   }
-										if (showingHeader && (turningPoint - newVal) > thresholdScrollDistance) ||
-											(!showingHeader && (newVal - turningPoint) > thresholdScrollDistance) {
-											showingHeader = newVal > turningPoint
+										Task(priority: .userInitiated) {
+											if (showingHeader && newVal > oldVal) || (!showingHeader && newVal < oldVal) {
+												   turningPoint = newVal
+											   }
+											if (showingHeader && (turningPoint - newVal) > thresholdScrollDistance) ||
+												(!showingHeader && (newVal - turningPoint) > thresholdScrollDistance) {
+												showingHeader = newVal > turningPoint
+											}
 										}
+										
 									}
 							}
 						}
 					}.coordinateSpace(name: "ContentScrollView")
 				}.padding(.top, 1)
+			} else {
+				Spacer()
 			}
 		}.animation(.easeInOut, value: showingHeader)
 	}

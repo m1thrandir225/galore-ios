@@ -12,35 +12,11 @@ import Lottie
 struct LoginScreen: View {
 	@State private var email: String = ""
 	@State private var password: String = ""
+	@State private var showPassword: Bool = false
 	
 	@StateObject var router: Router<AuthRoutes>
 	@StateObject private var viewModel = LoginViewModel()
 	
-	@FocusState private var focus: Field?
-	
-	private enum Field: Int, Hashable, CaseIterable {
-		case email
-		case password
-	}
-	
-	private func dismissKeyboard() {
-		self.focus = nil
-	}
-	
-	private func nextField() {
-		guard let currentIndex = focus,
-			  let lastIndex = Field.allCases.last?.rawValue else { return }
-		
-		let index = min(currentIndex.rawValue + 1, lastIndex)
-		self.focus = Field(rawValue: index)
-	}
-	private func previousField() {
-		guard let currentIndex = focus,
-			  let firstIndex = Field.allCases.first?.rawValue else { return }
-		
-		let index = max(currentIndex.rawValue - 1, firstIndex)
-		self.focus = Field(rawValue: index)
-	}
 	init(router: Router<AuthRoutes>) {
 		_router = StateObject(wrappedValue: router)
 	}
@@ -72,47 +48,16 @@ struct LoginScreen: View {
 					)
 				.keyboardType(.emailAddress)
 				.autocapitalization(.none)
-				.focused($focus, equals: Field.email)
 				
-				SecureField(
-					"Password",
-					text: $viewModel.password
-				)
-					.focused($focus, equals: Field.password)
-					.padding(.all, 20)
-						.overlay(
-							RoundedRectangle(cornerRadius: 8)
-								.stroke(Color("Outline"), lineWidth: 1.5)
-						)
+				PasswordField(text: $viewModel.password)
+				
+				
 				if let errorMessage = viewModel.errorMessage {
 					Text(errorMessage)
 						.foregroundStyle(.red)
 				}
 			}
 			.padding(.all, 20)
-			.toolbar {
-				ToolbarItemGroup(placement: .keyboard) {
-					Button {
-						dismissKeyboard()
-					} label: {
-						Image(systemName: "xmark")
-					}
-					
-					Spacer()
-					
-					Button {
-						previousField()
-					} label: {
-						Image(systemName: "chevron.up")
-					}
-					
-					Button {
-						nextField()
-					} label: {
-						Image(systemName: "chevron.down")
-					}
-				}
-			}
 			
 			Spacer(minLength: 64.0)
 			
@@ -122,10 +67,17 @@ struct LoginScreen: View {
 						await viewModel.login()
 					}
 				}) {
-					Text("Continue")
-						.font(.headline)
-						.padding(.all, 6)
-						.frame(maxWidth: .infinity)
+					if viewModel.isLoading {
+						ProgressView()
+							.tint(Color(.onMain))
+							.frame(maxWidth: .infinity)
+					} else {
+						Text("Continue")
+							.font(.headline)
+							.padding(.all, 6)
+							.frame(maxWidth: .infinity)
+					}
+					
 				}.padding([.leading, .trailing], 24)
 					.disabled(!viewModel.canContinue())
 					.buttonStyle(MainButtonStyle(isDisabled: !viewModel.canContinue()))
@@ -145,7 +97,6 @@ struct LoginScreen: View {
 			
 			Spacer()
 		}.navigationTitle("").navigationBarTitleDisplayMode(.inline).navigationBarBackButtonHidden(true).background(Color("Background"))
-	
 	}
 }
 
