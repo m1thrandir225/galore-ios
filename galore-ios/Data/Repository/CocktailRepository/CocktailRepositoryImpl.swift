@@ -17,7 +17,7 @@ final class CocktailRepositoryImpl : CocktailRepository {
 		return cocktailManager.getCocktail(with: id)
 	}
 	//Search if there is a match locally
-	func searchCocktails(with query: String) throws -> [Cocktail] {
+	func searchCocktails(with query: String?) throws -> [Cocktail] {
 		return try cocktailManager.searchCocktails(with: query)
 	}
 	

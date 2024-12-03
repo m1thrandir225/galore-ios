@@ -12,30 +12,33 @@ struct HomeScreen: View {
 	
 	@StateObject var viewModel: HomeViewModel = HomeViewModel()
 	
+	let columns = [GridItem(.fixed(180)), GridItem(.fixed(180))]
+	
+	
 	var body: some View {
 		ScrollView {
-			Button {
-				router.routeTo(.help)
-			} label: {
-				Text("Help")
+//			Button {
+//				router.routeTo(.help)
+//			} label: {
+//				Text("Help")
+//			}
+//			Button(action: {
+//				Task {
+//					try await viewModel.logout()
+//				}
+//			}) {
+//				Text("Logout")
+//			}
+			CocktailGrid(items: $viewModel.results) {
+				print("item clicked")
 			}
-			Button(action: {
-				Task {
-					try await viewModel.logout()
-				}
-			}) {
-				Text("Logout")
-			}
-			if let cocktails = viewModel.results {
-				CocktailGrid(items: cocktails, title: "Items", onCardPress: {})
-			}
-		}.onAppear {
+		}
+		.background(Color(.background))
+		.onAppear {
 			Task {
 				await viewModel.getCocktails()
 			}
 		}
-		
-		
 	}
 }
 

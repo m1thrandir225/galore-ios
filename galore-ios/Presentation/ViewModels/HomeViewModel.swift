@@ -13,7 +13,7 @@ class HomeViewModel: ObservableObject {
 	
 	@Published var errorMessage: String?
 	@Published var isLoading: Bool = false
-	@Published var results: [Cocktail]? = nil
+	@Published var results: [Cocktail] = []
  
 	
 	func logout() async throws {
@@ -24,15 +24,26 @@ class HomeViewModel: ObservableObject {
 		}
 	}
 	
+	func refresh() async {
+		isLoading = true
+		defer {
+			isLoading = false
+		}
+		do {
+			let cocktails = try await cocktailService.fetchCocktails()
+			results = cocktails
+		} catch {
+			
+		}
+	}
+	
 	func getCocktails() async{
 		isLoading = true
 		defer {
 			isLoading = false
 		}
-		
 		do {
 			let cocktails = try await cocktailService.searchCocktails()
-			
 			results = cocktails
 		} catch {
 			errorMessage = error.localizedDescription

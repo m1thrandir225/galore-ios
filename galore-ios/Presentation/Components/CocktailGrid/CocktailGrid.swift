@@ -7,52 +7,33 @@
 import SwiftUI
 
 struct CocktailGrid : View {
-	@State var items: [Cocktail]
-	var title: String? = nil
+	@Binding var items: [Cocktail]
+
 	var onCardPress: () -> Void
 	
 	let columns = [GridItem(.fixed(180)), GridItem(.fixed(180))]
-
-	init(items: [Cocktail], title: String? = nil, onCardPress: @escaping () -> Void) {
-		self.items = items
-		self.title = title
+	
+	init(items: Binding<[Cocktail]>, onCardPress: @escaping () -> Void) {
+		self._items = items
 		self.onCardPress = onCardPress
 	}
 	
 	var body: some View {
-		if let title = title {
-			ScrollView {
-				LazyVGrid(columns: columns, alignment: .center, spacing: 24){
-					ForEach(items, id: \.id) { item in
-						CocktailCard (
-							title: item.name,
-							isLiked: false,
-							imageURL: item.imageUrl.toUrl!,
-							width: 180,
-							onCardPress: onCardPress
-						)
-					}
-				}
-			}
-			.navigationBarTitle(title)
-			.navigationBarTitleDisplayMode(.large)
-		} else {
-			ScrollView {
-				LazyVGrid(columns: columns, alignment: .center, spacing: 24){
-					ForEach(items, id: \.id) { item in
-						CocktailCard (
-							title: item.name,
-							isLiked: false,
-							imageURL: item.imageUrl.toUrl!,
-							width: 180,
-							onCardPress: onCardPress
-						)
-					}
-				}
+		LazyVGrid(columns: columns, alignment: .center, spacing: 24){
+			ForEach(items, id: \.id) { item in
+				CocktailCard (
+					title: item.name,
+					isLiked: false,
+					imageURL: item.imageUrl.toUrl!,
+					width: 180,
+					onCardPress: onCardPress
+				)
+				.transition(.opacity.combined(with: .blurReplace))
 			}
 		}
-		
 	}
+	
+	
 }
 
 #Preview {
@@ -136,8 +117,4 @@ struct CocktailGrid : View {
 			instructions: "Combine all the ingredients in a highball glass with ice. Stir gently and garnish with celery."
 		)
 	]
-	NavigationView {
-		CocktailGrid(items: cocktails, title: "Sugary Delight") {
-		}
-	}
 }

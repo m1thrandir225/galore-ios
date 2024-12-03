@@ -29,7 +29,9 @@ struct TabRoutesView : View {
 						LibraryScreen(router: router)
 					}
 				}.accentColor(Color("MainColor"))
-			}.sheet(isPresented: $isPresented) {
+					.background(Color(.background))
+			}.background(Color(.background))
+			.sheet(isPresented: $isPresented) {
 				UserMenuSheet(router: router, dismissSheet: {
 					isPresented=false
 				})

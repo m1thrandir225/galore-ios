@@ -32,12 +32,16 @@ final class CocktailManager {
 		cocktails.append(contentsOf: unique)
 	}
 		
-	func searchCocktails(with query: String) throws -> [Cocktail ] {
-		return cocktails.filter { item in
-			item.name.contains(query) || item.ingredients.contains { ingredient in
-				ingredient.name.contains(query)
+	func searchCocktails(with query: String?) throws -> [Cocktail ] {
+		if let query = query {
+			return cocktails.filter { item in
+				item.name.contains(query) || item.ingredients.contains { ingredient in
+					ingredient.name.contains(query)
+				}
 			}
 		}
+		return getCocktails()
+		
 	}
 	
 }

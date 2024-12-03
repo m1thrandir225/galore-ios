@@ -11,5 +11,5 @@ protocol CocktailRepository {
 	func addCocktail(_ cocktail: Cocktail)
 	func getCocktails() -> [Cocktail] //fetch them from in-memory
 	func getCocktail(with id: String) throws -> Cocktail? // fetch single cocktail
-	func searchCocktails(with query: String) throws -> [Cocktail]
+	func searchCocktails(with query: String?) throws -> [Cocktail]
 }

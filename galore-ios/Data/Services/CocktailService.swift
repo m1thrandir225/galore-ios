@@ -12,22 +12,33 @@ class CocktailService {
 	private let networkService: NetworkService = NetworkService.shared
 	private let cocktailRepository: CocktailRepository = CocktailRepositoryImpl()
 	
-	func searchCocktails(query: String = "") async throws -> [Cocktail] {
+	init() {
+		Task {
+			let request = ListCocktailsRequest(searchQuery: "")
+			let response = try await networkService.execute(request)
+			cocktailRepository.addCocktails(response)
+		}
+	}
+	
+	func fetchCocktails(query: String? = nil) async throws -> [Cocktail] {
+		let request = ListCocktailsRequest(searchQuery: query)
+		let response = try await networkService.execute(request)
 		
+		return response
+	}
+	
+	func searchCocktails(query: String? = nil) async throws -> [Cocktail] {
 		let localCocktails = try cocktailRepository.searchCocktails(with: query)
-		print(localCocktails.count)
 		
 		if localCocktails.count > 0 {
 			return localCocktails
 		}
 		
-		let request = ListCocktailsRequest(searchQuery: query)
-		let response = try await networkService.execute(request)
 		
-		
+		let cocktails = try await fetchCocktails(query: query)
 		//Try to add them if we don't have them locally
-		cocktailRepository.addCocktails(response)
+		cocktailRepository.addCocktails(cocktails)
 		
-		return response
+		return cocktails
 	}
 }
