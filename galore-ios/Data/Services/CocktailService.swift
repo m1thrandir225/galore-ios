@@ -14,14 +14,14 @@ class CocktailService {
 	
 	init() {
 		Task {
-			let request = ListCocktailsRequest(searchQuery: "")
+			let request = GetCocktails(searchQuery: "")
 			let response = try await networkService.execute(request)
 			cocktailRepository.addCocktails(response)
 		}
 	}
 	
 	func fetchCocktails(query: String? = nil) async throws -> [Cocktail] {
-		let request = ListCocktailsRequest(searchQuery: query)
+		let request = GetCocktails(searchQuery: query)
 		let response = try await networkService.execute(request)
 		
 		return response

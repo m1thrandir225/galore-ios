@@ -20,7 +20,7 @@ struct TrackableScrollView<Header: View, Content: View>: View {
 			}
 			
 			GeometryReader { outerGeo in
-				let outerHeight = outerGeo.size.height
+				//let outerHeight = outerGeo.size.height
 				ScrollView(.vertical) {
 					content()
 						.background {

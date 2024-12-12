@@ -56,7 +56,11 @@ class NetworkService {
 		}
 		
 		do {
-			return try JSONDecoder().decode(T.Response.self, from: data)
+			if T.Response.self == Int.self {
+				return httpResponse.statusCode as! T.Response
+			} else {
+				return try JSONDecoder().decode(T.Response.self, from: data)
+			}
 		} catch {
 			print(String(describing: error))
 			throw NetworkError.decodingFailed

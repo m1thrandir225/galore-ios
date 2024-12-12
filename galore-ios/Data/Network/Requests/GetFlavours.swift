@@ -1,18 +1,16 @@
 //
-//  ListCocktails.swift
+//  GetFlavours.swift
 //  galore-ios
 //
-//  Created by Sebastijan Zindl on 26.11.24.
+//  Created by Sebastijan Zindl on 12.12.24.
 //
 import Foundation
 
-struct ListCocktailsRequest : NetworkRequest {
-	typealias Response = [Cocktail]
-	
-	var searchQuery: String? = nil
+struct GetFlavours : NetworkRequest {
+	typealias Response = [Flavour]
 	
 	var path: String {
-		return "/cocktails"
+		return "/flavours"
 	}
 	
 	var method: HTTPMethod {
@@ -24,9 +22,6 @@ struct ListCocktailsRequest : NetworkRequest {
 	}
 	
 	var parameters: [String : Any]? {
-		if let searchQuery = searchQuery {
-			return ["search": searchQuery]
-		}
 		return nil
 	}
 	
@@ -42,7 +37,5 @@ struct ListCocktailsRequest : NetworkRequest {
 		return nil
 	}
 	
-	init(searchQuery: String? = nil) {
-		self.searchQuery = searchQuery
-	}
+	
 }
