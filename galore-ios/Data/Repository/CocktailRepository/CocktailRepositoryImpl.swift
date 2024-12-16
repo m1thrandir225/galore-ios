@@ -29,4 +29,12 @@ final class CocktailRepositoryImpl : CocktailRepository {
 		cocktailManager.addCocktail(cocktail)
 	}
 	
+	func getFeatured()  -> [Cocktail] {
+		return cocktailManager.getFeatured()
+	}
+	
+	func addFeaturedCocktails(_ new: [Cocktail]) {
+		cocktailManager.addFeaturedCocktails(new)
+	}
+	
 }

@@ -41,4 +41,45 @@ class CocktailService {
 		
 		return cocktails
 	}
+	
+	func fetchFeatured() async throws -> [Cocktail] {
+		let request = GetDailyFeatured()
+		let response = try await networkService.execute(request)
+		
+		return response
+	}
+	
+	func getFeaturedCocktails() async throws -> [Cocktail] {
+//		let localFeatured =  cocktailRepository.getFeatured()
+//		
+//		if localFeatured.count > 0 {
+//			return localFeatured
+//		}
+//		
+		let cocktails = try await fetchFeatured()
+		
+		cocktailRepository.addFeaturedCocktails(cocktails)
+		
+		return cocktails
+	}
+	
+	func getCocktailsForUserCategories(categories: [Category]) async throws -> [GetCocktailsForCategoryResponse]{
+		try await withThrowingTaskGroup(of: GetCocktailsForCategoryResponse.self) { group in
+			// Create a task for each category
+			for category in categories {
+				group.addTask {
+					let request = GetCocktailsForCategory(categoryId: category.id)
+					return try await self.networkService.execute(request)
+				}
+			}
+			
+			// Collect results from all tasks
+			var finalResult: [GetCocktailsForCategoryResponse] = []
+			for try await response in group {
+				finalResult.append(response)
+			}
+			
+			return finalResult
+		}
+	}
 }

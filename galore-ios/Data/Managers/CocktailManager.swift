@@ -10,9 +10,13 @@ final class CocktailManager {
 	static let shared = CocktailManager()
 	
 	private var cocktails: [Cocktail] = []
+	private var featured: [Cocktail] = []
 	
 	func getCocktails() -> [Cocktail] {
 		return self.cocktails
+	}
+	func getFeatured() -> [Cocktail] {
+		return self.featured
 	}
 	
 	func getCocktail(with id: String) -> Cocktail? {
@@ -30,6 +34,13 @@ final class CocktailManager {
 		let unique = new.filter { !existingIds.contains($0.id)}
 	
 		cocktails.append(contentsOf: unique)
+	}
+	
+	func addFeaturedCocktails(_ new: [Cocktail]) {
+		let existingIds = Set(featured.map {$0.id})
+		let unique = new.filter { !existingIds.contains($0.id)}
+		
+		featured.append(contentsOf: unique)
 	}
 		
 	func searchCocktails(with query: String?) throws -> [Cocktail ] {

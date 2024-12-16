@@ -31,6 +31,17 @@ class UserManager {
 	
 	private(set) var user: User?
 	
+	private(set) var categoriesForUser: [Category]?
+	
+	func setCategoriesForUser(_ categories: [Category]) {
+		print(categories)
+		self.categoriesForUser = categories
+	}
+	
+	func clearCategoriesForUser() {
+		self.categoriesForUser = nil
+	}
+	
 	func setUser(_ user: User) {
 		self.user = user
 	}

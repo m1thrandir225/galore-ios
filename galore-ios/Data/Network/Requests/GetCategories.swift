@@ -1,18 +1,16 @@
 //
-//  CocktailsForCategory.swift
+//  GetCategories.swift
 //  galore-ios
 //
-//  Created by Sebastijan Zindl on 3.12.24.
+//  Created by Sebastijan Zindl on 12.12.24.
 //
 import Foundation
 
-struct GetCocktailsForCategory : NetworkRequest {
-	typealias Response = GetCocktailsForCategoryResponse
-	
-	var categoryId: String
+struct GetCategories : NetworkRequest {
+	typealias Response = [Category]
 	
 	var path: String {
-		return "/categories/\(categoryId)/cocktails"
+		return "/categories"
 	}
 	
 	var method: HTTPMethod {
@@ -20,7 +18,7 @@ struct GetCocktailsForCategory : NetworkRequest {
 	}
 	
 	var headers: [String : String]? {
-		return ["Content-Type": "application/json"]
+		return ["Content-Type" : "application/json"]
 	}
 	
 	var parameters: [String : Any]? {
@@ -39,7 +37,5 @@ struct GetCocktailsForCategory : NetworkRequest {
 		return nil
 	}
 	
-	init(categoryId: String) {
-		self.categoryId = categoryId
-	}
+	
 }

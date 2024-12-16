@@ -18,7 +18,7 @@ struct CocktailCard: View {
 	let width: CGFloat
 	var onCardPress: () -> Void
 	
-
+	
 	
 	init(title: String, isLiked: Bool, imageURL: URL, width: CGFloat = 300.0, onCardPress: @escaping () -> Void) {
 		self.title = title
@@ -44,16 +44,15 @@ struct CocktailCard: View {
 				} else if state.isLoading {
 					ProgressView()
 				} else {
-					Image(systemName: "")
-						.resizable()
-						.scaledToFit()
-						.frame(height:200)
+					Color.teritary
+						.frame(height: 200)
 						.clipShape(.rect(
 							topLeadingRadius: 12,
 							bottomLeadingRadius: 0,
 							bottomTrailingRadius: 0,
 							topTrailingRadius: 12
 						))
+					
 				}
 			}
 			
@@ -64,8 +63,10 @@ struct CocktailCard: View {
 				Spacer()
 				
 			}.padding(.all, 12)
+				.frame(height: 50)
 		}
-		.frame(width: width)
+
+		.frame(width: width, height: 250)
 		.background(Color("MainColor").opacity(0.1))
 		.clipShape(RoundedRectangle(cornerRadius: 12))
 		.overlay(

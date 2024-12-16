@@ -14,6 +14,7 @@ class AuthService : ObservableObject {
 	
 	private let networkService: NetworkService = NetworkService.shared
 	private let authenticationRepository: AuthenticationRepository = AuthenticationRepositoryImpl()
+	private let userManager: UserManager = .shared
 	
 	@Published var isLoggedIn: Bool = false
 	@Published var isLoading: Bool = false
@@ -32,6 +33,7 @@ class AuthService : ObservableObject {
 			self.isLoggedIn = true
 			do {
 				try await self.fetchUser()
+				try await self.getCategoriesForLikedFlavours(userId: userManager.userId!)
 			} catch {
 				print(error.localizedDescription)
 			}
@@ -66,6 +68,15 @@ class AuthService : ObservableObject {
 			throw AuthError.unknownError
 		}
 	}
+	
+	func getCategoriesForLikedFlavours(userId: String) async throws {
+		let request = GetCategoriesBasedOnLikedFlavours(userId: userId)
+		
+		let response = try await networkService.execute(request)
+		
+		userManager.setCategoriesForUser(response)
+	}
+	
 	
 	func register(email: String, password: String, name: String, birthday: Date, networkFile: NetworkFile)  async throws {
 		do {

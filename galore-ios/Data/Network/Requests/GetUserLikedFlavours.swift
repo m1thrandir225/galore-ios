@@ -1,18 +1,18 @@
 //
-//  CocktailsForCategory.swift
+//  GetLikedFlavour.swift
 //  galore-ios
 //
-//  Created by Sebastijan Zindl on 3.12.24.
+//  Created by Sebastijan Zindl on 12.12.24.
 //
 import Foundation
 
-struct GetCocktailsForCategory : NetworkRequest {
-	typealias Response = GetCocktailsForCategoryResponse
+struct GetUserLikedFlavours : NetworkRequest {
+	typealias Response = [Flavour]
 	
-	var categoryId: String
+	let id: String
 	
 	var path: String {
-		return "/categories/\(categoryId)/cocktails"
+		return "/users/\(id)/flavours"
 	}
 	
 	var method: HTTPMethod {
@@ -39,7 +39,5 @@ struct GetCocktailsForCategory : NetworkRequest {
 		return nil
 	}
 	
-	init(categoryId: String) {
-		self.categoryId = categoryId
-	}
+	
 }

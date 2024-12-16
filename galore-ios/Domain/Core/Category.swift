@@ -18,7 +18,7 @@ public final class Category: Identifiable, Codable, Equatable {
 	public let id: String
 	public let name: String
 	public let tag: String
-	public let createdAt: Date
+	public let createdAt: String
 	
 	public enum CodingKeys: String, CodingKey {
 		case id = "id"
@@ -32,10 +32,10 @@ public final class Category: Identifiable, Codable, Equatable {
 		self.id = try container.decode(String.self, forKey: .id)
 		self.name = try container.decode(String.self, forKey: .name)
 		self.tag = try container.decode(String.self, forKey: .tag)
-		self.createdAt = try container.decode(Date.self, forKey: .createdAt)
+		self.createdAt = try container.decode(String.self, forKey: .createdAt)
 	}
 	
-	public init (id: String, name: String, tag: String, createdAt: Date) {
+	public init (id: String, name: String, tag: String, createdAt: String) {
 		self.id = id
 		self.name = name
 		self.tag = tag

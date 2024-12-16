@@ -7,14 +7,14 @@
 import SwiftUI
 
 struct CocktailCarousel: View {
-	@State var title: String
-	@State var items: [Cocktail]
+	var title: String?
+	var items: [Cocktail]
 	let isCarouselShowcase: Bool
 	let onCardPress: () -> Void
 	let navigateToSection: () -> Void
 	
 	
-	init(items: [Cocktail], title: String, isCarouselShowcase: Bool, navigateToSection: @escaping () -> Void, onCardPress: @escaping () -> Void) {
+	init(items: [Cocktail], title: String? = nil, isCarouselShowcase: Bool, navigateToSection: @escaping () -> Void, onCardPress: @escaping () -> Void) {
 		self.items = items
 		self.title = title
 		self.isCarouselShowcase = isCarouselShowcase
@@ -24,20 +24,20 @@ struct CocktailCarousel: View {
 	
 	var body: some View {
 		VStack (alignment: .leading) {
-			HStack {
-				Text(title)
-					.font(.system(size: 28, weight: .bold))
-					.foregroundStyle(Color("OnBackground"))
-				Spacer()
-				Button {
-					navigateToSection()
-				} label: {
-					Image(systemName: "chevron.right")
+			if let title = title {
+				HStack {
+					Text(title)
+						.font(.system(size: 28, weight: .bold))
 						.foregroundStyle(Color("OnBackground"))
-				}
-			}.padding(.horizontal, 24)
-
-			
+					Spacer()
+					Button {
+						navigateToSection()
+					} label: {
+						Image(systemName: "chevron.right")
+							.foregroundStyle(Color("OnBackground"))
+					}
+				}.padding(.horizontal, 24)
+			}
 			GeometryReader { reader in
 				SnapperView(size: reader.size,
 							items: items,
@@ -71,7 +71,7 @@ struct SnapperView: View {
 		self.items = items
 		self.cardWidth = isCarouselShowcase ? size.width * 0.82 : 225
 		self.padding = (size.width - cardWidth) / 2.0
-		self.maxSwipeDistance = cardWidth + spacing
+		self.maxSwipeDistance = self.cardWidth + spacing
 		self.isCarouselShowcase = isCarouselShowcase
 		self.onCardPress = onCardPress
 	}
@@ -161,7 +161,6 @@ struct SnapperView: View {
 	ScrollView(.vertical, showsIndicators: false){
 		LazyVStack (alignment: .leading, spacing: 24){
 			CocktailCarousel(items: cocktails,
-							 title: "Packing a punch",
 							 isCarouselShowcase: true,
 							 navigateToSection: {},
 							 onCardPress: {}

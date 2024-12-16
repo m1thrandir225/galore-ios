@@ -17,26 +17,36 @@ struct HomeScreen: View {
 	
 	var body: some View {
 		ScrollView {
-//			Button {
-//				router.routeTo(.help)
-//			} label: {
-//				Text("Help")
-//			}
-//			Button(action: {
-//				Task {
-//					try await viewModel.logout()
-//				}
-//			}) {
-//				Text("Logout")
-//			}
-			CocktailGrid(items: $viewModel.results) {
-				print("item clicked")
+			if viewModel.isLoading {
+				ProgressView()
+			} else {
+				if viewModel.featuredCocktails.count > 0 {
+					CocktailCarousel(
+						items: viewModel.featuredCocktails,
+						isCarouselShowcase: true, navigateToSection: {},
+						onCardPress: {}
+					)
+				}
+				if viewModel.userRecommendedCocktails.count > 0 {
+					ForEach(viewModel.userRecommendedCocktails, id: \.category.id) { item in
+						CocktailCarousel(
+							items: item.cocktails,
+							title: item.category.name,
+							isCarouselShowcase: false,
+							navigateToSection: {},
+							onCardPress: {}
+						)
+					}
+				}
 			}
+			
 		}
 		.background(Color(.background))
 		.onAppear {
 			Task {
 				await viewModel.getCocktails()
+				await viewModel.getFeaturedCocktails()
+				await viewModel.getCocktailsForUserCategories()
 			}
 		}
 	}

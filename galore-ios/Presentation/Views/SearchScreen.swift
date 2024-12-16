@@ -23,7 +23,7 @@ struct SearchScreen: View {
 	}
 	
 	var body: some View {
-		TrackableScrollView {
+		VStack {
 			HStack {
 				if viewModel.hasSearchResults {
 					Button {
@@ -34,14 +34,14 @@ struct SearchScreen: View {
 					} label: {
 						Image(systemName: "xmark.circle")
 							.resizable()
-							.frame(width: 32, height: 32)
+							.frame(width: 24, height: 24)
 							.foregroundStyle(Color("MainColor"))
 							.background(Color("Background"))
 							.symbolEffect(.bounce.wholeSymbol, options: .repeat(1))
 					}.transition(.move(edge: .leading).combined(with: .opacity))
 				}
 				TextField("Search", text: $searchText)
-					.padding(20)
+					.padding(10)
 					.overlay(
 						RoundedRectangle(cornerRadius: 16)
 							.stroke(Color("Outline"), lineWidth: 1.5)
@@ -67,13 +67,15 @@ struct SearchScreen: View {
 			}.padding()
 				.animation(.easeInOut, value: viewModel.hasSearchResults)
 				.animation(.easeInOut, value: searchText.isEmpty)
-		} content: {
-			CocktailGrid(items: $viewModel.results, onCardPress: {
-				
-			})
-			.animation(.easeInOut, value: viewModel.results)
-		}
-		
+			
+			ScrollView(showsIndicators: false) {
+				CocktailGrid(items: $viewModel.results, onCardPress: {
+					
+				})
+				.animation(.easeInOut, value: viewModel.results)
+			}
+			
+		}.background(Color.background)
 	}
 	
 }
