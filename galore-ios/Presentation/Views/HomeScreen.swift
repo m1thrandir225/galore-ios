@@ -24,7 +24,9 @@ struct HomeScreen: View {
 					CocktailCarousel(
 						items: viewModel.featuredCocktails,
 						isCarouselShowcase: true, navigateToSection: {},
-						onCardPress: {}
+						onCardPress: { id in
+							router.routeTo(.cocktailDetails(id: id))
+						}
 					)
 				}
 				if viewModel.userRecommendedCocktails.count > 0 {
@@ -34,7 +36,9 @@ struct HomeScreen: View {
 							title: item.category.name,
 							isCarouselShowcase: false,
 							navigateToSection: {},
-							onCardPress: {}
+							onCardPress: { id in
+								router.routeTo(.cocktailDetails(id: id))
+							}
 						)
 					}
 				}

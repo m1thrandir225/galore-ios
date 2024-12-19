@@ -9,23 +9,24 @@ import SwiftUI
 struct CocktailGrid : View {
 	@Binding var items: [Cocktail]
 
-	var onCardPress: () -> Void
+	var onCardPress: (_: String) -> Void
 	
-	let columns = [GridItem(.fixed(180)), GridItem(.fixed(180))]
+	let columns = [GridItem(.fixed(190)), GridItem(.fixed(190))]
 	
-	init(items: Binding<[Cocktail]>, onCardPress: @escaping () -> Void) {
+	init(items: Binding<[Cocktail]>, onCardPress: @escaping (_: String) -> Void) {
 		self._items = items
 		self.onCardPress = onCardPress
 	}
 	
 	var body: some View {
-		LazyVGrid(columns: columns, alignment: .center, spacing: 24){
+		LazyVGrid(columns: columns, alignment: .center){
 			ForEach(items, id: \.id) { item in
 				CocktailCard (
+					id: item.id,
 					title: item.name,
 					isLiked: false,
 					imageURL: item.imageUrl.toUrl!,
-					width: 180,
+					width: 190,
 					onCardPress: onCardPress
 				)
 				.transition(.opacity.combined(with: .blurReplace))

@@ -58,5 +58,8 @@ final class AuthenticationRepositoryImpl: AuthenticationRepository {
 		userManager.clearUser()
 	}
 	
+	func setCategoriesForUser(_ categories: [Category]) {
+		userManager.setCategoriesForUser(categories)
+	}
 	
 }

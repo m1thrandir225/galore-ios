@@ -41,9 +41,9 @@ struct SearchScreen: View {
 					}.transition(.move(edge: .leading).combined(with: .opacity))
 				}
 				TextField("Search", text: $searchText)
-					.padding(10)
+					.padding(.all, 14)
 					.overlay(
-						RoundedRectangle(cornerRadius: 16)
+						RoundedRectangle(cornerRadius: 12)
 							.stroke(Color("Outline"), lineWidth: 1.5)
 					)
 					.keyboardType(.default)
@@ -69,7 +69,7 @@ struct SearchScreen: View {
 				.animation(.easeInOut, value: searchText.isEmpty)
 			
 			ScrollView(showsIndicators: false) {
-				CocktailGrid(items: $viewModel.results, onCardPress: {
+				CocktailGrid(items: $viewModel.results, onCardPress: { _ in
 					
 				})
 				.animation(.easeInOut, value: viewModel.results)

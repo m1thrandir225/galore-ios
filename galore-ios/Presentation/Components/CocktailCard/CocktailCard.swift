@@ -14,13 +14,22 @@ struct CocktailCard: View {
 	@State var imageURL: URL
 	
 	@State var opacity = 1.0
-	
+
+	let id: String
 	let width: CGFloat
-	var onCardPress: () -> Void
+	var onCardPress: (_: String) -> Void
 	
 	
 	
-	init(title: String, isLiked: Bool, imageURL: URL, width: CGFloat = 300.0, onCardPress: @escaping () -> Void) {
+	init(
+		id: String,
+		title: String,
+		isLiked: Bool,
+		imageURL: URL,
+		width: CGFloat = 300.0,
+		onCardPress: @escaping (_: String) -> Void
+	) {
+		self.id = id
 		self.title = title
 		self.isLiked = isLiked
 		self.imageURL = imageURL
@@ -80,7 +89,7 @@ struct CocktailCard: View {
 				withAnimation {
 					opacity = 0.5
 				}
-				onCardPress()
+				onCardPress(id)
 				
 				try? await Task.sleep(nanoseconds: 500_000_000)
 				
@@ -97,9 +106,12 @@ struct CocktailCard: View {
 
 #Preview {
 	CocktailCard(
-		title: "Example Title", isLiked: true, imageURL: "https://images.unsplash.com/photo-1726853546098-380e29da9e31?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D".toUrl!,
+		id: "1",
+		title: "Example Title",
+		isLiked: true,
+		imageURL:"https://images.unsplash.com/photo-1726853546098-380e29da9e31?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D".toUrl!,
 		width: 250
-	) {
+	) { _ in
 		print("hello world")
 	}
 }

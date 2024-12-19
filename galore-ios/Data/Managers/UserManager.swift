@@ -34,7 +34,6 @@ class UserManager {
 	private(set) var categoriesForUser: [Category]?
 	
 	func setCategoriesForUser(_ categories: [Category]) {
-		print(categories)
 		self.categoriesForUser = categories
 	}
 	

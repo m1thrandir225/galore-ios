@@ -17,4 +17,5 @@ protocol AuthenticationRepository {
 	func setAccessToken(_ accessToken: String)
 	func getUserId() -> String?
 	func setUser(_ user: User)
+	func setCategoriesForUser(_ categories: [Category])
 }

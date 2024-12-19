@@ -62,7 +62,6 @@ class NetworkService {
 				return try JSONDecoder().decode(T.Response.self, from: data)
 			}
 		} catch {
-			print(String(describing: error))
 			throw NetworkError.decodingFailed
 		}
 	}

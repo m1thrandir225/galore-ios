@@ -10,11 +10,11 @@ struct CocktailCarousel: View {
 	var title: String?
 	var items: [Cocktail]
 	let isCarouselShowcase: Bool
-	let onCardPress: () -> Void
+	let onCardPress: (_: String) -> Void
 	let navigateToSection: () -> Void
 	
 	
-	init(items: [Cocktail], title: String? = nil, isCarouselShowcase: Bool, navigateToSection: @escaping () -> Void, onCardPress: @escaping () -> Void) {
+	init(items: [Cocktail], title: String? = nil, isCarouselShowcase: Bool, navigateToSection: @escaping () -> Void, onCardPress: @escaping (_: String) -> Void) {
 		self.items = items
 		self.title = title
 		self.isCarouselShowcase = isCarouselShowcase
@@ -54,7 +54,7 @@ struct SnapperView: View {
 	let size: CGSize
 	let items: [Cocktail]
 	let isCarouselShowcase: Bool
-	let onCardPress: () -> Void
+	let onCardPress: (_: String) -> Void
 	
 	private let padding: CGFloat
 	private let cardWidth: CGFloat
@@ -66,7 +66,7 @@ struct SnapperView: View {
 	@State private var totalDrag: CGFloat = 0.0
 	
 	
-	init(size: CGSize, items: [Cocktail], isCarouselShowcase: Bool, onCardPress: @escaping() -> Void) {
+	init(size: CGSize, items: [Cocktail], isCarouselShowcase: Bool, onCardPress: @escaping(_: String) -> Void) {
 		self.size = size
 		self.items = items
 		self.cardWidth = isCarouselShowcase ? size.width * 0.82 : 225
@@ -80,7 +80,14 @@ struct SnapperView: View {
 		let offset: CGFloat = maxSwipeDistance - (maxSwipeDistance * CGFloat(currentCardIndex))
 		LazyHStack(spacing: spacing) {
 			ForEach(items, id: \.id) { item in
-				CocktailCard(title: item.name, isLiked: false, imageURL: item.imageUrl.toUrl!, width: cardWidth, onCardPress: onCardPress)
+				CocktailCard(
+					id: item.id,
+					title: item.name,
+					isLiked: false,
+					imageURL: item.imageUrl.toUrl!,
+					width: cardWidth,
+					onCardPress: onCardPress
+				)
 				.offset(x: isDragging ? totalDrag : 0)
 				.animation(.snappy(duration: 0.4, extraBounce: 0.2), value: isDragging)
 			}
@@ -163,19 +170,19 @@ struct SnapperView: View {
 			CocktailCarousel(items: cocktails,
 							 isCarouselShowcase: true,
 							 navigateToSection: {},
-							 onCardPress: {}
+							 onCardPress: { _ in}
 			)
 			CocktailCarousel(items: cocktails,
 							 title: "Packing a punch",
 							 isCarouselShowcase: false,
 							 navigateToSection: {},
-							 onCardPress: {})
+							 onCardPress: {_ in})
 			
 			CocktailCarousel(items: cocktails,
 							 title: "Packing a punch",
 							 isCarouselShowcase: false,
 							 navigateToSection: {},
-							 onCardPress: {})
+							 onCardPress: {_ in})
 		}
 	}.padding(.vertical)
 	

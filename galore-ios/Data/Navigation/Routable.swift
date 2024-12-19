@@ -16,6 +16,8 @@ public enum NavigationType {
 
 public protocol Routable: Hashable, Identifiable {
 	associatedtype ViewType: View
+	associatedtype RouteArgs = Void
+	
 	var navigationType: NavigationType { get }
 	func viewToDisplay(router: Router<Self>) -> ViewType
 }

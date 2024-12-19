@@ -49,6 +49,13 @@ class CocktailService {
 		return response
 	}
 	
+	func fetchCocktail(with id: String) async throws -> Cocktail {
+		let request = GetCocktail(id: id)
+		let response = try await networkService.execute(request)
+		
+		return response
+	}
+	
 	func getFeaturedCocktails() async throws -> [Cocktail] {
 //		let localFeatured =  cocktailRepository.getFeatured()
 //		
@@ -61,6 +68,19 @@ class CocktailService {
 		cocktailRepository.addFeaturedCocktails(cocktails)
 		
 		return cocktails
+	}
+	
+	func getCocktail(with id: String) async throws -> Cocktail {
+		let localCocktail = try cocktailRepository.getCocktail(with: id)
+		
+		if let localCocktail = localCocktail {
+			return localCocktail
+		}
+		
+		let cocktail = try await fetchCocktail(with: id)
+		cocktailRepository.addCocktail(cocktail)
+		
+		return cocktail
 	}
 	
 	func getCocktailsForUserCategories(categories: [Category]) async throws -> [GetCocktailsForCategoryResponse]{

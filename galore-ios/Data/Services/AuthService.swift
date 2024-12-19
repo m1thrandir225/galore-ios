@@ -6,15 +6,12 @@
 //
 import Foundation
 
-
-
 @MainActor
 class AuthService : ObservableObject {
 	static let shared = AuthService()
 	
 	private let networkService: NetworkService = NetworkService.shared
 	private let authenticationRepository: AuthenticationRepository = AuthenticationRepositoryImpl()
-	private let userManager: UserManager = .shared
 	
 	@Published var isLoggedIn: Bool = false
 	@Published var isLoading: Bool = false
@@ -32,8 +29,8 @@ class AuthService : ObservableObject {
 			//TODO: the user should be cached not initalized on every startup
 			self.isLoggedIn = true
 			do {
-				try await self.fetchUser()
-				try await self.getCategoriesForLikedFlavours(userId: userManager.userId!)
+				let userId = try await self.fetchUser()
+				try await self.getCategoriesForLikedFlavours(userId: userId)
 			} catch {
 				print(error.localizedDescription)
 			}
@@ -74,7 +71,7 @@ class AuthService : ObservableObject {
 		
 		let response = try await networkService.execute(request)
 		
-		userManager.setCategoriesForUser(response)
+		authenticationRepository.setCategoriesForUser(response)
 	}
 	
 	
@@ -136,7 +133,7 @@ class AuthService : ObservableObject {
 		}
 	}
 	
-	func fetchUser() async throws {
+	func fetchUser() async throws -> String {
 		do {
 			guard let userId = authenticationRepository.getUserId() else { throw UserManagerError.userIdNotFound }
 		
@@ -144,6 +141,8 @@ class AuthService : ObservableObject {
 			let response = try await networkService.execute(request)
 				
 			authenticationRepository.setUser(response)
+			
+			return response.id
 		} catch {
 			throw AuthError.unknownError
 		}
@@ -158,7 +157,7 @@ class AuthService : ObservableObject {
 			self.isLoading = false
 		}
 		try await self.refreshToken()
-		try await self.fetchUser()
+		_ = try await self.fetchUser()
 		
 		
 		self.isLoggedIn = true
