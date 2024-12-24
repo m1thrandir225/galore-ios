@@ -62,7 +62,6 @@ class CocktailService {
 //		if localFeatured.count > 0 {
 //			return localFeatured
 //		}
-//		
 		let cocktails = try await fetchFeatured()
 		
 		cocktailRepository.addFeaturedCocktails(cocktails)
@@ -101,5 +100,12 @@ class CocktailService {
 			
 			return finalResult
 		}
+	}
+	
+	func fetchSimilarCocktails(for id: String) async throws -> [Cocktail]{
+		let request = GetSimilarCocktails(cocktailId: id)
+		let response = try await networkService.execute(request)
+		
+		return response
 	}
 }

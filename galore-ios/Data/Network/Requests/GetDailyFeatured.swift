@@ -24,7 +24,7 @@ struct GetDailyFeatured : NetworkRequest {
 	}
 	
 	var parameters: [String : Any]? {
-		return ["timezone": timezone]
+		return nil
 	}
 	
 	var requestEncoding: RequestEncoding {

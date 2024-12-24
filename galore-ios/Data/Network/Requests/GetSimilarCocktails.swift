@@ -1,18 +1,18 @@
 //
-//  ListCocktails.swift
+//  GetSimilarCocktails.swift
 //  galore-ios
 //
-//  Created by Sebastijan Zindl on 26.11.24.
+//  Created by Sebastijan Zindl on 23.12.24.
 //
 import Foundation
 
-struct GetCocktails : NetworkRequest {
+struct GetSimilarCocktails : NetworkRequest {
 	typealias Response = [Cocktail]
-	
-	var searchQuery: String? = nil
+
+	let cocktailId: String
 	
 	var path: String {
-		return "/cocktails"
+		return "/cocktails/\(cocktailId)/simillar"
 	}
 	
 	var method: HTTPMethod {
@@ -20,15 +20,11 @@ struct GetCocktails : NetworkRequest {
 	}
 	
 	var headers: [String : String]? {
-		return ["Content-Type": "application/json"]
+		return ["Content-Type":"application/json"]
 	}
 	
 	var parameters: [String : Any]? {
-		if let searchQuery = searchQuery {
-			return ["search": searchQuery]
-		} else {
-			return nil
-		}
+		return nil
 	}
 	
 	var requestEncoding: RequestEncoding {
@@ -43,7 +39,4 @@ struct GetCocktails : NetworkRequest {
 		return nil
 	}
 	
-	init(searchQuery: String? = nil) {
-		self.searchQuery = searchQuery
-	}
 }

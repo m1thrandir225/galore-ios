@@ -20,7 +20,7 @@ struct LoginResponse: Codable {
 	let sessionId: String
 	
 	private enum CodingKeys: String, CodingKey {
-		 case user
+		 case user = "user"
 		 case refreshToken = "refresh_token"
 		 case accessToken = "access_token"
 		 case refreshTokenExpiresAt = "refresh_token_expires_at"
@@ -33,6 +33,11 @@ struct LoginResponse: Codable {
 		self.user = try container.decode(User.self, forKey: .user)
 		self.refreshToken = try container.decode(String.self, forKey: .refreshToken)
 		self.accessToken = try container.decode(String.self, forKey: .accessToken)
+		self.sessionId = try container.decode(String.self, forKey: .sessionId)
+		
+		print(self.accessToken)
+		print(self.refreshToken)
+		print(self.sessionId)
 		
 		if let refreshTokenExpiresAtString = try container.decodeIfPresent(String.self, forKey: .refreshTokenExpiresAt) {
 			let dateFormatter = ISO8601DateFormatter()
@@ -41,11 +46,11 @@ struct LoginResponse: Codable {
 			guard let formattedDate else {
 				throw LoginError.invalidDate
 			}
-			
 			self.refreshTokenExpiresAt = formattedDate
 		} else {
 			throw DecodingError.dataCorruptedError(forKey: .refreshTokenExpiresAt, in: container, debugDescription: "Missing access token expiration date")
 		}
+		
 		if let accessTokenExpiresAt = try container.decodeIfPresent(String.self, forKey: .accessTokenExpiresAt) {
 			let dateFormatter = ISO8601DateFormatter()
 			dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
@@ -59,6 +64,6 @@ struct LoginResponse: Codable {
 			throw DecodingError.dataCorruptedError(forKey: .accessTokenExpiresAt, in: container, debugDescription: "Missing access token expiration date")
 		}
 	
-		self.sessionId = try container.decode(String.self, forKey: .sessionId)
+		
 	}
 }

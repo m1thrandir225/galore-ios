@@ -14,6 +14,7 @@ protocol AuthenticationRepository {
 	func isAuthenticated() -> Bool
 	func getSessionToken() -> String?
 	func getRefreshToken() -> String?
+	func getAccessToken() -> String?
 	func setAccessToken(_ accessToken: String)
 	func getUserId() -> String?
 	func setUser(_ user: User)

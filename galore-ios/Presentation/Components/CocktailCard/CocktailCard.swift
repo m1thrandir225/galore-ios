@@ -68,7 +68,7 @@ struct CocktailCard: View {
 			HStack(alignment: .center){
 				Text(title)
 					.font(.system(size: 16, weight: .semibold))
-					.foregroundStyle(Color("MainColor"))
+					.foregroundStyle(Color.main)
 				Spacer()
 				
 			}.padding(.all, 12)
@@ -76,11 +76,11 @@ struct CocktailCard: View {
 		}
 
 		.frame(width: width, height: 250)
-		.background(Color("MainColor").opacity(0.1))
+		.background(Color.main.opacity(0.1))
 		.clipShape(RoundedRectangle(cornerRadius: 12))
 		.overlay(
 			RoundedRectangle(cornerRadius: 12)
-				.stroke(Color("Outline"), lineWidth: 1)
+				.stroke(Color.outline, lineWidth: 1)
 		)
 		.shadow(color: .gray.opacity(0.3), radius: 5, x: 0, y: 5)
 		.opacity(opacity)

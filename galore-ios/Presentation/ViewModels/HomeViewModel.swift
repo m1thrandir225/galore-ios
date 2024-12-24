@@ -14,11 +14,22 @@ class HomeViewModel: ObservableObject {
 	
 	@Published var errorMessage: String?
 	@Published var isLoading: Bool = false
-	@Published var results: [Cocktail] = []
 	@Published var featuredCocktails: [Cocktail] = []
 	@Published var userRecommendedCocktails: [GetCocktailsForCategoryResponse] = []
- 
 	
+	
+	@MainActor
+	func loadData() async {
+		isLoading = true
+		defer {
+			isLoading = false
+		}
+		async let featured: () = getFeaturedCocktails()
+		async let recommended: () = getCocktailsForUserCategories()
+		
+		let(_, _) = await (featured, recommended)
+		
+	}
 	func logout() async throws {
 		do {
 			try await authService.logout()
@@ -27,60 +38,27 @@ class HomeViewModel: ObservableObject {
 		}
 	}
 	
-	func refresh() async {
-		isLoading = true
-		defer {
-			isLoading = false
-		}
-		do {
-			let cocktails = try await cocktailService.fetchCocktails()
-			results = cocktails
-		} catch {
-			
-		}
-	}
 	
 	func getFeaturedCocktails() async {
-		isLoading = true
-		defer {
-			isLoading = false
-		}
 		do {
 			let cocktails = try await cocktailService.getFeaturedCocktails()
+			print(cocktails)
 			featuredCocktails = cocktails
 		} catch {
 			errorMessage = error.localizedDescription
 		}
 	}
 	
-	func getCocktails() async{
-		isLoading = true
-		defer {
-			isLoading = false
-		}
-		do {
-			let cocktails = try await cocktailService.searchCocktails()
-			results = cocktails
-		} catch {
-			errorMessage = error.localizedDescription
-		}
-	}
-	
 	func getCocktailsForUserCategories() async {
-		isLoading = true
-		
-		defer {
-			isLoading = false
-		}
-		
 		do {
 			if let categories = userManager.categoriesForUser {
 				let results = try await cocktailService.getCocktailsForUserCategories(categories: categories)
+				print(results)
 				userRecommendedCocktails = results
 			}
 		} catch {
 			errorMessage = error.localizedDescription
 		}
 	}
-
+	
 }

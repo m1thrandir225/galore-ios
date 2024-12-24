@@ -16,7 +16,7 @@ struct Config {
 	
 	static let baseURL: String = {
 		switch environment {
-		case .development: return "http://Sebastijans-Macbook-Pro.local:8080"
+		case .development: return "http://localhost:9090"
 		case .production: return ""
 		}
 	}()

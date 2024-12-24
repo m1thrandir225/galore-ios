@@ -26,7 +26,6 @@ class AuthService : ObservableObject {
 		if hasToken && !needsRefresh {
 			self.isLoading = false
 			self.isRefreshing = false
-			//TODO: the user should be cached not initalized on every startup
 			self.isLoggedIn = true
 			do {
 				let userId = try await self.fetchUser()
@@ -52,6 +51,9 @@ class AuthService : ObservableObject {
 			let request = LoginRequest(email: email, password: password)
 		
 			let response = try await networkService.execute(request)
+			
+			try await self.getCategoriesForLikedFlavours(userId: response.user.id)
+
 			
 			try await authenticationRepository.login(with: response)
 
@@ -81,6 +83,7 @@ class AuthService : ObservableObject {
 			
 			let response = try await networkService.execute(request)
 			
+			try await self.getCategoriesForLikedFlavours(userId: response.user.id)
 			try await authenticationRepository.register(with: response)
 			
 			self.isLoggedIn = true
@@ -119,12 +122,15 @@ class AuthService : ObservableObject {
 	
 	func refreshToken() async throws {
 		do {
-			guard let refreshToken = authenticationRepository.getSessionToken() else { throw TokenManagerError.refreshTokenNotFound }
-			guard let sessionId = authenticationRepository.getRefreshToken() else { throw TokenManagerError.sessionIdNotFound }
+			guard let refreshToken = authenticationRepository.getRefreshToken() else { throw TokenManagerError.refreshTokenNotFound }
+			guard let sessionId = authenticationRepository.getSessionToken() else { throw TokenManagerError.sessionIdNotFound }
+			
+			print("REFRESH TOKEN: \(refreshToken)")
+			print("SESSION ID: \(sessionId)")
 			
 			let request = RefreshTokenRequest(refreshToken: refreshToken, sessionId: sessionId)
 			let response = try await networkService.execute(request)
-			
+			print(response.accessToken)
 			
 			authenticationRepository.setAccessToken(response.accessToken)
 			
@@ -157,7 +163,8 @@ class AuthService : ObservableObject {
 			self.isLoading = false
 		}
 		try await self.refreshToken()
-		_ = try await self.fetchUser()
+		let userId = try await self.fetchUser()
+		try await self.getCategoriesForLikedFlavours(userId: userId)
 		
 		
 		self.isLoggedIn = true
