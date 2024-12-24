@@ -33,11 +33,15 @@ struct RefreshTokenRequest: NetworkRequest {
 	}
 	
 	var accessType: AcessType {
-		return .publicAccess
+		return .privateAccess
 	}
 	
 	var files: [String : NetworkFile]? {
 		return nil
+	}
+	init(refreshToken: String, sessionId: String) {
+		self.refreshToken = refreshToken
+		self.sessionId = sessionId
 	}
 	
 	

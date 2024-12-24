@@ -25,6 +25,9 @@ final class AuthenticationRepositoryImpl: AuthenticationRepository {
 	func getRefreshToken() -> String? {
 		return tokenManager.refreshToken
 	}
+	func getAccessToken() -> String? {
+		return tokenManager.accessToken
+	}
 	
 	func setAccessToken(_ accessToken: String) {
 		tokenManager.accessToken = accessToken
@@ -40,14 +43,25 @@ final class AuthenticationRepositoryImpl: AuthenticationRepository {
 	
 	
 	func login(with response: LoginResponse) async throws {
-		tokenManager.storeTokens(accessToken: response.accessToken, refreshToken: response.refreshToken, sessionId: response.sessionId, accessTokenExpiresAt: response.accessTokenExpiresAt, refreshTokenExpiresAt: response.refreshTokenExpiresAt)
+		tokenManager.storeTokens(
+			accessToken: response.accessToken,
+			refreshToken: response.refreshToken,
+			sessionId: response.sessionId,
+			accessTokenExpiresAt: response.accessTokenExpiresAt,
+			refreshTokenExpiresAt: response.refreshTokenExpiresAt
+		)
 		
 		userManager.setUser(response.user)
 		userManager.userId = response.user.id
 	}
 	
 	func register(with response: RegisterResponse) async throws {
-		tokenManager.storeTokens(accessToken: response.accessToken, refreshToken: response.refreshToken, sessionId: response.sessionId, accessTokenExpiresAt: response.accessTokenExpiresAt, refreshTokenExpiresAt: response.refreshTokenExpiresAt)
+		tokenManager.storeTokens(
+			accessToken: response.accessToken,
+			refreshToken: response.refreshToken,
+			sessionId: response.sessionId,
+			accessTokenExpiresAt: response.accessTokenExpiresAt,
+			refreshTokenExpiresAt: response.refreshTokenExpiresAt)
 		
 		userManager.setUser(response.user)
 		userManager.userId = response.user.id
@@ -58,5 +72,8 @@ final class AuthenticationRepositoryImpl: AuthenticationRepository {
 		userManager.clearUser()
 	}
 	
+	func setCategoriesForUser(_ categories: [Category]) {
+		userManager.setCategoriesForUser(categories)
+	}
 	
 }

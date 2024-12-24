@@ -47,18 +47,36 @@ class NetworkService {
 				urlRequest.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
 			}
 		}
+		print(urlRequest.url?.absoluteString)
 		
 		let (data, response) = try await urlSession.data(for: urlRequest)
 		
 		guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
-			print(response as? HTTPURLResponse ?? response)
+			let httpResponseError = response as? HTTPURLResponse
+			
+			print("HTTP Status Code: \(httpResponseError?.statusCode ?? -1)")
+			
+			do {
+				// Decoding the error response into a dictionary
+				if let jsonObject = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+				   let errorMessage = jsonObject["error"] as? String {
+					print("Server Error: \(errorMessage)")
+				} else {
+					print("Unexpected error format in response.")
+				}
+			} catch {
+				print("Error decoding response data: \(error.localizedDescription)")
+			}
 			throw NetworkError.requestFailed
 		}
 		
 		do {
-			return try JSONDecoder().decode(T.Response.self, from: data)
+			if T.Response.self == Int.self {
+				return httpResponse.statusCode as! T.Response
+			} else {
+				return try JSONDecoder().decode(T.Response.self, from: data)
+			}
 		} catch {
-			print(String(describing: error))
 			throw NetworkError.decodingFailed
 		}
 	}

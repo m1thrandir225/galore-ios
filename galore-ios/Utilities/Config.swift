@@ -14,10 +14,18 @@ enum Environment {
 struct Config {
 	static let environment: Environment = .development
 	
-	static let apiBase: String = {
+	static let baseURL: String = {
 		switch environment {
-		case .development: return "http://localhost:8080/api/v1"
+		case .development: return "http://localhost:9090"
 		case .production: return ""
 		}
+	}()
+	
+	static let publicURL: String = {
+		return baseURL + "/public"
+	}()
+	
+	static let apiBase: String = {
+		return baseURL + "/api/v1"
 	}()
 }

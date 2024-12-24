@@ -14,14 +14,14 @@ class CocktailService {
 	
 	init() {
 		Task {
-			let request = ListCocktailsRequest(searchQuery: "")
+			let request = GetCocktails(searchQuery: "")
 			let response = try await networkService.execute(request)
 			cocktailRepository.addCocktails(response)
 		}
 	}
 	
 	func fetchCocktails(query: String? = nil) async throws -> [Cocktail] {
-		let request = ListCocktailsRequest(searchQuery: query)
+		let request = GetCocktails(searchQuery: query)
 		let response = try await networkService.execute(request)
 		
 		return response
@@ -40,5 +40,72 @@ class CocktailService {
 		cocktailRepository.addCocktails(cocktails)
 		
 		return cocktails
+	}
+	
+	func fetchFeatured() async throws -> [Cocktail] {
+		let request = GetDailyFeatured()
+		let response = try await networkService.execute(request)
+		
+		return response
+	}
+	
+	func fetchCocktail(with id: String) async throws -> Cocktail {
+		let request = GetCocktail(id: id)
+		let response = try await networkService.execute(request)
+		
+		return response
+	}
+	
+	func getFeaturedCocktails() async throws -> [Cocktail] {
+//		let localFeatured =  cocktailRepository.getFeatured()
+//		
+//		if localFeatured.count > 0 {
+//			return localFeatured
+//		}
+		let cocktails = try await fetchFeatured()
+		
+		cocktailRepository.addFeaturedCocktails(cocktails)
+		
+		return cocktails
+	}
+	
+	func getCocktail(with id: String) async throws -> Cocktail {
+		let localCocktail = try cocktailRepository.getCocktail(with: id)
+		
+		if let localCocktail = localCocktail {
+			return localCocktail
+		}
+		
+		let cocktail = try await fetchCocktail(with: id)
+		cocktailRepository.addCocktail(cocktail)
+		
+		return cocktail
+	}
+	
+	func getCocktailsForUserCategories(categories: [Category]) async throws -> [GetCocktailsForCategoryResponse]{
+		try await withThrowingTaskGroup(of: GetCocktailsForCategoryResponse.self) { group in
+			// Create a task for each category
+			for category in categories {
+				group.addTask {
+					let request = GetCocktailsForCategory(categoryId: category.id)
+					return try await self.networkService.execute(request)
+				}
+			}
+			
+			// Collect results from all tasks
+			var finalResult: [GetCocktailsForCategoryResponse] = []
+			for try await response in group {
+				finalResult.append(response)
+			}
+			
+			return finalResult
+		}
+	}
+	
+	func fetchSimilarCocktails(for id: String) async throws -> [Cocktail]{
+		let request = GetSimilarCocktails(cocktailId: id)
+		let response = try await networkService.execute(request)
+		
+		return response
 	}
 }

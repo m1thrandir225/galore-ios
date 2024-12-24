@@ -43,7 +43,7 @@ struct UserMenuSheet: View {
 				UserCard(
 					name: user.name,
 					email: user.email,
-					imageURL: user.avatar != nil ? "http://localhost:8080/\(user.avatar!)" : ""
+					imageURL: user.avatar != nil ? "\(Config.baseURL)/\(user.avatar!)" : ""
 				)
 			}
 			VStack(alignment: .leading, spacing: 12) {

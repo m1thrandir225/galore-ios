@@ -56,7 +56,7 @@ public final class Cocktail: Identifiable, Codable, Equatable {
 		self.name = try container.decode(String.self, forKey: .name)
 		self.isAlchoholic = try container.decode(Bool.self, forKey: .isAlchoholic)
 		self.glass = try container.decode(String.self, forKey: .glass)
-		self.imageUrl = "http://localhost:8080/\(try container.decode(String.self, forKey: .imageUrl))"
+		self.imageUrl = "\(Config.baseURL)/\(try container.decode(String.self, forKey: .imageUrl))"
 		self.embedding = try container.decode([Float32].self, forKey: .embedding)
 		
 		let ingredientsContainer = try container.nestedContainer(keyedBy: IngredientsCodingKeys.self, forKey: .ingredients)

@@ -6,8 +6,6 @@
 //
 import Foundation
 
-
-
 @MainActor
 class AuthService : ObservableObject {
 	static let shared = AuthService()
@@ -28,10 +26,10 @@ class AuthService : ObservableObject {
 		if hasToken && !needsRefresh {
 			self.isLoading = false
 			self.isRefreshing = false
-			//TODO: the user should be cached not initalized on every startup
 			self.isLoggedIn = true
 			do {
-				try await self.fetchUser()
+				let userId = try await self.fetchUser()
+				try await self.getCategoriesForLikedFlavours(userId: userId)
 			} catch {
 				print(error.localizedDescription)
 			}
@@ -54,6 +52,9 @@ class AuthService : ObservableObject {
 		
 			let response = try await networkService.execute(request)
 			
+			try await self.getCategoriesForLikedFlavours(userId: response.user.id)
+
+			
 			try await authenticationRepository.login(with: response)
 
 			isLoggedIn = true
@@ -67,12 +68,22 @@ class AuthService : ObservableObject {
 		}
 	}
 	
+	func getCategoriesForLikedFlavours(userId: String) async throws {
+		let request = GetCategoriesBasedOnLikedFlavours(userId: userId)
+		
+		let response = try await networkService.execute(request)
+		
+		authenticationRepository.setCategoriesForUser(response)
+	}
+	
+	
 	func register(email: String, password: String, name: String, birthday: Date, networkFile: NetworkFile)  async throws {
 		do {
 			let request = RegisterRequest(email: email, password: password, name: name, birthday: birthday, networkFile: networkFile)
 			
 			let response = try await networkService.execute(request)
 			
+			try await self.getCategoriesForLikedFlavours(userId: response.user.id)
 			try await authenticationRepository.register(with: response)
 			
 			self.isLoggedIn = true
@@ -111,12 +122,15 @@ class AuthService : ObservableObject {
 	
 	func refreshToken() async throws {
 		do {
-			guard let refreshToken = authenticationRepository.getSessionToken() else { throw TokenManagerError.refreshTokenNotFound }
-			guard let sessionId = authenticationRepository.getRefreshToken() else { throw TokenManagerError.sessionIdNotFound }
+			guard let refreshToken = authenticationRepository.getRefreshToken() else { throw TokenManagerError.refreshTokenNotFound }
+			guard let sessionId = authenticationRepository.getSessionToken() else { throw TokenManagerError.sessionIdNotFound }
+			
+			print("REFRESH TOKEN: \(refreshToken)")
+			print("SESSION ID: \(sessionId)")
 			
 			let request = RefreshTokenRequest(refreshToken: refreshToken, sessionId: sessionId)
 			let response = try await networkService.execute(request)
-			
+			print(response.accessToken)
 			
 			authenticationRepository.setAccessToken(response.accessToken)
 			
@@ -125,7 +139,7 @@ class AuthService : ObservableObject {
 		}
 	}
 	
-	func fetchUser() async throws {
+	func fetchUser() async throws -> String {
 		do {
 			guard let userId = authenticationRepository.getUserId() else { throw UserManagerError.userIdNotFound }
 		
@@ -133,6 +147,8 @@ class AuthService : ObservableObject {
 			let response = try await networkService.execute(request)
 				
 			authenticationRepository.setUser(response)
+			
+			return response.id
 		} catch {
 			throw AuthError.unknownError
 		}
@@ -147,7 +163,8 @@ class AuthService : ObservableObject {
 			self.isLoading = false
 		}
 		try await self.refreshToken()
-		try await self.fetchUser()
+		let userId = try await self.fetchUser()
+		try await self.getCategoriesForLikedFlavours(userId: userId)
 		
 		
 		self.isLoggedIn = true

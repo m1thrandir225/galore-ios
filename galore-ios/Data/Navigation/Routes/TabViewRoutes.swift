@@ -15,11 +15,23 @@ enum TabRoutes: Routable {
 	case settingsOverview
 	case updateProfile
 	case changePassword
+	case cocktailDetails(id: String)
+	
+	typealias RouteArgs = String?
+	
+	var arguments: RouteArgs {
+		switch self {
+		case .cocktailDetails(let id):
+			return id
+		default:
+			return nil
+		}
+	}
 
 	
 	var navigationType: NavigationType  {
 		switch self {
-		case .generate, .home, .library, .search, .settingsOverview, .updateProfile, .changePassword:
+		case .generate, .home, .library, .search, .settingsOverview, .updateProfile, .changePassword, .cocktailDetails:
 				.push
 		case .help:
 				.sheet
@@ -45,6 +57,8 @@ enum TabRoutes: Routable {
 			UpdateProfileScreen(router: router)
 		case .changePassword:
 			ChangePasswordScreen(router: router)
+		case .cocktailDetails(let id):
+			CocktailDetailsScreen(router: router, cocktailId: id)
 		}
 	}
 	
