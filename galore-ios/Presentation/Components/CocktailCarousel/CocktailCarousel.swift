@@ -45,7 +45,7 @@ struct CocktailCarousel: View {
 							onCardPress: onCardPress
 				)
 			}.frame(height: 300)
-		}
+		}.transition(.opacity.combined(with: .blurReplace))
 		
 	}
 }

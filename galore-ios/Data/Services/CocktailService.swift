@@ -79,6 +79,16 @@ class CocktailService {
 		return response
 	}
 	
+	func fetchUserLikedCocktails() async throws -> [Cocktail] {
+		guard userManager.userId != nil else { throw UserManagerError.userIdNotFound }
+		
+		let request = GetUserLikedCocktails(id: userManager.userId!)
+		
+		let response = try await networkService.execute(request)
+		
+		return response
+	}
+	
 	func getFeaturedCocktails() async throws -> [Cocktail] {
 //		let localFeatured =  cocktailRepository.getFeatured()
 //		

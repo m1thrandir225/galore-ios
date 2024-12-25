@@ -51,7 +51,7 @@ struct TitleVisibilityCheckerView: View {
 	var body: some View {
 		GeometryReader { geometry in
 			Text(title)
-				.font(.system(size: 48, weight: .bold))
+				.font(.system(size: 32, weight: .bold))
 				.foregroundStyle(Color("OnBackground"))
 				.padding(24)
 				.opacity(titleVisible ? 1 : 0)
