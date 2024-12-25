@@ -17,7 +17,12 @@ struct ContentView: View {
 				LoadingScreen()
 			} else {
 				if authService.isLoggedIn {
-					TabRoutesView()
+					if authService.isNewUser {
+						OnboardingRoutesView()
+					} else {
+						Text("Is new user: \(authService.isNewUser)")
+					}
+					
 				} else {
 					AuthRoutesView()
 				}

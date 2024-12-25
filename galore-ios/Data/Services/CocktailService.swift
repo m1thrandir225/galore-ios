@@ -9,7 +9,7 @@ import Foundation
 class CocktailService {
 	static let shared = CocktailService()
 	
-	private let userManager: UserManager = .shared
+	private let userRepository: UserRepository = UserRepositoryImpl()
 	private let networkService: NetworkService = NetworkService.shared
 	private let cocktailRepository: CocktailRepository = CocktailRepositoryImpl()
 	
@@ -70,9 +70,9 @@ class CocktailService {
 	}
 	
 	func fetchIsCocktailLikedByUser(for id: String) async throws -> Bool {
-		guard userManager.userId != nil else { throw UserManagerError.userIdNotFound }
+		guard userRepository.getUserId() != nil else { throw UserManagerError.userIdNotFound }
 		
-		let request = GetCocktailLikedStatus(cocktailId: id, userId: userManager.userId!)
+		let request = GetCocktailLikedStatus(cocktailId: id, userId: userRepository.getUserId()!)
 		let response = try await networkService.execute(request)
 		
 		
@@ -80,9 +80,9 @@ class CocktailService {
 	}
 	
 	func fetchUserLikedCocktails() async throws -> [Cocktail] {
-		guard userManager.userId != nil else { throw UserManagerError.userIdNotFound }
+		guard userRepository.getUserId() != nil else { throw UserManagerError.userIdNotFound }
 		
-		let request = GetUserLikedCocktails(id: userManager.userId!)
+		let request = GetUserLikedCocktails(id: userRepository.getUserId()!)
 		
 		let response = try await networkService.execute(request)
 		

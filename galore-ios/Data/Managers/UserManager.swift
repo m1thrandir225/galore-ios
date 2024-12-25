@@ -32,9 +32,18 @@ class UserManager {
 	private(set) var user: User?
 	
 	private(set) var categoriesForUser: [Category]?
+	private(set) var likedFlavours: [Flavour]?
 	
 	func setCategoriesForUser(_ categories: [Category]) {
 		self.categoriesForUser = categories
+	}
+	
+	func setLikedFlavours(_ flavours: [Flavour]) {
+		self.likedFlavours = flavours
+	}
+	
+	func clearLikedFlavours() {
+		self.likedFlavours = nil
 	}
 	
 	func clearCategoriesForUser() {
@@ -43,6 +52,7 @@ class UserManager {
 	
 	func setUser(_ user: User) {
 		self.user = user
+		self.userId = user.id
 	}
 	
 	func clearUser() {
