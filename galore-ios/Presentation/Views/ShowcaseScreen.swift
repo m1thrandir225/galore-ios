@@ -25,6 +25,7 @@ struct ShowcaseScreen :  View {
 	
 	var body: some View {
 		VStack(alignment: .center ,spacing: 10) {
+			Spacer()
 			TabView(selection: $currentIndex) {
 				ForEach(slides.indices, id: \.description) { index in
 					VStack {
@@ -32,18 +33,20 @@ struct ShowcaseScreen :  View {
 							.resizable()
 							.scaledToFit()
 							.frame(height: 300)
+							
+						
 						Text(slides[index].description)
 							.font(.system(size: 26, weight: .semibold))
 							.foregroundStyle(Color("OnBackground"))
 							.transition(.blurReplace)
 					}
-					.background(.red)
+					
 					.padding(24)
 					.tag(index)
 					
 				}
 			}
-			.tabViewStyle(PageTabViewStyle())
+			.tabViewStyle(.page(indexDisplayMode: .never))
 			.gesture(
 				DragGesture()
 					.onEnded { gesture in
@@ -60,20 +63,52 @@ struct ShowcaseScreen :  View {
 						}
 					}
 			)
-			.onReceive(timer) { _ in
-				withAnimation {
-					currentIndex = (currentIndex + 1) % slides.count
-				}
-			}.frame(height: 500)
+			.frame(height: 500)
+			
 			HStack(spacing: 8) {
 				ForEach(slides.indices, id: \.self) { index in
-					Circle()
+					RoundedRectangle(cornerRadius: 24)
 						.fill(index == currentIndex ? Color("MainColor") : Color.gray.opacity(0.4))
-						.frame(width: 8, height: 8)
+						.frame(width: index == currentIndex ? 16 : 8, height: 8)
+						.animation(.spring(duration: 0.3, bounce: 0.5, blendDuration: 0), value: currentIndex)
 				}
 			}
 			
-		}.background(Color("Background"))
+			Spacer()
+			HStack {
+				Button {
+					if (currentIndex < slides.count-1) {
+						currentIndex+=1
+					} else {
+						router.routeTo(.enableNotifications)
+					}
+				} label: {
+					Text(currentIndex == slides.count-1 ? "Continue" : "\(Image(systemName: "arrow.right"))")
+						.frame(maxWidth: currentIndex == slides.count-1 ? .infinity : 50)
+						.padding()
+						.font(.system(size: 24, weight: .semibold))
+						.foregroundStyle(Color("OnBackground"))
+						.background(Color("MainColor"))
+						.clipShape(
+							RoundedRectangle(cornerRadius: currentIndex == slides.count-1 ? 16 : 50)
+						)
+						.animation(.spring(duration: 0.3, bounce: 0.5, blendDuration: 0), value: currentIndex)
+					
+					
+					
+				}
+			}.padding(24)
+			Spacer()
+			
+		}
+		.background(Color("Background"))
+		.frame(
+			minWidth: 0,
+			maxWidth: .infinity,
+			minHeight: 0,
+			maxHeight: .infinity
+		)
+		.navigationBarBackButtonHidden(true)
 	}
 }
 
