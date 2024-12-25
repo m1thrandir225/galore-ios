@@ -9,7 +9,7 @@ import Foundation
 public final class Flavour: Identifiable, Codable, Equatable {
 	public let id: String
 	public let name: String
-	public let createdAt: Date
+	public let createdAt: String
 	
 	public static func == (lhs: Flavour, rhs: Flavour) -> Bool {
 		lhs.id == rhs.id
@@ -23,7 +23,7 @@ public final class Flavour: Identifiable, Codable, Equatable {
 		case createdAt = "created_at"
 	}
 	
-	public init(id: String, name: String, createdAt: Date) {
+	public init(id: String, name: String, createdAt: String) {
 		self.id = id
 		self.name = name
 		self.createdAt = createdAt
@@ -33,7 +33,7 @@ public final class Flavour: Identifiable, Codable, Equatable {
 		let container = try decoder.container(keyedBy: CodingKeys.self)
 		self.id = try container.decode(String.self, forKey: .id)
 		self.name = try container.decode(String.self, forKey: .name)
-		self.createdAt = try container.decode(Date.self, forKey: .createdAt)
+		self.createdAt = try container.decode(String.self, forKey: .createdAt)
 	}
 	
 }

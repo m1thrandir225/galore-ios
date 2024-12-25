@@ -18,9 +18,7 @@ class NetworkService {
 	}
 	
 	private static var defaultSession: URLSession {
-		let cacheSizeMemory = 50 * 1024 * 1024 //50mb
-		let cacheSizeDisk = 100 * 1024 * 1024
-		let urlCache = URLCache(memoryCapacity: cacheSizeMemory, diskCapacity: cacheSizeDisk)
+		let urlCache = URLCache(memoryCapacity: 0, diskCapacity: 0)
 		
 		let configuration = URLSessionConfiguration.default
 		configuration.urlCache = urlCache

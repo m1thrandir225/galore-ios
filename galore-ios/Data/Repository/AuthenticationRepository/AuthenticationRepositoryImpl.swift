@@ -9,7 +9,6 @@ import Foundation
 
 final class AuthenticationRepositoryImpl: AuthenticationRepository {
 	private let tokenManager: TokenManager = TokenManager.shared
-	private let userManager: UserManager = UserManager.shared
 	
 	func shouldRefreshToken() -> Bool {
 		return tokenManager.shouldRefreshToken()
@@ -33,16 +32,8 @@ final class AuthenticationRepositoryImpl: AuthenticationRepository {
 		tokenManager.accessToken = accessToken
 	}
 	
-	func getUserId() -> String? {
-		return userManager.userId
-	}
-	
-	func setUser(_ user: User) {
-		userManager.setUser(user)
-	}
-	
-	
-	func login(with response: LoginResponse) async throws {
+
+	func login(with response: LoginResponse) {
 		tokenManager.storeTokens(
 			accessToken: response.accessToken,
 			refreshToken: response.refreshToken,
@@ -50,30 +41,21 @@ final class AuthenticationRepositoryImpl: AuthenticationRepository {
 			accessTokenExpiresAt: response.accessTokenExpiresAt,
 			refreshTokenExpiresAt: response.refreshTokenExpiresAt
 		)
-		
-		userManager.setUser(response.user)
-		userManager.userId = response.user.id
 	}
 	
-	func register(with response: RegisterResponse) async throws {
+	func register(with response: RegisterResponse) {
 		tokenManager.storeTokens(
 			accessToken: response.accessToken,
 			refreshToken: response.refreshToken,
 			sessionId: response.sessionId,
 			accessTokenExpiresAt: response.accessTokenExpiresAt,
 			refreshTokenExpiresAt: response.refreshTokenExpiresAt)
-		
-		userManager.setUser(response.user)
-		userManager.userId = response.user.id
+
 	}
 	
-	func logout() async throws {
+	func logout()  {
 		tokenManager.clearTokens()
-		userManager.clearUser()
 	}
 	
-	func setCategoriesForUser(_ categories: [Category]) {
-		userManager.setCategoriesForUser(categories)
-	}
-	
+
 }

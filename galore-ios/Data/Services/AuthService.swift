@@ -12,10 +12,13 @@ class AuthService : ObservableObject {
 	
 	private let networkService: NetworkService = NetworkService.shared
 	private let authenticationRepository: AuthenticationRepository = AuthenticationRepositoryImpl()
+	private let userRepository: UserRepository = UserRepositoryImpl()
+	
 	
 	@Published var isLoggedIn: Bool = false
 	@Published var isLoading: Bool = false
 	@Published var isRefreshing: Bool = false
+	@Published var isNewUser: Bool = false
 	
 	private init() {}
 	
@@ -24,16 +27,31 @@ class AuthService : ObservableObject {
 		let needsRefresh = authenticationRepository.shouldRefreshToken()
 		
 		if hasToken && !needsRefresh {
-			self.isLoading = false
+			self.isLoading = true
+			defer {
+				isLoading = false
+			}
+			
 			self.isRefreshing = false
-			self.isLoggedIn = true
+			
 			do {
-				let userId = try await self.fetchUser()
-				try await self.getCategoriesForLikedFlavours(userId: userId)
+				let user = try await self.fetchUser()
+				let userCategories = try await self.fetchCategoriesForLikedFlavours(userId: user.id)
+				let userFlavours = try await self.fetchLikedFlavours(userId: user.id)
+				
+				userRepository.setUser(user)
+				userRepository.setCategoriesForUser(userCategories)
+				userRepository.setLikedFlavoursForUser(userFlavours)
+				
+				print(userFlavours.count)
+				
+				if (userFlavours.count == 0) {
+					isNewUser = true
+				}
+				self.isLoggedIn = true
 			} catch {
 				print(error.localizedDescription)
 			}
-			
 		} else {
 			do {
 				try await refreshSession()
@@ -41,6 +59,7 @@ class AuthService : ObservableObject {
 				self.isLoading = false
 				self.isRefreshing = false
 				self.isLoggedIn = false
+				self.isNewUser = false
 			}
 		}
 	}
@@ -49,15 +68,19 @@ class AuthService : ObservableObject {
 	func login(email: String, password: String) async throws  {
 		do {
 			let request = LoginRequest(email: email, password: password)
-		
 			let response = try await networkService.execute(request)
+			authenticationRepository.login(with: response)
+			userRepository.setUser(response.user)
 			
-			print(response)
+			let userCategories = try await self.fetchCategoriesForLikedFlavours(userId: response.user.id)
+			let userFlavours = try await self.fetchLikedFlavours(userId: response.user.id)
+			userRepository.setCategoriesForUser(userCategories)
+			userRepository.setLikedFlavoursForUser(userFlavours)
 			
-			try await authenticationRepository.login(with: response)
+			if(userFlavours.count == 0) {
+				isNewUser = true
+			}
 			
-			try await self.getCategoriesForLikedFlavours(userId: response.user.id)
-
 			isLoggedIn = true
 		
 		} catch NetworkError.requestFailed {
@@ -69,12 +92,20 @@ class AuthService : ObservableObject {
 		}
 	}
 	
-	func getCategoriesForLikedFlavours(userId: String) async throws {
+	func fetchLikedFlavours(userId: String) async throws -> [Flavour] {
+		let request = GetUserLikedFlavours(id: userId)
+		
+		let response = try await networkService.execute(request)
+		
+		return response
+	}
+	
+	func fetchCategoriesForLikedFlavours(userId: String) async throws -> [Category] {
 		let request = GetCategoriesBasedOnLikedFlavours(userId: userId)
 		
 		let response = try await networkService.execute(request)
 		
-		authenticationRepository.setCategoriesForUser(response)
+		return response
 	}
 	
 	
@@ -84,15 +115,20 @@ class AuthService : ObservableObject {
 			
 			let response = try await networkService.execute(request)
 			
-			try await self.getCategoriesForLikedFlavours(userId: response.user.id)
-			try await authenticationRepository.register(with: response)
+			authenticationRepository.register(with: response)
+			userRepository.setUser(response.user)
 			
 			self.isLoggedIn = true
+			self.isNewUser = true
+			
 		} catch NetworkError.requestFailed {
 			self.isLoggedIn = false
+			self.isNewUser = false
 			throw AuthError.userExists
 		} catch {
 			self.isLoggedIn = false
+			self.isNewUser = false
+			
 			print(error.localizedDescription)
 			throw AuthError.unknownError
 		}
@@ -107,13 +143,13 @@ class AuthService : ObservableObject {
 			
 			let request = LogoutRequest(sessionId: sessionId)
 			
-			self.isLoggedIn = false
-			
 			let response = try await networkService.execute(request)
 			if response.message.isEmpty { throw NetworkError.requestFailed }
 			
+			authenticationRepository.logout()
+			userRepository.clearUser()
 			
-			try await authenticationRepository.logout()
+			self.isLoggedIn = false
 			
 		} catch {
 			self.isLoggedIn = false
@@ -137,16 +173,14 @@ class AuthService : ObservableObject {
 		}
 	}
 	
-	func fetchUser() async throws -> String {
+	func fetchUser() async throws -> User {
 		do {
-			guard let userId = authenticationRepository.getUserId() else { throw UserManagerError.userIdNotFound }
+			guard let userId = userRepository.getUserId() else { throw UserManagerError.userIdNotFound }
 		
 			let request = UserRequest(userId: userId)
 			let response = try await networkService.execute(request)
-				
-			authenticationRepository.setUser(response)
 			
-			return response.id
+			return response
 		} catch {
 			throw AuthError.unknownError
 		}
@@ -161,10 +195,21 @@ class AuthService : ObservableObject {
 			self.isLoading = false
 		}
 		try await self.refreshToken()
-		let userId = try await self.fetchUser()
-		try await self.getCategoriesForLikedFlavours(userId: userId)
 		
+		let user = try await self.fetchUser()
+		userRepository.setUser(user)
 		
+		let userCategories =  try await self.fetchCategoriesForLikedFlavours(userId: user.id)
+		userRepository.setCategoriesForUser(userCategories)
+		
+		let userFlavours = try await self.fetchLikedFlavours(userId: user.id)
+		userRepository.setLikedFlavoursForUser(userFlavours)
+		
+		print(userFlavours.count)
+		
+		if userFlavours.count == 0 {
+			self.isNewUser = true
+		}
 		self.isLoggedIn = true
 	}
 	

@@ -7,13 +7,12 @@
 
 protocol UserRepository {
 	func getUser() -> User?
-	func saveUser(of user: User) throws -> User
+	func setUser(_ user: User)
 	func getUserId()-> String?
-
-//	func getUserLikedFlavours(userId: String) async throws -> [Flavour]
-//	func getUserLikedCocktails(userId: String) async throws -> [Cocktail]
-//	func updateUserInformation() async throws -> User
-//	func updateUserPassword() async throws -> Void
-//	func updateUserEnabledEmailNotifications() async throws -> Bool
-//	func updateUserEnabledPushNotifications() async throws -> Bool
+	func setUserId(_ userId: String)
+	func getLikedFlavoursForUser() -> [Flavour]?
+	func getCategoriesForUser() -> [Category]?
+	func setCategoriesForUser(_ categories: [Category])
+	func setLikedFlavoursForUser(_ likedFlavours: [Flavour])
+	func clearUser()
 }

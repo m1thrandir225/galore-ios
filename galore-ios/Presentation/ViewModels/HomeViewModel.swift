@@ -10,7 +10,7 @@ import Foundation
 class HomeViewModel: ObservableObject {
 	private var authService: AuthService = .shared
 	private var cocktailService: CocktailService = CocktailService.shared
-	private var userManager: UserManager = .shared
+	private var userRepository: UserRepository = UserRepositoryImpl()
 	
 	@Published var errorMessage: String?
 	@Published var isLoading: Bool = false
@@ -50,7 +50,7 @@ class HomeViewModel: ObservableObject {
 	
 	func getCocktailsForUserCategories() async {
 		do {
-			if let categories = userManager.categoriesForUser {
+			if let categories = userRepository.getCategoriesForUser() {
 				let results = try await cocktailService.getCocktailsForUserCategories(categories: categories)
 				userRecommendedCocktails = results
 			}
