@@ -1,42 +1,78 @@
 //
-//  CocktailGrid.swift
+//  CocktailSectionScreen.swift
 //  galore-ios
 //
-//  Created by Sebastijan Zindl on 25.11.24.
+//  Created by Sebastijan Zindl on 25.12.24.
 //
+
 import SwiftUI
 
-struct CocktailGrid : View {
-	@Binding var items: [Cocktail]
-
-	var onCardPress: (_: String) -> Void
-	let columns = [GridItem(.fixed(190)), GridItem(.fixed(190))]
+struct CocktailSectionScreen: View {
+	@StateObject var router: Router<TabRoutes>
 	
-	init(items: Binding<[Cocktail]>, onCardPress: @escaping (_: String) -> Void) {
-		self._items = items
-		self.onCardPress = onCardPress
-	}
+	@State var cocktails: [Cocktail]
+	@State var title: String
+	@State var titleVisible: Bool = true
 	
 	var body: some View {
-		LazyVGrid(columns: columns, alignment: .center){
-			ForEach(items, id: \.id) { item in
-				CocktailCard (
-					id: item.id,
-					title: item.name,
-					isLiked: false,
-					imageURL: item.imageUrl.toUrl!,
-					width: 190,
-					onCardPress: onCardPress
-				)
-				.transition(.opacity.combined(with: .blurReplace))
+		VStack(alignment: .leading, spacing: 0) {
+			HStack {
+				BackButton {
+					router.dismiss()
+				}
+				Text(title)
+					.font(.system(size: 24, weight: .semibold))
+					.foregroundStyle(Color("OnBackground"))
+					.padding(24)
+					.opacity(titleVisible ? 0 : 1)
+					.animation(.easeInOut, value: titleVisible)
+				Spacer()
+			}
+			.padding(.leading, 24)
+			ScrollView(.vertical, showsIndicators: false) {
+				VStack (alignment: .leading) {
+					TitleVisibilityCheckerView(title: title, titleVisible: $titleVisible)
+					CocktailGrid(items: $cocktails, onCardPress: { id in
+						router.routeTo(.cocktailDetails(CocktailDetailsArgs(id: id,rootSentFrom: nil)))
+					})
+				}
+				
 			}
 		}
+		.background(Color("Background"))
+		.navigationBarBackButtonHidden(true)
 	}
+}
+
+struct TitleVisibilityCheckerView: View {
+	let title: String
+	@Binding var titleVisible: Bool
 	
-	
+	var body: some View {
+		GeometryReader { geometry in
+			Text(title)
+				.font(.system(size: 48, weight: .bold))
+				.foregroundStyle(Color("OnBackground"))
+				.padding(24)
+				.opacity(titleVisible ? 1 : 0)
+				.animation(.easeInOut, value: titleVisible)
+				.onChange(of: geometry.frame(in: .global).minY) { _, newValue in
+					let threshold: CGFloat = 50 // Adjust this based on when you want the header to appear
+					if newValue <= threshold && titleVisible {
+						// Once scrolled out of view, make the header title appear
+						titleVisible = false
+					} else if newValue > threshold && !titleVisible {
+						// Make the initial title visible again
+						titleVisible = true
+					}
+				}
+		}
+		.frame(height: 100) // Adjust the height as needed for the text
+	}
 }
 
 #Preview {
+	@Previewable @State  var route: TabRoutes? = nil
 	let cocktails: [Cocktail] = [
 		Cocktail(
 			id: "1",
@@ -117,4 +153,11 @@ struct CocktailGrid : View {
 			instructions: "Combine all the ingredients in a highball glass with ice. Stir gently and garnish with celery."
 		)
 	]
+	let router = Router<TabRoutes>(isPresented: Binding(projectedValue: $route))
+	
+	CocktailSectionScreen(
+		router: router,
+		cocktails: cocktails,
+		title: "Section Title"
+	)
 }

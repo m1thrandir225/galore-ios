@@ -11,11 +11,12 @@ enum LikeUnlikeStatus {
 	case unlike
 }
 
-struct LikeCocktail : NetworkRequest {
+struct LikeUnlikeCocktail : NetworkRequest {
 	typealias Response = Int
 
 	let id: String
 	let action: LikeUnlikeStatus
+	
 	var path: String {
 		switch action {
 		case .like:
@@ -26,7 +27,7 @@ struct LikeCocktail : NetworkRequest {
 	}
 	
 	var method: HTTPMethod {
-		return .get
+		return .post
 	}
 	
 	var headers: [String : String]? {

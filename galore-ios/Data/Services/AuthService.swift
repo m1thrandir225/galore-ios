@@ -52,10 +52,11 @@ class AuthService : ObservableObject {
 		
 			let response = try await networkService.execute(request)
 			
-			try await self.getCategoriesForLikedFlavours(userId: response.user.id)
-
+			print(response)
 			
 			try await authenticationRepository.login(with: response)
+			
+			try await self.getCategoriesForLikedFlavours(userId: response.user.id)
 
 			isLoggedIn = true
 		
@@ -125,12 +126,9 @@ class AuthService : ObservableObject {
 			guard let refreshToken = authenticationRepository.getRefreshToken() else { throw TokenManagerError.refreshTokenNotFound }
 			guard let sessionId = authenticationRepository.getSessionToken() else { throw TokenManagerError.sessionIdNotFound }
 			
-			print("REFRESH TOKEN: \(refreshToken)")
-			print("SESSION ID: \(sessionId)")
 			
 			let request = RefreshTokenRequest(refreshToken: refreshToken, sessionId: sessionId)
 			let response = try await networkService.execute(request)
-			print(response.accessToken)
 			
 			authenticationRepository.setAccessToken(response.accessToken)
 			

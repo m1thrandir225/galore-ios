@@ -17,6 +17,9 @@ public class Router<Destination: Routable>: ObservableObject {
 	@Published public var presentingFullScreenCover: Destination?
 	/// Used by presented Router instances to dismiss themselves
 	@Published public var isPresented: Binding<Destination?>
+	
+	private var stack: [Destination] = []
+	
 	public var isPresenting: Bool {
 		presentingSheet != nil || presentingFullScreenCover != nil
 	}
@@ -42,16 +45,25 @@ public class Router<Destination: Routable>: ObservableObject {
 			presentFullScreen(route)
 		}
 	}
-	
+	func popUntil(_ destination: Destination) {
+		while let last = stack.last, last != destination {
+			stack.removeLast()
+		}
+		path = NavigationPath(stack)
+	}
 	
 	func replaceStack(with destination: Destination) {
-		path = NavigationPath([destination]) // Replace current stack with a single destination
+		stack = [destination]
+		path = NavigationPath(stack) // Replace current stack with a single destination
 	}
 	
 	public func replace(_ route: Destination) {
 		switch route.navigationType {
 		case .push:
-			path.removeLast()
+			if !stack.isEmpty && !path.isEmpty {
+				stack.removeLast()
+				path.removeLast()
+			}
 			push(route)
 		case .sheet:
 			presentSheet(route)
@@ -62,13 +74,17 @@ public class Router<Destination: Routable>: ObservableObject {
 	
 	// Pop to the root screen in our hierarchy
 	public func popToRoot() {
-		path.removeLast(path.count)
+		stack.removeLast(stack.count)
+		path = NavigationPath(stack)
 	}
+	
 	
 	// Dismisses presented screen or self
 	public func dismiss() {
-		if !path.isEmpty {
-			path.removeLast()
+		if !stack.isEmpty {
+			stack.removeLast()
+			path = NavigationPath(stack)
+			
 		} else if presentingSheet != nil {
 			presentingSheet = nil
 		} else if presentingFullScreenCover != nil {
@@ -79,6 +95,7 @@ public class Router<Destination: Routable>: ObservableObject {
 	}
 	
 	private func push(_ appRoute: Destination) {
+		stack.append(appRoute)
 		path.append(appRoute)
 	}
 	

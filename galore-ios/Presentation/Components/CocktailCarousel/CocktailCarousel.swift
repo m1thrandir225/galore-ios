@@ -70,14 +70,15 @@ struct SnapperView: View {
 		self.size = size
 		self.items = items
 		self.cardWidth = isCarouselShowcase ? size.width * 0.82 : 225
-		self.padding = (size.width - cardWidth) / 2.0
+		self.padding = 24
 		self.maxSwipeDistance = self.cardWidth + spacing
 		self.isCarouselShowcase = isCarouselShowcase
 		self.onCardPress = onCardPress
 	}
 	
 	var body: some View {
-		let offset: CGFloat = maxSwipeDistance - (maxSwipeDistance * CGFloat(currentCardIndex))
+		//let offset: CGFloat = maxSwipeDistance - (maxSwipeDistance * CGFloat(currentCardIndex)
+		let offset: CGFloat = -CGFloat(currentCardIndex - 1) * (cardWidth + spacing) + totalDrag
 		LazyHStack(spacing: spacing) {
 			ForEach(items, id: \.id) { item in
 				CocktailCard(
@@ -88,30 +89,31 @@ struct SnapperView: View {
 					width: cardWidth,
 					onCardPress: onCardPress
 				)
-				.offset(x: isDragging ? totalDrag : 0)
-				.animation(.snappy(duration: 0.4, extraBounce: 0.2), value: isDragging)
+				
 			}
-		}.padding(.horizontal, padding)
-			.offset(x: offset, y:0)
-			.gesture(
-				DragGesture()
-					.onChanged { value in
-						isDragging = true
-						totalDrag =  value.translation.width
+		}
+		.padding(.horizontal, padding)
+		.offset(x: offset, y:0)
+		.animation(.spring(response: 0.4, dampingFraction: 0.8, blendDuration: 0.2),value: isDragging)
+		.gesture(
+			DragGesture()
+				.onChanged { value in
+					isDragging = true
+					totalDrag =  value.translation.width
+				}
+				.onEnded { value in
+					totalDrag = 0.0
+					isDragging = false
+					
+					if (value.translation.width < -(cardWidth / 2.0) && self.currentCardIndex < items.count) {
+						self.currentCardIndex = self.currentCardIndex + 1
 					}
-					.onEnded { value in
-						totalDrag = 0.0
-						isDragging = false
-						
-						if (value.translation.width < -(cardWidth / 2.0) && self.currentCardIndex < items.count) {
-							self.currentCardIndex = self.currentCardIndex + 1
-						}
-						
-						if (value.translation.width > (cardWidth / 2.0) && self.currentCardIndex > 1) {
-							self.currentCardIndex = self.currentCardIndex - 1
-						}
+					
+					if (value.translation.width > (cardWidth / 2.0) && self.currentCardIndex > 1) {
+						self.currentCardIndex = self.currentCardIndex - 1
 					}
-			)
+				}
+		)
 	}
 }
 

@@ -24,7 +24,7 @@ class NetworkService {
 		
 		let configuration = URLSessionConfiguration.default
 		configuration.urlCache = urlCache
-		configuration.requestCachePolicy = .useProtocolCachePolicy
+		configuration.requestCachePolicy = .reloadIgnoringLocalCacheData
 		
 		return URLSession(configuration: configuration)
 	}
@@ -47,8 +47,6 @@ class NetworkService {
 				urlRequest.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
 			}
 		}
-		print(urlRequest.url?.absoluteString)
-		
 		let (data, response) = try await urlSession.data(for: urlRequest)
 		
 		guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
