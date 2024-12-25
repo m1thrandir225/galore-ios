@@ -42,7 +42,6 @@ class HomeViewModel: ObservableObject {
 	func getFeaturedCocktails() async {
 		do {
 			let cocktails = try await cocktailService.getFeaturedCocktails()
-			print(cocktails)
 			featuredCocktails = cocktails
 		} catch {
 			errorMessage = error.localizedDescription
@@ -53,7 +52,6 @@ class HomeViewModel: ObservableObject {
 		do {
 			if let categories = userManager.categoriesForUser {
 				let results = try await cocktailService.getCocktailsForUserCategories(categories: categories)
-				print(results)
 				userRecommendedCocktails = results
 			}
 		} catch {

@@ -70,7 +70,7 @@ struct SearchScreen: View {
 			
 			ScrollView(showsIndicators: false) {
 				CocktailGrid(items: $viewModel.results, onCardPress: { id in
-					router.routeTo(.cocktailDetails(id: id))
+					router.routeTo(.cocktailDetails(CocktailDetailsArgs(id: id, rootSentFrom: TabRoutes.search)))
 				})
 				.animation(.easeInOut, value: viewModel.results)
 			}

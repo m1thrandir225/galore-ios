@@ -12,10 +12,12 @@ struct CocktailDetailsScreen : View {
 	@StateObject var viewModel: CocktailDetailsViewModel = CocktailDetailsViewModel()
 	
 	let cocktailId: String
+	let rootSentFrom: (any Routable)?
 	
-	init(router: Router<TabRoutes>, cocktailId: String) {
+	init(router: Router<TabRoutes>, cocktailId: String, rootSentFrom: (any Routable)? ) {
 		_router = StateObject(wrappedValue: router)
 		self.cocktailId = cocktailId
+		self.rootSentFrom = rootSentFrom
 	}
 	
 	var body: some View {
@@ -28,17 +30,23 @@ struct CocktailDetailsScreen : View {
 						VStack {
 							ZStack (alignment: .topLeading) {
 								HStack {
-									Button {
-										router.dismiss()
-									} label: {
-										Image(systemName:  "arrow.left")
-											.foregroundStyle(Color.white)
-											.padding()
-											.background(Color("MainColor"))
-											.clipShape(Circle())
+									BackButton {
+										if let rootSentFrom = rootSentFrom {
+											router.popUntil(rootSentFrom as! TabRoutes)
+										} else {
+											router.dismiss()
+										}	
 									}
+				
 									Spacer()
-									HeartButton(isPressed: false, onToggle: {})
+									if let isLikedByUser = viewModel.isLikedByUser {
+										HeartButton(isPressed: isLikedByUser) {
+											Task {
+												try await viewModel.likeUnlikeCocktail(for: cocktail.id, action: isLikedByUser ? .unlike :  .like)
+											}
+										}
+									}
+					
 								}
 								.safeAreaPadding(.all)
 								.padding(.top, 24)
@@ -127,7 +135,7 @@ struct CocktailDetailsScreen : View {
 										isCarouselShowcase: false,
 										navigateToSection: {},
 										onCardPress: {id in
-											router.replace(.cocktailDetails(id: id))
+											router.routeTo(.cocktailDetails(CocktailDetailsArgs(id: id, rootSentFrom: TabRoutes.home)))
 										}
 									)
 								}
@@ -143,10 +151,8 @@ struct CocktailDetailsScreen : View {
 		}
 		.background(Color.background)
 		.navigationBarBackButtonHidden(true)
-		.onAppear {
-			Task {
-				await viewModel.fetchCocktailDetails(for: cocktailId)
-			}
+		.task {
+				await viewModel.loadData(for: cocktailId)
 		}
 		
 	}
@@ -157,5 +163,5 @@ struct CocktailDetailsScreen : View {
 	let router = Router<TabRoutes>(isPresented: Binding(projectedValue: $route))
 	
 
-	CocktailDetailsScreen(router: router, cocktailId: "hello")
+	CocktailDetailsScreen(router: router, cocktailId: "hello", rootSentFrom: TabRoutes.home)
 }

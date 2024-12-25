@@ -34,11 +34,7 @@ struct LoginResponse: Codable {
 		self.refreshToken = try container.decode(String.self, forKey: .refreshToken)
 		self.accessToken = try container.decode(String.self, forKey: .accessToken)
 		self.sessionId = try container.decode(String.self, forKey: .sessionId)
-		
-		print(self.accessToken)
-		print(self.refreshToken)
-		print(self.sessionId)
-		
+
 		if let refreshTokenExpiresAtString = try container.decodeIfPresent(String.self, forKey: .refreshTokenExpiresAt) {
 			let dateFormatter = ISO8601DateFormatter()
 			dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]

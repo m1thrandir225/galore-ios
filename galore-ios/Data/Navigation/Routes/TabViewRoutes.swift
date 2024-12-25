@@ -6,6 +6,20 @@
 //
 import SwiftUI
 
+struct CocktailDetailsArgs : Equatable {
+	static func == (lhs: CocktailDetailsArgs, rhs: CocktailDetailsArgs) -> Bool {
+		return lhs.id == rhs.id
+	}
+	
+	let id: String
+	let rootSentFrom: (any Routable)?
+}
+
+struct CocktailSectionArgs : Equatable {
+	let cocktails: [Cocktail]
+	let title: String
+}
+
 enum TabRoutes: Routable {
 	case home
 	case search
@@ -15,24 +29,40 @@ enum TabRoutes: Routable {
 	case settingsOverview
 	case updateProfile
 	case changePassword
-	case cocktailDetails(id: String)
+	case cocktailDetails(CocktailDetailsArgs)
+	case cocktailSection(CocktailSectionArgs)
 	
-	typealias RouteArgs = String?
+	enum RouteArgs {
+		case none
+		case cocktailDetails(CocktailDetailsArgs)
+		case cocktailSection(CocktailSectionArgs)
+	}
 	
 	var arguments: RouteArgs {
 		switch self {
-		case .cocktailDetails(let id):
-			return id
+		case .cocktailDetails(let args):
+			return .cocktailDetails(args)
+		case .cocktailSection(let args):
+			return .cocktailSection(args)
 		default:
-			return nil
+			return .none
 		}
 	}
 
 	
 	var navigationType: NavigationType  {
 		switch self {
-		case .generate, .home, .library, .search, .settingsOverview, .updateProfile, .changePassword, .cocktailDetails:
-				.push
+		case
+				.generate,
+				.home,
+				.library,
+				.search,
+				.settingsOverview,
+				.updateProfile,
+				.changePassword,
+				.cocktailDetails,
+				.cocktailSection:
+					.push
 		case .help:
 				.sheet
 		}
@@ -57,8 +87,10 @@ enum TabRoutes: Routable {
 			UpdateProfileScreen(router: router)
 		case .changePassword:
 			ChangePasswordScreen(router: router)
-		case .cocktailDetails(let id):
-			CocktailDetailsScreen(router: router, cocktailId: id)
+		case .cocktailDetails(let args):
+			CocktailDetailsScreen(router: router, cocktailId: args.id, rootSentFrom: args.rootSentFrom ?? nil)
+		case .cocktailSection(let args):
+			CocktailSectionScreen(router: router, cocktails: args.cocktails, title: args.title)
 		}
 	}
 	

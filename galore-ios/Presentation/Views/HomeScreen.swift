@@ -37,7 +37,7 @@ struct HomeScreen: View {
 				isCarouselShowcase: true,
 				navigateToSection: {},
 				onCardPress: { id in
-					router.routeTo(.cocktailDetails(id: id))
+					router.routeTo(.cocktailDetails(CocktailDetailsArgs(id: id, rootSentFrom: TabRoutes.home)))
 				}
 			)
 			ForEach(viewModel.userRecommendedCocktails, id: \.category.id) { item in
@@ -45,9 +45,13 @@ struct HomeScreen: View {
 					items: item.cocktails,
 					title: item.category.name,
 					isCarouselShowcase: false,
-					navigateToSection: {},
+					navigateToSection: {
+						router.routeTo(.cocktailSection(
+							CocktailSectionArgs(cocktails: item.cocktails, title: item.category.name)
+						))
+					},
 					onCardPress: { id in
-						router.routeTo(.cocktailDetails(id: id))
+						router.routeTo(.cocktailDetails(CocktailDetailsArgs(id: id, rootSentFrom: TabRoutes.home)))
 					}
 				)
 			}

@@ -7,15 +7,13 @@
 import SwiftUI
 
 struct HeartButton: View {
-	@State private var isPressed: Bool
-	@State private var isScaled: Bool
-	
+	@State private var isScaled: Bool = false
 	var onToggle: () -> Void
+	var isPressed: Bool
 
 	
-	init(isPressed: Bool, isScaled: Bool = false, onToggle: @escaping () -> Void) {
+	init(isPressed: Bool, onToggle: @escaping () -> Void) {
 		self.isPressed = isPressed
-		self.isScaled = isScaled
 		self.onToggle = onToggle
 	}
 	
@@ -23,7 +21,6 @@ struct HeartButton: View {
 		Button {
 			Task {
 				withAnimation(.spring(response: 0.3, dampingFraction: 0.6, blendDuration: 0)) {
-					isPressed.toggle()
 					isScaled.toggle()
 				}
 				
@@ -36,6 +33,7 @@ struct HeartButton: View {
 				withAnimation {
 					isScaled = false
 				}
+				onToggle()
 			}
 		} label: {
 			Image(systemName: isPressed ? "heart.fill" : "heart")
@@ -50,7 +48,9 @@ struct HeartButton: View {
 }
 
 #Preview {
-	HeartButton(isPressed: true) {
-		print("Hello")
+	@Previewable @State var isPressed: Bool = false
+	
+	HeartButton(isPressed: isPressed) {
+		isPressed.toggle()
 	}
 }
