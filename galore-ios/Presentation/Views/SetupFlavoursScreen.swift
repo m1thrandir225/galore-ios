@@ -8,7 +8,7 @@ import SwiftUI
 
 struct SetupFlavoursScreen : View {
 	@StateObject var router: Router<OnboardingRoutes>
-	@StateObject var viewModel: SetupFlavorsViewModel = SetupFlavorsViewModel()
+	@StateObject var viewModel: SetupFlavoursViewModel = SetupFlavoursViewModel()
 	
 	
 	let columns = [GridItem(.fixed(190)), GridItem(.fixed(190))]

@@ -20,7 +20,7 @@ struct ContentView: View {
 					if authService.isNewUser {
 						OnboardingRoutesView()
 					} else {
-						Text("Is new user: \(authService.isNewUser)")
+						TabRoutesView()
 					}
 					
 				} else {

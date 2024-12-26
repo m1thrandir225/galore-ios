@@ -7,7 +7,7 @@
 import Foundation
 
 @MainActor
-class SetupFlavorsViewModel: ObservableObject {
+class SetupFlavoursViewModel: ObservableObject {
 	private final let networkService: NetworkService = .shared
 	private final let userRepository: UserRepository = UserRepositoryImpl()
 	@Published var flavours: [Flavour]? = nil
