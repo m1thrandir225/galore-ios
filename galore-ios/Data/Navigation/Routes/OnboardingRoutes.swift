@@ -21,7 +21,7 @@ enum OnboardingRoutes : Routable {
 		case .enableNotifications:
 			EnablePushNotificationsScreen(router: router)
 		case .setupFlavours:
-			Text("Setup Flavours")
+			SetupFlavoursScreen(router: router)
 		case .allDone:
 			Text("All Done")
 		}

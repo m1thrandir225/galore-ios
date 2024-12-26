@@ -88,14 +88,17 @@ class EnablePushNotificationsViewModel : ObservableObject {
 	
 	func checkNotificationPermission()  {
 		self.notificationCenter.getNotificationSettings(completionHandler: { permission in
-			switch permission.authorizationStatus {
-			case .authorized, .ephemeral:
-				self.hasPermission = true
-			case .denied, .notDetermined, .provisional:
-				self.hasPermission = false
-			@unknown default:
-				self.hasPermission = false
-				
+			Task { @MainActor in
+				switch permission.authorizationStatus {
+					
+				case .authorized, .ephemeral:
+					self.hasPermission = true
+				case .denied, .notDetermined, .provisional:
+					self.hasPermission = false
+				@unknown default:
+					self.hasPermission = false
+					
+				}
 			}
 		})
 		

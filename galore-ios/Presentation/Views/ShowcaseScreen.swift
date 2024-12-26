@@ -87,7 +87,7 @@ struct ShowcaseScreen :  View {
 						.frame(maxWidth: currentIndex == slides.count-1 ? .infinity : 50)
 						.padding()
 						.font(.system(size: 24, weight: .semibold))
-						.foregroundStyle(Color("OnBackground"))
+						.foregroundStyle(Color("OnMain"))
 						.background(Color("MainColor"))
 						.clipShape(
 							RoundedRectangle(cornerRadius: currentIndex == slides.count-1 ? 16 : 50)
