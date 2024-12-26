@@ -23,7 +23,7 @@ enum OnboardingRoutes : Routable {
 		case .setupFlavours:
 			SetupFlavoursScreen(router: router)
 		case .allDone:
-			Text("All Done")
+			AllSetScreen(router: router)
 		}
 	}
 	
