@@ -12,10 +12,9 @@ enum AuthRoutes: Routable {
 	case welcome
 	case login
 	case register
-	//	case forgotPassword
-	//	case resetPassword(token: String)
+	case forgotPassword
+	case resetPassword
 	//	case verifyEmail(token: String)
-	//	case logout
 
 	
 	
@@ -28,12 +27,16 @@ enum AuthRoutes: Routable {
 			RegisterScreen(router: router)
 		case .welcome:
 			WelcomeScreen(router: router)
+		case .forgotPassword:
+			ForgotPasswordScreen(router: router)
+		case .resetPassword:
+			ResetPasswordScreen(router: router)
 		}
 	}
 	
 	var navigationType: NavigationType  {
 		switch self  {
-		case .login, .register, .welcome:
+		case .login, .register, .welcome, .forgotPassword, .resetPassword:
 				.push
 		}
 	}

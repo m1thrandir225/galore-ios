@@ -56,6 +56,12 @@ struct LoginScreen: View {
 					Text(errorMessage)
 						.foregroundStyle(.red)
 				}
+				Button {
+					router.routeTo(.forgotPassword)
+				} label: {
+					Text("Forgot your password?")
+						.foregroundStyle(Color("MainColor"))
+				}
 			}
 			.padding(.all, 20)
 			
