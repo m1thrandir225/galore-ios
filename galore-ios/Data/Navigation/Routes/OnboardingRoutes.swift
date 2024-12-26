@@ -18,10 +18,10 @@ enum OnboardingRoutes : Routable {
 		switch self {
 		case .showcase:
 			ShowcaseScreen(router: router)
+		case .enableNotifications:
+			EnablePushNotificationsScreen(router: router)
 		case .setupFlavours:
 			Text("Setup Flavours")
-		case .enableNotifications:
-			Text("Enable Notifications")
 		case .allDone:
 			Text("All Done")
 		}
