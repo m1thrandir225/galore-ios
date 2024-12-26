@@ -9,6 +9,8 @@ import SwiftUI
 struct ResetPasswordScreen : View {
 	@StateObject var router: Router<AuthRoutes>
 	
+	let resetPasswordRequest: ResetPasswordModel
+	
 	@StateObject var viewModel: ResetPasswordViewModel = ResetPasswordViewModel()
 	
 	var body: some View {
@@ -36,18 +38,32 @@ struct ResetPasswordScreen : View {
 					PasswordField(text: $viewModel.confirmPassword, placeholder: "Repeat your new password")
 				}
 				Button {
-					viewModel.resetPassword {
-						router.routeTo(.login)
+					Task {
+						 await viewModel.resetPassword(resetPasswordRequestId: resetPasswordRequest.id ){
+							router.routeTo(.login)
+						}
 					}
+
 				} label: {
-					Text("Reset Password")
-						.font(.system(size: 16, weight: .semibold))
-						.frame(maxWidth: .infinity)
-						.padding()
-						.background(Color("MainColor"))
-						.foregroundStyle(Color("OnMain"))
-						.clipShape(RoundedRectangle(cornerRadius: 16))
+					ZStack {
+						if viewModel.isLoading {
+							ProgressView()
+								.progressViewStyle(CircularProgressViewStyle(tint: (Color("OnMain"))))
+								.foregroundColor(Color("OnMain"))
+							
+							
+						} else {
+							Text("Continue")
+								.font(.system(size: 18, weight: .semibold))
+						}
+					}
+					.frame(maxWidth: .infinity)
+					.padding()
+					.foregroundStyle(Color("OnMain"))
+					.background(Color("MainColor"))
+					.clipShape(RoundedRectangle(cornerRadius: 16))
 				}
+				.disabled(viewModel.isLoading)
 			}.padding(24)
 
 			Spacer()
@@ -61,5 +77,5 @@ struct ResetPasswordScreen : View {
 	@Previewable @State  var authRoute: AuthRoutes? = nil
 	let router = Router<AuthRoutes>(isPresented: Binding(projectedValue: $authRoute))
 	
-	ResetPasswordScreen(router: router)
+//	ResetPasswordScreen(router: router, reset)
 }

@@ -10,7 +10,10 @@ import SwiftUI
 struct ForgotPasswordEnterEmailStep: View {
 	@Binding var email: String
 	
+	@Binding var isLoading: Bool
+
 	var onNext: () -> Void
+	
 	
     var body: some View {
 		VStack (alignment: .leading, spacing: 16) {
@@ -31,20 +34,32 @@ struct ForgotPasswordEnterEmailStep: View {
 			Button {
 				onNext()
 			} label: {
-				Text("Send OTP")
-					.font(.system(size: 16, weight: .semibold))
-					.frame(maxWidth: .infinity)
-					.padding()
-					.background(Color("MainColor"))
-					.foregroundStyle(Color("OnMain"))
-					.clipShape(RoundedRectangle(cornerRadius: 16))
-					
+				ZStack {
+					if isLoading {
+						// Show loading spinner
+						ProgressView()
+							.progressViewStyle(CircularProgressViewStyle(tint: (Color("OnMain"))))
+							.foregroundColor(Color("OnMain"))
+						
+						
+					} else {
+						Text("Send OTP")
+							.font(.system(size: 18, weight: .semibold))
+					}
+				}
+				.frame(maxWidth: .infinity)
+				.padding()
+				.foregroundStyle(Color("OnMain"))
+				.background(Color("MainColor"))
+				.clipShape(RoundedRectangle(cornerRadius: 16))
 			}
+			.disabled(isLoading)
 		}.transition(.slide.combined(with: .blurReplace))
     }
 }
 
 #Preview {
 	@Previewable @State var email: String = ""
-	ForgotPasswordEnterEmailStep(email: $email) {}
+	@Previewable @State var isLoading: Bool = false
+	ForgotPasswordEnterEmailStep(email: $email, isLoading: $isLoading) {}
 }

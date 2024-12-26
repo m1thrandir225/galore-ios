@@ -6,14 +6,14 @@
 //
 struct VerifyOTPResponse: Codable {
 	let email: String
-	let resetPasswordRequest: ResetPasswordRequest
+	let resetPasswordRequest: ResetPasswordModel
 	
 	private enum CodingKeys: String, CodingKey {
 		case email = "email"
 		case resetPasswordRequest = "reset_password_request"
 	}
 	
-	init (email: String, resetPasswordRequest: ResetPasswordRequest) {
+	init (email: String, resetPasswordRequest: ResetPasswordModel) {
 		self.email = email
 		self.resetPasswordRequest = resetPasswordRequest
 	}
@@ -21,6 +21,6 @@ struct VerifyOTPResponse: Codable {
 	init(from decoder: any Decoder) throws {
 		let container = try decoder.container(keyedBy: CodingKeys.self)
 		self.email = try container.decode(String.self, forKey: .email)
-		self.resetPasswordRequest = try container.decode(ResetPasswordRequest.self, forKey: .resetPasswordRequest)
+		self.resetPasswordRequest = try container.decode(ResetPasswordModel.self, forKey: .resetPasswordRequest)
 	}
 }

@@ -8,15 +8,35 @@
 import Foundation
 import SwiftUI
 
+struct ResetPasswordArgs : Equatable {
+	static func == (lhs: ResetPasswordArgs, rhs: ResetPasswordArgs) -> Bool {
+		lhs.resetPasswordRequest.id == rhs.resetPasswordRequest.id
+	}
+	
+	let resetPasswordRequest: ResetPasswordModel
+}
+
 enum AuthRoutes: Routable {
 	case welcome
 	case login
 	case register
 	case forgotPassword
-	case resetPassword
+	case resetPassword(ResetPasswordArgs)
 	//	case verifyEmail(token: String)
 
+	enum RouteArgs {
+		case none
+		case resetPassword(ResetPasswordArgs)
+	}
 	
+	var arguments: RouteArgs {
+		switch self {
+		case .resetPassword(let args):
+			return .resetPassword(args)
+		default:
+			return .none
+		}
+	}
 	
 	@ViewBuilder
 	func viewToDisplay(router: Router<AuthRoutes>) -> some View {
@@ -29,8 +49,8 @@ enum AuthRoutes: Routable {
 			WelcomeScreen(router: router)
 		case .forgotPassword:
 			ForgotPasswordScreen(router: router)
-		case .resetPassword:
-			ResetPasswordScreen(router: router)
+		case .resetPassword(let args):
+			ResetPasswordScreen(router: router, resetPasswordRequest: args.resetPasswordRequest)
 		}
 	}
 	

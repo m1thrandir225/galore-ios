@@ -6,7 +6,7 @@
 //
 import Foundation
 
-struct ResetPasswordNetworkRequest : NetworkRequest {
+struct ResetPasswordRequest : NetworkRequest {
 	typealias Response = Int
 	
 	let resetPasswordRequestId: String

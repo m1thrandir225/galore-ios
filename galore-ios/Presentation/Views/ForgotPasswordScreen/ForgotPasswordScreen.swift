@@ -48,19 +48,31 @@ struct ForgotPasswordScreen: View {
 				
 				switch step {
 				case .enterEmail:
-					ForgotPasswordEnterEmailStep(email: $viewModel.email) {
-						step = .enterCode
+					ForgotPasswordEnterEmailStep(email: $viewModel.email, isLoading: $viewModel.isLoading) {
+						Task {
+							try await viewModel.sendForgotPasswordRequest {
+								step = .enterCode
+							}
+						}
+						
 					}
 				case .enterCode:
-					ForgotPasswordEnterCodeStep(code: $viewModel.code) {
-						step = .success
+					ForgotPasswordEnterCodeStep(code: $viewModel.code, isLoading: $viewModel.isLoading) {
+						Task {
+							try await viewModel.sendVerifyOTPRequest {
+								step = .success
+							}
+						}
 					}
 				case .success:
 					VStack(alignment: .center) {
 						ProgressView()
 							.task{
 								try? await Task.sleep(nanoseconds: 1500000000)
-								router.routeTo(.resetPassword)
+								if let resetPasswordRequest = viewModel.passwordChangeRequest {
+									router.routeTo(.resetPassword(ResetPasswordArgs(resetPasswordRequest: resetPasswordRequest)))
+								}
+					
 								
 							}
 					}.frame(maxWidth: .infinity)

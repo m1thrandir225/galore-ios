@@ -9,6 +9,8 @@ import SwiftUI
 
 struct ForgotPasswordEnterCodeStep: View {
 	@Binding var code: String
+	@Binding var isLoading: Bool
+
 	
 	var onNext: () -> Void
 	
@@ -31,20 +33,32 @@ struct ForgotPasswordEnterCodeStep: View {
 			Button {
 				onNext()
 			} label: {
-				Text("Verify")
-					.font(.system(size: 16, weight: .semibold))
-					.frame(maxWidth: .infinity)
-					.padding()
-					.background(Color("MainColor"))
-					.foregroundStyle(Color("OnMain"))
-					.clipShape(RoundedRectangle(cornerRadius: 16))
-					
+				ZStack {
+					if isLoading {
+						// Show loading spinner
+						ProgressView()
+							.progressViewStyle(CircularProgressViewStyle(tint: (Color("OnMain"))))
+							.foregroundColor(Color("OnMain"))
+						
+						
+					} else {
+						Text("Verify")
+							.font(.system(size: 18, weight: .semibold))
+					}
+				}
+				.frame(maxWidth: .infinity)
+				.padding()
+				.foregroundStyle(Color("OnMain"))
+				.background(Color("MainColor"))
+				.clipShape(RoundedRectangle(cornerRadius: 16))
 			}
+			.disabled(isLoading)
 		}.transition(.slide.combined(with: .blurReplace))
 	}
 }
 
 #Preview {
 	@Previewable @State var code: String = ""
-	ForgotPasswordEnterCodeStep(code: $code) {}
+	@Previewable @State var isLoading: Bool = false
+	ForgotPasswordEnterCodeStep(code: $code, isLoading: $isLoading) {}
 }

@@ -6,9 +6,9 @@
 //
 import Foundation
 
-public final class ResetPasswordRequest: Identifiable, Codable, Equatable, Sendable {
+public final class ResetPasswordModel: Identifiable, Codable, Equatable, Sendable {
 	
-	public static func == (lhs: ResetPasswordRequest, rhs: ResetPasswordRequest) -> Bool {
+	public static func == (lhs: ResetPasswordModel, rhs: ResetPasswordModel) -> Bool {
 		lhs.id == rhs.id
 		&& lhs.userId == rhs.userId
 		&& lhs.passwordReset == rhs.passwordReset
