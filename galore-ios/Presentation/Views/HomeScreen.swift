@@ -28,10 +28,20 @@ struct HomeScreen: View {
 		.task {
 			await viewModel.loadData()
 		}
+		.refreshable {
+			Task {
+				await viewModel.getHomescreen()
+			}
+		}
 	}
 	
 	private var contentView: some View {
 		VStack {
+			if let errorMessage = viewModel.errorMessage {
+				Text("Error: \(errorMessage)")
+					.font(.system(size: 16, weight: .semibold))
+					.foregroundStyle(Color("Error"))
+			}
 			CocktailCarousel(
 				items: viewModel.featuredCocktails,
 				isCarouselShowcase: true,
@@ -40,7 +50,7 @@ struct HomeScreen: View {
 					router.routeTo(.cocktailDetails(CocktailDetailsArgs(id: id, rootSentFrom: TabRoutes.home)))
 				}
 			)
-			ForEach(viewModel.userRecommendedCocktails, id: \.category.id) { item in
+			ForEach(viewModel.sectons, id: \.category.id) { item in
 				CocktailCarousel(
 					items: item.cocktails,
 					title: item.category.name,

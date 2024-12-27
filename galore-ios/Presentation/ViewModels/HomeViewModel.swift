@@ -11,11 +11,14 @@ class HomeViewModel: ObservableObject {
 	private var authService: AuthService = .shared
 	private var cocktailService: CocktailService = CocktailService.shared
 	private var userRepository: UserRepository = UserRepositoryImpl()
+	private var networkService: NetworkService = .shared
 	
 	@Published var errorMessage: String?
 	@Published var isLoading: Bool = false
 	@Published var featuredCocktails: [Cocktail] = []
 	@Published var userRecommendedCocktails: [GetCocktailsForCategoryResponse] = []
+	
+	@Published var sectons: [GetHomescreenResponse] = []
 	
 	
 	@MainActor
@@ -25,9 +28,10 @@ class HomeViewModel: ObservableObject {
 			isLoading = false
 		}
 		async let featured: () = getFeaturedCocktails()
+		async let homescreen: () = getHomescreen()
 		async let recommended: () = getCocktailsForUserCategories()
 		
-		let(_, _) = await (featured, recommended)
+		let(_, _, _) = await (featured, recommended, homescreen)
 		
 	}
 	func logout() async throws {
@@ -35,6 +39,20 @@ class HomeViewModel: ObservableObject {
 			try await authService.logout()
 		} catch {
 			errorMessage = error.localizedDescription
+		}
+	}
+	
+	func getHomescreen() async {
+		do {
+			guard let userId = userRepository.getUserId() else {
+				throw UserManagerError.userIdNotFound
+			}
+			let request = GetHomescreen(userId: userId)
+			let response = try await networkService.execute(request)
+			
+			sectons = response
+		} catch {
+			errorMessage = "Error fetching homescreen"
 		}
 	}
 	
