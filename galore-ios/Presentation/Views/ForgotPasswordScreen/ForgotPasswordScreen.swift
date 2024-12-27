@@ -18,8 +18,11 @@ struct ForgotPasswordScreen: View {
 	@StateObject var viewModel: ForgotPasswordViewModel = ForgotPasswordViewModel()
 	
 	@State var step: ForgotPasswordSteps = .enterEmail
-
+	@State private var showAlert: Bool = false
+	@State private var alertMessage: String = ""
 	
+	let resetPasswordExpiredError = "reset password request has expired"
+
 	private func getStepProgressValue() -> Float {
 		switch step {
 		case .enterEmail:
@@ -104,6 +107,22 @@ struct ForgotPasswordScreen: View {
 		}
 		.background(Color("Background"))
 		.navigationBarBackButtonHidden(true)
+		.onChange(of: viewModel.errorMessage) { oldErr, newErr in
+			guard let errorMessage = newErr else { return }
+			if resetPasswordExpiredError.contains(errorMessage) {
+				alertMessage = "The reset password request has expired. Please try again!"
+				showAlert = true
+			}
+		}
+		.alert(isPresented: $showAlert) {
+			Alert(
+				title: Text("Request Expired"),
+				message: Text(alertMessage),
+				dismissButton: .default(Text("OK"), action: {
+					router.popUntil(.login)
+				})
+			)
+		}
     }
 }
 
