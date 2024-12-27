@@ -18,6 +18,7 @@ struct ForgotPasswordScreen: View {
 	@StateObject var viewModel: ForgotPasswordViewModel = ForgotPasswordViewModel()
 	
 	@State var step: ForgotPasswordSteps = .enterEmail
+
 	
 	private func getStepProgressValue() -> Float {
 		switch step {
@@ -83,9 +84,19 @@ struct ForgotPasswordScreen: View {
 			.animation(.smooth, value: step)
 			
 			Spacer()
-			ProgressView(value: getStepProgressValue())
-				.progressViewStyle(LinearProgressViewStyle(tint: Color("MainColor")))
-				.animation(.smooth, value: step)
+			VStack(spacing: 24) {
+				if let errorMessage = viewModel.errorMessage {
+					Text("Error: \(errorMessage)")
+						.font(.system(size: 16, weight: .semibold))
+						.foregroundColor(Color("Error"))
+						.transition(.slide.combined(with: .scale))
+						.animation(.smooth, value: viewModel.errorMessage)
+				}
+				ProgressView(value: getStepProgressValue())
+					.progressViewStyle(LinearProgressViewStyle(tint: Color("MainColor")))
+					.animation(.smooth, value: step)
+			}
+
 			
 			
 			

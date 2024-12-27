@@ -18,6 +18,7 @@ class ForgotPasswordViewModel: ObservableObject {
 	
 	func sendForgotPasswordRequest(completionHandler: @escaping () -> Void) async throws {
 		isLoading = true
+		errorMessage = nil
 		
 		defer {
 			isLoading = false
@@ -25,17 +26,33 @@ class ForgotPasswordViewModel: ObservableObject {
 		
 		do {
 			let request = ForgotPasswordRequest(email: email)
-			let response = try await networkService.execute(request)
+			_ = try await networkService.execute(request)
 			
 			completionHandler()
 			
-		} catch {
+		} catch let error as NetworkError {
+			switch error {
+			case .badRequest(let message):
+				errorMessage = message ?? "Something went wrong"
+			case .notFound(let message):
+				errorMessage = message ?? "Something went wrong"
+			case .unauthorized(let message):
+				errorMessage = message ?? "Something went wrong"
+			case .serverError(let message):
+				errorMessage = message ?? "Something went wrong"
+			case .requestFailed(let message):
+				errorMessage = message ?? "Something went wrong"
+			default:
+				errorMessage = "Something went wrong"
+			}
+		} catch  {
 			errorMessage = "Something went wrong"
- 		}
+		}
 	}
 	
 	func sendVerifyOTPRequest(completionHandler: @escaping () -> Void) async throws {
 		isLoading = true
+		errorMessage = nil
 		
 		defer {
 			isLoading = false
@@ -49,8 +66,23 @@ class ForgotPasswordViewModel: ObservableObject {
 			passwordChangeRequest = response.resetPasswordRequest
 			
 			completionHandler()
+		} catch let error as NetworkError {
+			switch error {
+			case .badRequest(let message):
+				errorMessage = message ?? "Something went wrong"
+			case .notFound(let message):
+				errorMessage = message ?? "Something went wrong"
+			case .unauthorized(let message):
+				errorMessage = message ?? "Something went wrong"
+			case .serverError(let message):
+				errorMessage = message ?? "Something went wrong"
+			case .requestFailed(let message):
+				errorMessage = message ?? "Something went wrong"
+			default:
+				errorMessage = "Something went wrong"
+			}
 		} catch {
-			errorMessage = "The code you entered is incorrect."
+			errorMessage = "Something went wrong"
 		}
 	}
 }

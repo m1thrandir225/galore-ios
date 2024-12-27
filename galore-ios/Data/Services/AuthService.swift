@@ -143,9 +143,8 @@ class AuthService : ObservableObject {
 			
 			let request = LogoutRequest(sessionId: sessionId)
 			
-			let response = try await networkService.execute(request)
-			if response.message.isEmpty { throw NetworkError.requestFailed }
-			
+			_ = try await networkService.execute(request)
+		
 			authenticationRepository.logout()
 			userRepository.clearUser()
 			

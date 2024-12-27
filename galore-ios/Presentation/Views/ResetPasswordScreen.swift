@@ -12,6 +12,13 @@ struct ResetPasswordScreen : View {
 	let resetPasswordRequest: ResetPasswordModel
 	
 	@StateObject var viewModel: ResetPasswordViewModel = ResetPasswordViewModel()
+	@State private var showAlert: Bool = false
+	@State private var alertMessage: String = ""
+	
+	
+	let resetRequestExpiredError = "reset password request has expired"
+	let resetRequestNotFoundError = "reset password request not found"
+	let resetRequestError = "error getting reset password request"
 	
 	var body: some View {
 		VStack(alignment: .leading) {
@@ -37,13 +44,18 @@ struct ResetPasswordScreen : View {
 						.font(.system(size: 16, weight: .semibold))
 					PasswordField(text: $viewModel.confirmPassword, placeholder: "Repeat your new password")
 				}
+				if let errorMessage = viewModel.errorMessage {
+					Text("Error \(errorMessage)")
+						.font(.system(size: 16, weight: .semibold))
+						.foregroundStyle(Color("Error"))
+				}
 				Button {
 					Task {
-						 await viewModel.resetPassword(resetPasswordRequestId: resetPasswordRequest.id ){
+						await viewModel.resetPassword(resetPasswordRequestId: resetPasswordRequest.id ){
 							router.routeTo(.login)
 						}
 					}
-
+					
 				} label: {
 					ZStack {
 						if viewModel.isLoading {
@@ -65,11 +77,27 @@ struct ResetPasswordScreen : View {
 				}
 				.disabled(viewModel.isLoading)
 			}.padding(24)
-
+			
 			Spacer()
 		}
 		.background(Color("Background"))
 		.navigationBarBackButtonHidden(true)
+		.onChange(of: viewModel.errorMessage) { oldError, newError in
+			guard let errorMessage = newError else { return }
+			if [resetRequestExpiredError, resetRequestNotFoundError, resetRequestError].contains(errorMessage) {
+				alertMessage = "The reset password request has expired. Please try again!"
+				showAlert = true
+			}
+		}
+		.alert(isPresented: $showAlert) {
+			Alert(
+				title: Text("Request Expired"),
+				message: Text(alertMessage),
+				dismissButton: .default(Text("OK"), action: {
+					router.popUntil(.login)
+				})
+			)
+		}
 	}
 }
 
@@ -77,5 +105,5 @@ struct ResetPasswordScreen : View {
 	@Previewable @State  var authRoute: AuthRoutes? = nil
 	let router = Router<AuthRoutes>(isPresented: Binding(projectedValue: $authRoute))
 	
-//	ResetPasswordScreen(router: router, reset)
+	//	ResetPasswordScreen(router: router, reset)
 }

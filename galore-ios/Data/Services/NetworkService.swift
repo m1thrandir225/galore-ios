@@ -49,21 +49,36 @@ class NetworkService {
 		
 		guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
 			let httpResponseError = response as? HTTPURLResponse
+			var errorMessage: String?
 			
 			print("HTTP Status Code: \(httpResponseError?.statusCode ?? -1)")
 			
 			do {
 				// Decoding the error response into a dictionary
 				if let jsonObject = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
-				   let errorMessage = jsonObject["error"] as? String {
-					print("Server Error: \(errorMessage)")
+				   let serverMessage = jsonObject["error"] as? String {
+					errorMessage = serverMessage
 				} else {
-					print("Unexpected error format in response.")
+					errorMessage = "Unexpected error format in response."
 				}
 			} catch {
 				print("Error decoding response data: \(error.localizedDescription)")
 			}
-			throw NetworkError.requestFailed
+			switch httpResponseError!.statusCode {
+			case 400:
+				throw NetworkError.badRequest(errorMessage: errorMessage)
+			case 404:
+				throw NetworkError.notFound(errorMessage: errorMessage)
+			case 401:
+				throw NetworkError.unauthorized(errorMessage: errorMessage)
+			case 403:
+				throw NetworkError.unauthorized(errorMessage: errorMessage)
+			case 500:
+				throw NetworkError.serverError(errorMessage: errorMessage)
+			default:
+				throw NetworkError.requestFailed(errorMessage: errorMessage)
+				
+			}
 		}
 		
 		do {

@@ -9,13 +9,13 @@ import Foundation
 @MainActor
 class ResetPasswordViewModel: ObservableObject {
 	private final let networkServiced: NetworkService = .shared
-
+	
 	@Published var newPassword: String = ""
 	@Published var confirmPassword: String = ""
 	@Published var errorMessage: String?
 	@Published var isLoading: Bool = false
 	
-
+	
 	func isValid() -> Bool {
 		newPassword.count >= 8 && newPassword == confirmPassword
 	}
@@ -27,13 +27,24 @@ class ResetPasswordViewModel: ObservableObject {
 		}
 		do {
 			let networkRequest = ResetPasswordRequest(resetPasswordRequestId: resetPasswordRequestId, newPassword: newPassword, confirmPassword: confirmPassword)
-			let response = try await  networkServiced.execute(networkRequest)
-			
-			if response != 200 {
-				throw NetworkError.requestFailed
-			}
+			let  _ = try await  networkServiced.execute(networkRequest)
 			
 			completionHandler()
+		} catch let error as NetworkError {
+			switch error {
+			case .badRequest(let message):
+				errorMessage = message ?? "Something went wrong"
+			case .notFound(let message):
+				errorMessage = message ?? "Something went wrong"
+			case .unauthorized(let message):
+				errorMessage = message ?? "Something went wrong"
+			case .serverError(let message):
+				errorMessage = message ?? "Something went wrong"
+			case .requestFailed(let message):
+				errorMessage = message ?? "Something went wrong"
+			default:
+				errorMessage = "Something went wrong"
+			}
 		} catch {
 			errorMessage = "Something went wrong."
 		}
