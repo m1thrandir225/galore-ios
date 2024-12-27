@@ -8,12 +8,20 @@ import SwiftUI
 
 struct PasswordField : View {
 	@Binding var text: String
-	@State var isShowingPassword: Bool = false
+	@State var isShowingPassword: Bool
+	
+	let placeholder: String
+	
+	init(text: Binding<String>, isShowingPassword: Bool = false, placeholder: String = "Password") {
+		self._text = text
+		self.isShowingPassword = isShowingPassword
+		self.placeholder = placeholder
+	}
 	var body: some View {
 		HStack {
 			if isShowingPassword {
 				TextField(
-					"Password",
+					placeholder,
 					text: $text
 				)
 				.padding(.all, 20)
@@ -25,7 +33,7 @@ struct PasswordField : View {
 				.textContentType(.password)
 			} else {
 				SecureField(
-					"Password",
+					placeholder,
 					text: $text
 				).padding(.all, 20)
 					.frame(height: 60)
@@ -33,8 +41,6 @@ struct PasswordField : View {
 						RoundedRectangle(cornerRadius: 8)
 							.stroke(Color("Outline"), lineWidth: 1.5)
 					)
-				
-				
 			}
 			if !text.isEmpty {
 				Button {

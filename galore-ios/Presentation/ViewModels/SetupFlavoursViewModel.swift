@@ -46,14 +46,24 @@ class SetupFlavoursViewModel: ObservableObject {
 			let request = LikeFlavours(userId: userId, flavourIds: likedFlavours.compactMap{String($0)})
 			let response = try await networkService.execute(request)
 			
-			if response != 200 {
-				throw NetworkError.requestFailed
-			}
-			
 			completionHandler()
 			
-		} catch NetworkError.requestFailed {
-			errorMessage = "There was a problem submiting the request."
+		}
+		catch let error as NetworkError {
+			switch error {
+			case .badRequest(let message):
+				errorMessage = message ?? "Something went wrong"
+			case .notFound(let message):
+				errorMessage = message ?? "Something went wrong"
+			case .unauthorized(let message):
+				errorMessage = message ?? "Something went wrong"
+			case .serverError(let message):
+				errorMessage = message ?? "Something went wrong"
+			case .requestFailed(let message):
+				errorMessage = message ?? "Something went wrong"
+			default:
+				errorMessage = "Something went wrong"
+			}
 		} catch UserManagerError.userIdNotFound {
 			errorMessage = "No user found"
 		}
