@@ -29,6 +29,7 @@ struct CocktailGrid : View {
 					onCardPress: onCardPress
 				)
 				.transition(.opacity.combined(with: .blurReplace))
+				.animation(.smooth, value: items)
 			}
 		}
 	}

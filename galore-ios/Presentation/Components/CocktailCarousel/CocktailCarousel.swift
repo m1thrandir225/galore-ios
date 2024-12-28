@@ -30,21 +30,38 @@ struct CocktailCarousel: View {
 						.font(.system(size: 28, weight: .bold))
 						.foregroundStyle(Color("OnBackground"))
 					Spacer()
-					Button {
-						navigateToSection()
-					} label: {
-						Image(systemName: "chevron.right")
-							.foregroundStyle(Color("OnBackground"))
+					if !items.isEmpty {
+						Button {
+							navigateToSection()
+						} label: {
+							Image(systemName: "chevron.right")
+								.foregroundStyle(Color("OnBackground"))
+						}
 					}
+
 				}.padding(.horizontal, 24)
 			}
-			GeometryReader { reader in
-				SnapperView(size: reader.size,
-							items: items,
-							isCarouselShowcase: isCarouselShowcase,
-							onCardPress: onCardPress
-				)
-			}.frame(height: 300)
+			if items.isEmpty {
+				VStack (alignment: .center){
+					Image("noResults")
+						.resizable()
+						.scaledToFit()
+						.frame(height: 50)
+				}
+				.frame(height: 100)
+				.frame(maxWidth: .infinity)
+				
+				
+			} else {
+				GeometryReader { reader in
+					SnapperView(size: reader.size,
+								items: items,
+								isCarouselShowcase: isCarouselShowcase,
+								onCardPress: onCardPress
+					)
+				}.frame(height: 300)
+			}
+			
 		}.transition(.opacity.combined(with: .blurReplace))
 		
 	}
@@ -174,7 +191,7 @@ struct SnapperView: View {
 							 navigateToSection: {},
 							 onCardPress: { _ in}
 			)
-			CocktailCarousel(items: cocktails,
+			CocktailCarousel(items: [],
 							 title: "Packing a punch",
 							 isCarouselShowcase: false,
 							 navigateToSection: {},

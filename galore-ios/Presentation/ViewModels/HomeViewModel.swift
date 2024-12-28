@@ -17,11 +17,8 @@ class HomeViewModel: ObservableObject {
 	@Published var isLoading: Bool = false
 	@Published var featuredCocktails: [Cocktail] = []
 	@Published var userRecommendedCocktails: [GetCocktailsForCategoryResponse] = []
+	@Published var homeSection: [GetHomescreenResponse] = []
 	
-	@Published var sectons: [GetHomescreenResponse] = []
-	
-	
-	@MainActor
 	func loadData() async {
 		isLoading = true
 		defer {
@@ -42,7 +39,17 @@ class HomeViewModel: ObservableObject {
 		}
 	}
 	
+	func clearCurrentData() {
+		errorMessage = nil
+		
+		userRecommendedCocktails = []
+		homeSection = []
+		featuredCocktails = []
+	}
+	
 	func getHomescreen() async {
+		guard homeSection.isEmpty else { return }
+		
 		do {
 			guard let userId = userRepository.getUserId() else {
 				throw UserManagerError.userIdNotFound
@@ -50,7 +57,7 @@ class HomeViewModel: ObservableObject {
 			let request = GetHomescreen(userId: userId)
 			let response = try await networkService.execute(request)
 			
-			sectons = response
+			homeSection = response
 		} catch {
 			errorMessage = "Error fetching homescreen"
 		}
