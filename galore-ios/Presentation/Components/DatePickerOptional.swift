@@ -13,14 +13,16 @@ struct DatePickerOptional: View {
 	let prompt: String
 	let range: PartialRangeThrough<Date>
 	@Binding var date: Date?
-	@State private var hidenDate: Date = Date()
-	@State private var showDate: Bool = false
+	@State private var hidenDate: Date
+	@State private var showDate: Bool
 	
-	init(_ label: String, prompt: String, in range: PartialRangeThrough<Date>, selection: Binding<Date?>) {
+	init(_ label: String, prompt: String, in range: PartialRangeThrough<Date>, selection: Binding<Date?>, showDate: Bool = false, initialDate: Date = Date()) {
 		self.label = label
 		self.prompt = prompt
 		self.range = range
 		self._date = selection
+		self.showDate = showDate
+		self.hidenDate = initialDate
 	}
 	
 	var body: some View {
@@ -31,7 +33,6 @@ struct DatePickerOptional: View {
 					.multilineTextAlignment(.leading)
 				Spacer()
 				if showDate {
-
 					DatePicker(
 						label,
 						selection: $hidenDate,
