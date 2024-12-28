@@ -15,28 +15,84 @@ struct OverviewSettingsScreen: View {
 	}
 	let columns = [GridItem(.fixed(150)), GridItem(.fixed(150))]
 	
+	
 	var body: some View {
-		List {
-			Button {
-				router.routeTo(.settingsOverview)
-			} label: {
-				Text("Update Profile")
+		VStack(alignment: .leading, spacing: 24) {
+			BackButton {
+				router.dismiss()
 			}
+			SectionTitle(text: "Settings")
+			ScrollView(.vertical, showsIndicators: false) {
+				VStack(alignment: .leading, spacing: 24) {
+					VStack(alignment: .leading, spacing: 24) {
+						OverviewSettingsButton(
+							title: "Account Settings",
+							icon: "gearshape",
+							action: {
+								router.routeTo(.updateProfile)
+							},
+							hasIcon: true
+						)
+						OverviewSettingsButton(
+							title: "Password & Security",
+							icon: "key",
+							action: {
+								router.routeTo(.changePassword)
+							},
+							hasIcon: true
+						)
+						OverviewSettingsButton(
+							title: "Notifications",
+							icon: "bell",
+							action: {
+								router.routeTo(.notificationSettings)
+							},
+							hasIcon: true
+						)
+					}
+					.padding()
+					.background(Color("MainContainer").opacity(0.5))
+					.clipShape(RoundedRectangle(cornerRadius: 16))
 			
-			Button {
-				router.routeTo(.help)
-			} label: {
-				Text("Change Password")
-			}
+					VStack(alignment: .leading, spacing: 24) {
+						OverviewSettingsButton(
+							title: "Terms & Conditions",
+							icon: "",
+							action: {
+								router.routeTo(.termsAndConditions)
+							},
+							hasIcon: false
+						)
+						OverviewSettingsButton(
+							title: "Privacy Policy",
+							icon: "",
+							action: {
+								router.routeTo(.privacyPolicy)
+							},
+							hasIcon: false
+						)
+					}
+					.padding()
+					.background(Color("MainContainer").opacity(0.5))
+					.clipShape(RoundedRectangle(cornerRadius: 16))
 			
-			Button {
-				router.routeTo(.help)
-			} label: {
-				Text("Terms and Conditions")
+				}
 			}
-		}.background(Color("Background"))
-			.navigationTitle("Settings")
-			.navigationBarTitleDisplayMode(.large)
+
+			Spacer()
+			VStack(alignment: .center, spacing: 12) {
+				Logo()
+				if let version = Bundle.main.releaseVersionNumber {
+					Text("Version: \(version)")
+						.font(.footnote)
+						.foregroundStyle(Color("Outline"))
+				}
+			}
+			.frame(maxWidth: .infinity)
+		}
+		.padding(.horizontal, 24)
+		.background(Color("Background"))
+		.navigationBarBackButtonHidden()
 		
 	}
 }
