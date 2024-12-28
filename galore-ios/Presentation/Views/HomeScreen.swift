@@ -53,9 +53,8 @@ struct HomeScreen: View {
 	private var contentView: some View {
 		VStack {
 			if let errorMessage = viewModel.errorMessage {
-				Text("Error: \(errorMessage)")
-					.font(.system(size: 16, weight: .semibold))
-					.foregroundStyle(Color("Error"))
+				ErrorMessage(text: errorMessage)
+					.animation(.smooth, value: errorMessage)
 			}
 			CocktailCarousel(
 				items: viewModel.featuredCocktails,

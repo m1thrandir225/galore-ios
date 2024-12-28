@@ -56,9 +56,8 @@ struct AllSetScreen: View {
 				}
 				
 				if let errorMessage = viewModel.errorMessage {
-					Text(errorMessage)
-						.font(.system(size: 16, weight: .semibold))
-						.foregroundStyle(Color("Error"))
+					ErrorMessage(text: errorMessage)
+						.animation(.smooth, value: viewModel.errorMessage)
 				}
 			}
 			

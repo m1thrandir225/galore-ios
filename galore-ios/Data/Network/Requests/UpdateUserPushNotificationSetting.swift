@@ -39,4 +39,9 @@ struct UpdateUserPushNotificationSetting : NetworkRequest {
 	var files: [String : NetworkFile]? {
 		return nil
 	}
+	
+	init(userId: String, status: Bool) {
+		self.userId = userId
+		self.status = status
+	}
 }

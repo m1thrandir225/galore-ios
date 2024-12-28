@@ -53,8 +53,8 @@ struct LoginScreen: View {
 				
 				
 				if let errorMessage = viewModel.errorMessage {
-					Text(errorMessage)
-						.foregroundStyle(.red)
+					ErrorMessage(text: errorMessage)
+						.animation(.smooth, value: errorMessage)
 				}
 				Button {
 					router.routeTo(.forgotPassword)

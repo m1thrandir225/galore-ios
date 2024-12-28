@@ -9,9 +9,86 @@ import SwiftUI
 
 struct NotificationSettingsScreen: View {
 	@StateObject var router: Router<TabRoutes>
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-    }
+	@StateObject var viewModel: NotificationSettingsViewModel = NotificationSettingsViewModel()
+	@State var isOn: Bool = false
+	
+	var body: some View {
+		VStack(alignment: .leading, spacing: 24) {
+			BackButton {
+				router.dismiss()
+			}
+			SectionTitle(text: "Notifications")
+			
+			if let pushNotificationsEnabled = $viewModel.pushNotificationsEnabled.optionalBinding(), let emailNotificationsEnabled = $viewModel.emailNotificationsEnabled.optionalBinding() {
+				Toggle(
+					"Push Notifications",
+					systemImage: "bell",
+					isOn: pushNotificationsEnabled
+				)
+				.font(.system(size: 16, weight: .medium))
+				.foregroundStyle(Color("Secondary"))
+				.toggleStyle(SwitchToggleStyle(tint: Color("Secondary")))
+				
+				Toggle(
+					"Email Notifications",
+					systemImage: "envelope",
+					isOn: emailNotificationsEnabled
+				)
+				.font(.system(size: 16, weight: .medium))
+				.foregroundStyle(Color("Secondary"))
+				.toggleStyle(SwitchToggleStyle(tint: Color("Secondary")))
+				
+				Button {
+					Task {
+						await viewModel.updateNotificationSettings() {
+							router.dismiss()
+						}
+					}
+				} label: {
+					ZStack {
+						if viewModel.isLoading {
+							// Show loading spinner
+							ProgressView()
+								.progressViewStyle(CircularProgressViewStyle(tint: (Color("OnMain"))))
+								.foregroundColor(Color("OnMain"))
+							
+							
+						} else {
+							// Show the button label
+							Text("Update Preferences")
+								.font(.system(size: 18, weight: .semibold))
+						}
+					}
+					.frame(maxWidth: .infinity) // Keeps the button width consistent
+					.padding()
+					.foregroundStyle(Color("OnMain"))
+					.background(Color("MainColor"))
+					.clipShape(RoundedRectangle(cornerRadius: 16))
+				}
+				.disabled(viewModel.isLoading)
+				
+				if let errorMessage = viewModel.errorMessage {
+					ErrorMessage(text: errorMessage)
+						.animation(.smooth, value: errorMessage)
+				}
+			}
+			if let successMessage = viewModel.successMessage {
+				Text(successMessage)
+					.font(.system(size: 24, weight: .bold))
+					.foregroundStyle(Color("Teritary"))
+			}
+			Spacer()
+			Logo()
+				.frame(maxWidth: .infinity)
+		}
+		.onAppear {
+			viewModel.fetchNotificationSettings()
+		}
+		.padding(24)
+		.background(Color("Background"))
+		.navigationBarBackButtonHidden(true)
+		
+	}
 }
 
 #Preview {

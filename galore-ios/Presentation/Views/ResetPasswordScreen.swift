@@ -45,9 +45,8 @@ struct ResetPasswordScreen : View {
 					PasswordField(text: $viewModel.confirmPassword, placeholder: "Repeat your new password")
 				}
 				if let errorMessage = viewModel.errorMessage {
-					Text("Error \(errorMessage)")
-						.font(.system(size: 16, weight: .semibold))
-						.foregroundStyle(Color("Error"))
+					ErrorMessage(text: errorMessage)
+						.animation(.smooth, value: errorMessage)
 				}
 				Button {
 					Task {
