@@ -10,7 +10,6 @@ struct SetupFlavoursScreen : View {
 	@StateObject var router: Router<OnboardingRoutes>
 	@StateObject var viewModel: SetupFlavoursViewModel = SetupFlavoursViewModel()
 	
-	
 	let columns = [GridItem(.fixed(190)), GridItem(.fixed(190))]
 	
 	var body: some View {
@@ -30,25 +29,31 @@ struct SetupFlavoursScreen : View {
 						ForEach(flavours, id: \.id) { flavour in
 							Button {
 								let generator = UIImpactFeedbackGenerator(style: .heavy)
-								
 								viewModel.addOrRemoveFlavourToLiked(flavour.id)
 								generator.impactOccurred()
 								
 							} label: {
-								Text(flavour.name)
-									.font(.system(size: 18, weight: .semibold))
-									.frame(minWidth: 0, maxWidth: .infinity)
-									.padding()
-									.foregroundStyle(viewModel.isFlavourLiked(flavour.id) ? Color("OnMain") : Color("MainColor"))
-									.background(viewModel.isFlavourLiked(flavour.id) ? Color("MainColor") : Color("Background"))
-									.clipShape(RoundedRectangle(cornerRadius: 16))
-									.overlay(
-										RoundedRectangle(cornerRadius: 16)
-											.stroke(viewModel.isFlavourLiked(flavour.id) ? Color("Secondary") : Color("MainColor").opacity(0.5), lineWidth: 2)
-									)
-									.animation(.spring(duration: 0.3, bounce: 0.5, blendDuration: 0), value: viewModel.isFlavourLiked(flavour.id))
-									.disabled(viewModel.isLoading)
-							}
+								HStack {
+									Image(systemName: viewModel.isFlavourLiked(flavour.id) ? "minus" : "plus" )
+									Text(flavour.name)
+										.font(.system(size: 18, weight: .semibold))
+										
+										
+								}
+								.foregroundStyle(viewModel.isFlavourLiked(flavour.id) ? Color("OnMain") : Color("MainColor"))
+								
+								.frame(minWidth: 0, maxWidth: .infinity)
+								
+								.padding()
+								.background(viewModel.isFlavourLiked(flavour.id) ? Color("MainColor") : Color("Background"))
+								.clipShape(RoundedRectangle(cornerRadius: 16))
+								.overlay(
+									RoundedRectangle(cornerRadius: 16)
+										.stroke(viewModel.isFlavourLiked(flavour.id) ? Color("Secondary") : Color("MainColor").opacity(0.5), lineWidth: 2)
+								)
+								.transition(.scale.combined(with: .opacity))
+								.animation(.spring(duration: 0.3, bounce: 0.5, blendDuration: 0), value: viewModel.isFlavourLiked(flavour.id))
+							}.disabled(viewModel.isLoading)
 						}
 					}
 				}
