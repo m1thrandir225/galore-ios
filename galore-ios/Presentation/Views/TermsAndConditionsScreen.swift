@@ -21,7 +21,7 @@ struct TermsAndConditionsScreen: View {
     var body: some View {
 		VStack(alignment: .leading) {
 			HStack {
-				Text("Privacy Policy")
+				Text("Terms and Conditions")
 					.font(.system(size: 24, weight: .semibold))
 					.foregroundStyle(Color("OnBackground"))
 					.padding(24)
@@ -31,7 +31,7 @@ struct TermsAndConditionsScreen: View {
 			}
 			ScrollView(.vertical, showsIndicators: false) {
 				VStack(alignment: .leading, spacing: 24) {
-					TitleVisibilityCheckerView(title: "Privacy Policy", titleVisible: $titleVisible)
+					TitleVisibilityCheckerView(title: "Terms and Conditions", titleVisible: $titleVisible)
 					ForEach(paragraphs, id: \.self) { item in
 						Text(item)
 							.font(.system(size: 16, weight: .regular))
