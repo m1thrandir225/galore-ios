@@ -26,9 +26,12 @@ enum TabRoutes: Routable {
 	case library
 	case generate
 	case help
+	case privacyPolicy
+	case termsAndConditions
 	case settingsOverview
 	case updateProfile
 	case changePassword
+	case notificationSettings
 	case cocktailDetails(CocktailDetailsArgs)
 	case cocktailSection(CocktailSectionArgs)
 	
@@ -61,9 +64,10 @@ enum TabRoutes: Routable {
 				.updateProfile,
 				.changePassword,
 				.cocktailDetails,
-				.cocktailSection:
+				.cocktailSection,
+				.notificationSettings:
 					.push
-		case .help:
+		case .help, .privacyPolicy, .termsAndConditions:
 				.sheet
 		}
 	}
@@ -83,10 +87,16 @@ enum TabRoutes: Routable {
 			OverviewSettingsScreen(router: router)
 		case .help:
 			HelpScreen(router: router)
+		case .privacyPolicy:
+			PrivacyPolicyScreen(router: router)
+		case .termsAndConditions:
+			TermsAndConditionsScreen(router: router)
 		case .updateProfile:
 			UpdateProfileScreen(router: router)
 		case .changePassword:
 			ChangePasswordScreen(router: router)
+		case .notificationSettings:
+			NotificationSettingsScreen(router: router)
 		case .cocktailDetails(let args):
 			CocktailDetailsScreen(router: router, cocktailId: args.id, rootSentFrom: args.rootSentFrom ?? nil)
 		case .cocktailSection(let args):
