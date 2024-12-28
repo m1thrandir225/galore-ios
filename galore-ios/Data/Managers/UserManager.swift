@@ -58,4 +58,5 @@ class UserManager {
 	func clearUser() {
 		self.user = nil
 	}
+	
 }

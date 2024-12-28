@@ -63,8 +63,8 @@ struct RegisterScreen: View {
 					.transition(.slide.combined(with: .blurReplace))
 			}
 			if let errorMessage = viewModel.errorMessage {
-				Text(errorMessage)
-					.foregroundStyle(.red)
+				ErrorMessage(text: errorMessage)
+					.animation(.smooth, value: viewModel.errorMessage)
 					.onAppear {
 						currentStep = .info
 					}

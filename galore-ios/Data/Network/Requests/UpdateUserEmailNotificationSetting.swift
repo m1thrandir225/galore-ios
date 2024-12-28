@@ -40,5 +40,11 @@ struct UpdateUserEmailNotificationSetting: NetworkRequest {
 		return nil
 	}
 	
+	init(userId: String, status: Bool) {
+		self.userId = userId
+		self.status = status
+		
+	}
+	
 	
 }

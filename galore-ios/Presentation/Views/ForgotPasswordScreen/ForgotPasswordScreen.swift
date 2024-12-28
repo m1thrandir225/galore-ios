@@ -89,10 +89,7 @@ struct ForgotPasswordScreen: View {
 			Spacer()
 			VStack(spacing: 24) {
 				if let errorMessage = viewModel.errorMessage {
-					Text("Error: \(errorMessage)")
-						.font(.system(size: 16, weight: .semibold))
-						.foregroundColor(Color("Error"))
-						.transition(.slide.combined(with: .scale))
+					ErrorMessage(text: errorMessage)
 						.animation(.smooth, value: viewModel.errorMessage)
 				}
 				ProgressView(value: getStepProgressValue())
