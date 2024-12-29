@@ -57,6 +57,7 @@ class NetworkService {
 				// Decoding the error response into a dictionary
 				if let jsonObject = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
 				   let serverMessage = jsonObject["error"] as? String {
+					print(serverMessage)
 					errorMessage = serverMessage
 				} else {
 					errorMessage = "Unexpected error format in response."

@@ -43,8 +43,6 @@ class AuthService : ObservableObject {
 				userRepository.setCategoriesForUser(userCategories)
 				userRepository.setLikedFlavoursForUser(userFlavours)
 				
-				print(userFlavours.count)
-				
 				if (userFlavours.count == 0) {
 					isNewUser = true
 				}
@@ -204,13 +202,12 @@ class AuthService : ObservableObject {
 		let userFlavours = try await self.fetchLikedFlavours(userId: user.id)
 		userRepository.setLikedFlavoursForUser(userFlavours)
 		
-		print(userFlavours.count)
 		
 		if userFlavours.count == 0 {
 			self.isNewUser = true
 		}
 		self.isLoggedIn = true
 	}
-	
+
 
 }

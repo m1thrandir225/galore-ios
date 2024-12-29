@@ -26,6 +26,8 @@ struct PasswordField : View {
 				)
 				.padding(.all, 20)
 				.frame(height: 60)
+				.autocorrectionDisabled()
+				.textInputAutocapitalization(.never)
 				.overlay(
 					RoundedRectangle(cornerRadius: 8)
 						.stroke(Color("Outline"), lineWidth: 1.5)
