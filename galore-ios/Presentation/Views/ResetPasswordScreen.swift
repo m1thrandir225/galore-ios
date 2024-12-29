@@ -15,6 +15,26 @@ struct ResetPasswordScreen : View {
 	@State private var showAlert: Bool = false
 	@State private var alertMessage: String = ""
 	
+	func isPasswordValid(password: String) -> Bool {
+		let passwordTest = NSPredicate(format: "SELF MATCHES %@", "^([a-zA-Z0-9@*#]{8,15})$")
+		return passwordTest.evaluate(with: password)
+	}
+	
+	func newPassowrdPrompt(password: String) -> String {
+		if isPasswordValid(password: password) {
+			return ""
+		} else {
+			return "Please enter a valid password."
+		}
+	}
+	
+	func confirmPasswordPrompt(password: String) -> String {
+		if isPasswordValid(password: password) && password == viewModel.newPassword {
+			return ""
+		} else {
+			return "Passwords do not match."
+		}
+	}
 	
 	let resetRequestExpiredError = "reset password request has expired"
 	let resetRequestNotFoundError = "reset password request not found"
@@ -36,13 +56,25 @@ struct ResetPasswordScreen : View {
 					Text("New Password")
 						.foregroundStyle(Color("Secondary"))
 						.font(.system(size: 16, weight: .semibold))
+					
 					PasswordField(text: $viewModel.newPassword, placeholder: "Enter your new password")
+					
+					if !viewModel.newPassword.isEmpty {
+						Text(newPassowrdPrompt(password: viewModel.newPassword))
+							.font(.caption).foregroundStyle(Color("Error"))
+							.fontWeight(.semibold).transition(.scale)
+					}
 				}
 				VStack (alignment: .leading, spacing: 12) {
 					Text("Confirm Password")
 						.foregroundStyle(Color("Secondary"))
 						.font(.system(size: 16, weight: .semibold))
 					PasswordField(text: $viewModel.confirmPassword, placeholder: "Repeat your new password")
+					if !viewModel.confirmPassword.isEmpty {
+						Text(confirmPasswordPrompt(password: viewModel.confirmPassword))
+							.font(.caption).foregroundStyle(Color("Error"))
+							.fontWeight(.semibold).transition(.scale)
+					}
 				}
 				if let errorMessage = viewModel.errorMessage {
 					ErrorMessage(text: errorMessage)
@@ -69,12 +101,18 @@ struct ResetPasswordScreen : View {
 						}
 					}
 					.frame(maxWidth: .infinity)
-					.padding()
-					.foregroundStyle(Color("OnMain"))
-					.background(Color("MainColor"))
 					.clipShape(RoundedRectangle(cornerRadius: 16))
 				}
-				.disabled(viewModel.isLoading)
+				.disabled(
+					viewModel.isLoading ||
+					!isPasswordValid(password: viewModel.newPassword) ||
+					!isPasswordValid(password: viewModel.confirmPassword)
+				)
+				.buttonStyle(
+					MainButtonStyle(isDisabled: viewModel.isLoading ||
+									!isPasswordValid(password: viewModel.newPassword) ||
+									!isPasswordValid(password: viewModel.confirmPassword))
+				)
 			}.padding(24)
 			
 			Spacer()
@@ -104,5 +142,5 @@ struct ResetPasswordScreen : View {
 	@Previewable @State  var authRoute: AuthRoutes? = nil
 	let router = Router<AuthRoutes>(isPresented: Binding(projectedValue: $authRoute))
 	
-	//	ResetPasswordScreen(router: router, reset)
+	ResetPasswordScreen(router: router, resetPasswordRequest: ResetPasswordModel(id: "", userId: "", passwordReset: false, validUntil: Date()))
 }
