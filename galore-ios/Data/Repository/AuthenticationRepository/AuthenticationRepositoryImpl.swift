@@ -8,6 +8,8 @@
 import Foundation
 
 final class AuthenticationRepositoryImpl: AuthenticationRepository {
+
+	
 	private let tokenManager: TokenManager = TokenManager.shared
 	
 	func shouldRefreshToken() -> Bool {
@@ -54,6 +56,10 @@ final class AuthenticationRepositoryImpl: AuthenticationRepository {
 	}
 	
 	func logout()  {
+		tokenManager.clearTokens()
+	}
+	
+	func deleteAccount() {
 		tokenManager.clearTokens()
 	}
 	

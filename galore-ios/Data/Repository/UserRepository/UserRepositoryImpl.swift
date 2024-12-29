@@ -8,6 +8,8 @@ import Foundation
 
 
 final class UserRepositoryImpl: UserRepository {
+
+	
 	private let userManager: UserManager = UserManager.shared
 
 	func getUser() -> User? {
@@ -49,5 +51,6 @@ final class UserRepositoryImpl: UserRepository {
 		userManager.clearLikedFlavours()
 		userManager.clearCategoriesForUser()
 	}
+
 	
 }

@@ -10,6 +10,7 @@ protocol AuthenticationRepository {
 	func login(with response: LoginResponse)
 	func register(with response: RegisterResponse)
 	func logout()
+	func deleteAccount()
 	func shouldRefreshToken() -> Bool
 	func isAuthenticated() -> Bool
 	func getSessionToken() -> String?
