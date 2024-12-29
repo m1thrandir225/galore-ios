@@ -15,14 +15,23 @@ struct DatePickerOptional: View {
 	@Binding var date: Date?
 	@State private var hidenDate: Date
 	@State private var showDate: Bool
+	@State private var allowClear: Bool
 	
-	init(_ label: String, prompt: String, in range: PartialRangeThrough<Date>, selection: Binding<Date?>, showDate: Bool = false, initialDate: Date = Date()) {
+	init(_ label: String,
+		 prompt: String,
+		 in range: PartialRangeThrough<Date>,
+		 selection: Binding<Date?>,
+		 showDate: Bool = false,
+		 initialDate: Date = Date(),
+		 allowClear: Bool = true
+	) {
 		self.label = label
 		self.prompt = prompt
 		self.range = range
 		self._date = selection
 		self.showDate = showDate
 		self.hidenDate = initialDate
+		self.allowClear = allowClear
 	}
 	
 	var body: some View {
@@ -43,15 +52,18 @@ struct DatePickerOptional: View {
 					.onChange(of: hidenDate) { oldDate, newDate in
 						date = newDate
 					}
-					Button {
-						showDate = false
-						date = nil
-					} label: {
-						Image(systemName: "xmark.circle")
-							.resizable()
-							.frame(width: 16, height: 16)
-							.tint(Color("MainColor"))
+					if allowClear {
+						Button {
+							showDate = false
+							date = nil
+						} label: {
+							Image(systemName: "xmark.circle")
+								.resizable()
+								.frame(width: 16, height: 16)
+								.tint(Color("MainColor"))
+						}
 					}
+					
 					
 				} else {
 					Button {

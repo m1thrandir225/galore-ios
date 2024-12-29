@@ -17,11 +17,13 @@ class UpdateProfileViewModel : ObservableObject {
 	@Published var birthday: Date?
 	@Published var networkFile: NetworkFile? = nil
 	@Published var isLoading: Bool = false
+	@Published var isLoadingInitialData: Bool = false
 	@Published var successMessage: String? = nil
 	
 	@Published var imageModel: ProfilePictureModel? = nil
 	
 	func loadInitialData() {
+		isLoadingInitialData = true
 		guard let user = userRepository.getUser() else { errorMesage = "User not found"; return}
 		
 		email = user.email
@@ -34,6 +36,7 @@ class UpdateProfileViewModel : ObservableObject {
 		} else {
 			imageModel = ProfilePictureModel()
 		}
+		isLoadingInitialData = false
 	}
 	
 	func updateProfile(completionHandler: @escaping() -> Void) async {
