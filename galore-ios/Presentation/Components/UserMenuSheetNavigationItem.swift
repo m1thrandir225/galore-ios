@@ -21,7 +21,7 @@ struct UserMenuSheetNavigationItem : View {
 							.resizable()
 							.scaledToFit()
 							.frame(width: 32, height: 32)
-							.foregroundStyle(Color("Secondary"))
+							.foregroundStyle(Color("MainColor"))
 					}
 					if let text {
 						Text(text)
@@ -37,7 +37,10 @@ struct UserMenuSheetNavigationItem : View {
 			}
 		}
 		.frame(maxWidth: 400)
+		.background(Color("MainContainer"))
+		.clipShape(RoundedRectangle(cornerRadius: 16))
 		.buttonStyle(UserSheetButtonStyle())
+		
 	}
 }
 

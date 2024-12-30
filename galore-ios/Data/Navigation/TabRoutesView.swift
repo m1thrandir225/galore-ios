@@ -32,9 +32,12 @@ struct TabRoutesView : View {
 					.background(Color(.background))
 			}.background(Color(.background))
 			.sheet(isPresented: $isPresented) {
-				UserMenuSheet(router: router, dismissSheet: {
-					isPresented=false
-				})
+				ZStack {
+					Color("Background").ignoresSafeArea(.all)
+					UserMenuSheet(router: router, dismissSheet: {
+						isPresented=false
+					})
+				}
 			}
 		}
 

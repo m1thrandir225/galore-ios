@@ -11,8 +11,21 @@ struct ForgotPasswordEnterEmailStep: View {
 	@Binding var email: String
 	
 	@Binding var isLoading: Bool
+	
+	func isEmailValid() -> Bool {
+		let emailTest = NSPredicate(format: "SELF MATCHES %@", "^\\w+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$")
+		return emailTest.evaluate(with: email)
+	}
 
 	var onNext: () -> Void
+	
+	var emailPrompt: String {
+		if isEmailValid() {
+			return ""
+		} else {
+			return "Please enter a valid email address"
+		}
+	}
 	
 	
     var body: some View {
@@ -31,6 +44,11 @@ struct ForgotPasswordEnterEmailStep: View {
 			.keyboardType(.emailAddress)
 			.autocapitalization(.none)
 			
+			if !email.isEmpty {
+				Text(emailPrompt).font(.caption).foregroundStyle(Color("Error"))
+					.fontWeight(.semibold).transition(.scale)
+			}
+			
 			Button {
 				onNext()
 			} label: {
@@ -48,12 +66,11 @@ struct ForgotPasswordEnterEmailStep: View {
 					}
 				}
 				.frame(maxWidth: .infinity)
-				.padding()
-				.foregroundStyle(Color("OnMain"))
-				.background(Color("MainColor"))
-				.clipShape(RoundedRectangle(cornerRadius: 16))
 			}
-			.disabled(isLoading)
+			.disabled(isLoading || !isEmailValid())
+			.buttonStyle(
+				MainButtonStyle(isDisabled: isLoading || !isEmailValid())
+			)
 		}.transition(.slide.combined(with: .blurReplace))
     }
 }

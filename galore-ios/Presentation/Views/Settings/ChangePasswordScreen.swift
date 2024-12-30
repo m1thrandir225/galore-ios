@@ -63,7 +63,7 @@ struct ChangePasswordScreen: View {
 					.font(.system(size: 16, weight: .semibold))
 				PasswordField(text: $viewModel.confirmPassword, placeholder: "Repeat your new password")
 				if !viewModel.confirmPassword.isEmpty {
-					Text(confirmPasswordPrompt(password: viewModel.password))
+					Text(confirmPasswordPrompt(password: viewModel.confirmPassword))
 						.font(.caption).foregroundStyle(Color("Error"))
 						.fontWeight(.semibold).transition(.scale)
 				}

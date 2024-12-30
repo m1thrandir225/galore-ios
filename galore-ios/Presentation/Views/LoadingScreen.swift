@@ -12,7 +12,11 @@ struct LoadingScreen: View {
 		VStack(alignment: .center) {
 			ProgressView(label: {
 				Text("Prepearing concoctions...")
-			}).frame(maxWidth: .infinity, maxHeight: .infinity)
+					.foregroundStyle(Color("MainColor"))
+			})
+			.progressViewStyle(CircularProgressViewStyle())
+			.tint(Color("MainColor"))
+			.frame(maxWidth: .infinity, maxHeight: .infinity)
 		}
 		.background(Color("Background"))
 			

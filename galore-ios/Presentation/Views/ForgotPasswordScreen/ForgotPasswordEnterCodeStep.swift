@@ -14,6 +14,18 @@ struct ForgotPasswordEnterCodeStep: View {
 	
 	var onNext: () -> Void
 	
+	func isCodeValid() -> Bool {
+		return code.count == 6 && !code.isEmpty
+	}
+	
+	var codePrompt: String {
+		if isCodeValid() {
+			return ""
+		} else {
+			return "Please enter a valid code."
+		}
+	}
+	
 	var body: some View {
 		VStack (alignment: .leading, spacing: 16) {
 			Text("Please enter the code you received in your email: ")
@@ -29,13 +41,17 @@ struct ForgotPasswordEnterCodeStep: View {
 				)
 			.keyboardType(.emailAddress)
 			.autocapitalization(.none)
+			if !code.isEmpty {
+				Text(codePrompt).font(.caption).foregroundStyle(Color("Error"))
+					.fontWeight(.semibold).transition(.scale)
+			}
+			
 			
 			Button {
 				onNext()
 			} label: {
 				ZStack {
 					if isLoading {
-						// Show loading spinner
 						ProgressView()
 							.progressViewStyle(CircularProgressViewStyle(tint: (Color("OnMain"))))
 							.foregroundColor(Color("OnMain"))
@@ -47,12 +63,11 @@ struct ForgotPasswordEnterCodeStep: View {
 					}
 				}
 				.frame(maxWidth: .infinity)
-				.padding()
-				.foregroundStyle(Color("OnMain"))
-				.background(Color("MainColor"))
-				.clipShape(RoundedRectangle(cornerRadius: 16))
 			}
-			.disabled(isLoading)
+			.disabled(isLoading || !isCodeValid())
+			.buttonStyle(
+				MainButtonStyle(isDisabled: isLoading || !isCodeValid())
+			)
 		}.transition(.slide.combined(with: .blurReplace))
 	}
 }

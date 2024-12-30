@@ -25,9 +25,12 @@ struct AllSetScreen: View {
 				VStack (spacing: 12){
 					Text("You’re all set!")
 						.font(.system(size: 36, weight: .bold))
+						.foregroundStyle(Color("OnBackground"))
 					Text("Get ready to become your own mixology master")
 						.font(.system(size: 16, weight: .medium))
+						.foregroundStyle(Color("OnBackground"))
 						.multilineTextAlignment(.center)
+						
 				}
 				
 				Button {
@@ -38,22 +41,19 @@ struct AllSetScreen: View {
 				} label: {
 					ZStack {
 						if viewModel.isLoading {
-							// Show loading spinner
 							ProgressView()
-								.progressViewStyle(CircularProgressViewStyle(tint: (Color("OnMain"))))
-								.foregroundColor(Color("OnMain"))
+								.progressViewStyle(CircularProgressViewStyle(tint: (Color("OnTeritaryContainer"))))
 						} else {
-							// Show the button label
 							Text("Finish Setup")
 								.font(.system(size: 18, weight: .semibold))
 						}
 					}
-					.frame(maxWidth: .infinity) // Keeps the button width consistent
-					.padding()
-					.foregroundStyle(Color("OnMain"))
-					.background(Color("MainColor"))
-					.clipShape(RoundedRectangle(cornerRadius: 16))
+					.frame(maxWidth: .infinity)
 				}
+				.disabled(viewModel.isLoading)
+				.buttonStyle(
+					MainButtonStyle(isDisabled: viewModel.isLoading)
+				)
 				
 				if let errorMessage = viewModel.errorMessage {
 					ErrorMessage(text: errorMessage)
@@ -62,6 +62,7 @@ struct AllSetScreen: View {
 			}
 			
 		}
+		.navigationBarBackButtonHidden()
 		.padding(24)
 		.background(Color("Background"))
 	}
