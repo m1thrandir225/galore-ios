@@ -30,6 +30,7 @@ class LibraryViewModel : ObservableObject {
 			async let userLikedCocktails: () = fetchUserLikedCocktails()
 			
 			let (_) = try await (userLikedCocktails)
+			userCreatedCocktails = []
 		} catch {
 			
 		}

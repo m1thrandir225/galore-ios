@@ -14,15 +14,10 @@ struct UserSheetButtonStyle: ButtonStyle {
 			.padding()
 			.cornerRadius(12)
 			.opacity(configuration.isPressed ? 0.3 : 1)
-			.animation(.easeInOut(duration: 0.2), value: configuration.isPressed)
 			.overlay(
-				RoundedRectangle(cornerRadius: 12)
+				RoundedRectangle(cornerRadius: 16)
 					.stroke(Color("Outline"), lineWidth: .init(1))
-					.scaleEffect(configuration.isPressed ? 1.1 : 1)
-					.animation(.easeInOut(duration: 0.2), value: configuration.isPressed)
-
 			)
-			.scaleEffect(configuration.isPressed ? 1.1 : 1)
 		
 
 	}

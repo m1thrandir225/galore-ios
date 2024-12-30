@@ -60,12 +60,11 @@ struct NotificationSettingsScreen: View {
 						}
 					}
 					.frame(maxWidth: .infinity) // Keeps the button width consistent
-					.padding()
-					.foregroundStyle(Color("OnMain"))
-					.background(Color("MainColor"))
-					.clipShape(RoundedRectangle(cornerRadius: 16))
 				}
 				.disabled(viewModel.isLoading)
+				.buttonStyle(
+					MainButtonStyle(isDisabled: viewModel.isLoading)
+				)
 				
 				if let errorMessage = viewModel.errorMessage {
 					ErrorMessage(text: errorMessage)

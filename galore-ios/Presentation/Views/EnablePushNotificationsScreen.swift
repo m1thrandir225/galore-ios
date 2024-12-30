@@ -38,11 +38,11 @@ struct EnablePushNotificationsScreen : View {
 				} label: {
 					Text("Notify me")
 						.font(.system(size: 18, weight: .semibold))
-						.padding()
-						.foregroundStyle(Color("OnMain"))
-						.background(Color("MainColor"))
-						.clipShape(RoundedRectangle(cornerRadius: 16))
-				}.disabled(viewModel.isLoading)
+				}
+				.disabled(viewModel.isLoading)
+				.buttonStyle(
+					MainButtonStyle(isDisabled: viewModel.isLoading)
+				)
 				
 				Button {
 					Task {
@@ -55,7 +55,8 @@ struct EnablePushNotificationsScreen : View {
 						.font(.system(size: 14, weight: .medium))
 						.foregroundStyle(Color("MainColor"))
 					
-				}.disabled(viewModel.isLoading)
+				}
+				.disabled(viewModel.isLoading)
 			}
 		}
 		.frame(

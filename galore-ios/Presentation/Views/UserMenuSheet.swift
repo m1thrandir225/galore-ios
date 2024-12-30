@@ -52,7 +52,7 @@ struct UserMenuSheet: View {
 						switch item {
 						case .logout:
 							Task {
-									await viewModel.logout()
+								await viewModel.logout()
 							}
 						case .help:
 							Task {
@@ -72,12 +72,11 @@ struct UserMenuSheet: View {
 					}
 				}
 			}.padding()
-			
-	
-			
-		}.presentationDetents([.medium])
-			.presentationDragIndicator(.visible)
-			.onAppear {
+		}
+		.background(Color("Background"))
+		.presentationDetents([.medium])
+		.presentationDragIndicator(.visible)
+		.onAppear {
 				viewModel.getUser()
 			}
 

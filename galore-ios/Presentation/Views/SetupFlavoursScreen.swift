@@ -84,14 +84,13 @@ struct SetupFlavoursScreen : View {
 							.font(.system(size: 18, weight: .semibold))
 					}
 				}
-				.frame(maxWidth: .infinity) // Keeps the button width consistent
-				.padding()
-				.foregroundStyle(Color("OnMain"))
-				.background(Color("MainColor"))
-				.clipShape(RoundedRectangle(cornerRadius: 16))
+				.frame(maxWidth: .infinity)
 			}
 			.padding(24)
-			.disabled(viewModel.isSubmitting)
+			.disabled(viewModel.isSubmitting || viewModel.likedFlavours.count == 0)
+			.buttonStyle(
+				MainButtonStyle(isDisabled: viewModel.isSubmitting || viewModel.likedFlavours.count == 0)
+			)
 			
 			
 		}
