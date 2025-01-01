@@ -27,33 +27,33 @@ struct GenerateFlavourSelectionScreen : View {
 			if let flavours = viewModel.flavours {
 				LazyVGrid(columns: columns, alignment: .center, spacing: 12) {
 					ForEach(flavours, id: \.id) { flavour in
-						let shouldBeDisabled = !viewModel.isFlavourSelected(flavour.id) && viewModel.selectedFlavours.count >= 3
+						let shouldBeDisabled = !viewModel.isFlavourSelected(flavour.name) && viewModel.selectedFlavours.count >= 3
 						Button {
 							let generator = UIImpactFeedbackGenerator(style: .heavy)
-							viewModel.addOrRemoveFlavourToSelected(flavour.id)
+							viewModel.addOrRemoveFlavourToSelected(flavour.name)
 							generator.impactOccurred()
 							
 						} label: {
 							HStack {
-								Image(systemName: viewModel.isFlavourSelected(flavour.id) ? "minus" : "plus" )
+								Image(systemName: viewModel.isFlavourSelected(flavour.name) ? "minus" : "plus" )
 								Text(flavour.name)
 									.font(.system(size: 18, weight: .semibold))
 							}
-							.foregroundStyle(viewModel.isFlavourSelected(flavour.id) ? Color("OnMain") : Color("MainColor"))
+							.foregroundStyle(viewModel.isFlavourSelected(flavour.name) ? Color("OnMain") : Color("MainColor"))
 							
 							.frame(minWidth: 0, maxWidth: .infinity)
 							
 							.padding()
 							.background(
-								viewModel.isFlavourSelected(flavour.id) ? Color("MainColor") : shouldBeDisabled ? Color("MainContainer") : Color("Background")
+								viewModel.isFlavourSelected(flavour.name) ? Color("MainColor") : shouldBeDisabled ? Color("MainContainer") : Color("Background")
 							)
 							.clipShape(RoundedRectangle(cornerRadius: 16))
 							.overlay(
 								RoundedRectangle(cornerRadius: 16)
-									.stroke(viewModel.isFlavourSelected(flavour.id) ? Color("Secondary") : Color("MainColor").opacity(0.5), lineWidth: 2)
+									.stroke(viewModel.isFlavourSelected(flavour.name) ? Color("Secondary") : Color("MainColor").opacity(0.5), lineWidth: 2)
 							)
 							.transition(.scale.combined(with: .opacity))
-							.animation(.spring(duration: 0.3, bounce: 0.5, blendDuration: 0), value: viewModel.isFlavourSelected(flavour.id))
+							.animation(.spring(duration: 0.3, bounce: 0.5, blendDuration: 0), value: viewModel.isFlavourSelected(flavour.name))
 						}
 						.disabled(viewModel.isLoading || shouldBeDisabled)
 					}
@@ -61,7 +61,9 @@ struct GenerateFlavourSelectionScreen : View {
 				}
 			}
 				Button {
-				
+					router.routeTo(.generateSelectCocktails(GenerateSelectCocktailArgs(
+						selectedFlavours: viewModel.selectedFlavours.compactMap{String($0)}
+					)))
 			} label: {
 				Text("Continue")
 					.frame(maxWidth: .infinity)

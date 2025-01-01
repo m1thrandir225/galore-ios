@@ -23,7 +23,6 @@ struct CocktailGrid : View {
 				CocktailCard (
 					id: item.id,
 					title: item.name,
-					isLiked: false,
 					imageURL: item.imageUrl.toUrl!,
 					width: 190,
 					onCardPress: onCardPress

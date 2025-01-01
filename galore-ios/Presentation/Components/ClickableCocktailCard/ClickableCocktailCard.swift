@@ -8,7 +8,7 @@
 import SwiftUI
 import NukeUI
 
-struct CocktailCard: View {
+struct ClickableCocktailCard: View {
 	@State var title: String
 	
 	@State var imageURL: URL
@@ -19,12 +19,14 @@ struct CocktailCard: View {
 	let width: CGFloat
 	var onCardPress: (_: String) -> Void
 	var isSelected: Bool
+	var isDisabled: Bool
 	
 	
 	init(
 		id: String,
 		title: String,
-		isSelected: Bool = false,
+		isSelected: Bool,
+		isDisabled: Bool,
 		imageURL: URL,
 		width: CGFloat = 300.0,
 		onCardPress: @escaping (_: String) -> Void
@@ -32,6 +34,7 @@ struct CocktailCard: View {
 		self.id = id
 		self.title = title
 		self.isSelected = isSelected
+		self.isDisabled = isDisabled
 		self.imageURL = imageURL
 		self.width = width
 		self.onCardPress = onCardPress
@@ -68,7 +71,7 @@ struct CocktailCard: View {
 			HStack(alignment: .center){
 				Text(title)
 					.font(.system(size: 16, weight: .semibold))
-					.foregroundStyle(isSelected ? Color("OnSecondaryContainer") : Color("MainColor"))
+					.foregroundStyle(isSelected ? Color("OnMain") : isDisabled ? Color("OnSecondaryContainer") : Color("MainColor"))
 				Spacer()
 				
 			}.padding(.all, 12)
@@ -76,7 +79,7 @@ struct CocktailCard: View {
 		}
 
 		.frame(width: width, height: 250)
-		.background(isSelected ? Color("Secondary").opacity(0.5) : Color("MainContainer").opacity(0.5))
+		.background(isSelected ? Color("MainColor").opacity(0.75) : isDisabled ? Color("Secondary").opacity(0.5) :  Color("MainContainer").opacity(0.5))
 		.clipShape(RoundedRectangle(cornerRadius: 12))
 		.overlay(
 			RoundedRectangle(cornerRadius: 12)
@@ -84,12 +87,13 @@ struct CocktailCard: View {
 		)
 		.shadow(color: .gray.opacity(0.3), radius: 5, x: 0, y: 5)
 		.opacity(opacity)
+		.disabled(isDisabled)
 		.onTapGesture {
 			Task {
 				withAnimation {
 					opacity = 0.5
 				}
-				onCardPress(id)
+				onCardPress(title)
 				
 				try? await Task.sleep(nanoseconds: 500_000_000)
 				
@@ -105,9 +109,11 @@ struct CocktailCard: View {
 }
 
 #Preview {
-	CocktailCard(
+	ClickableCocktailCard(
 		id: "1",
 		title: "Example Title",
+		isSelected: false,
+		isDisabled: true,
 		imageURL:"https://images.unsplash.com/photo-1726853546098-380e29da9e31?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D".toUrl!,
 		width: 250
 	) { _ in
