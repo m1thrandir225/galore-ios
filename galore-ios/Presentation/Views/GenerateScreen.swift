@@ -28,7 +28,7 @@ struct GenerateScreen :  View {
 					.frame(width: 250, height: 150)
 				
 				Button {
-					
+					router.routeTo(.generateSelectFlavours)
 				} label: {
 					Text("Get Started")
 						.frame(maxWidth: .infinity)
