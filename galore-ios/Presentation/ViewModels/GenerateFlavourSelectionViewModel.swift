@@ -6,6 +6,7 @@
 //
 import Foundation
 
+@MainActor
 class GenerateFlavourSelectionViewModel : ObservableObject {
 	private final let networkService: NetworkService = .shared
 	@Published var selectedFlavours: Set<String> = []
