@@ -25,6 +25,8 @@ enum TabRoutes: Routable {
 	case search
 	case library
 	case generate
+	case generateSelectFlavours
+	case generateSelectCocktails
 	case help
 	case privacyPolicy
 	case termsAndConditions
@@ -57,6 +59,8 @@ enum TabRoutes: Routable {
 		switch self {
 		case
 				.generate,
+				.generateSelectFlavours,
+				.generateSelectCocktails,
 				.home,
 				.library,
 				.search,
@@ -79,6 +83,10 @@ enum TabRoutes: Routable {
 			HomeScreen(router: router)
 		case .generate:
 			GenerateScreen(router: router)
+		case .generateSelectFlavours:
+			GenerateFlavourSelectionScreen(router: router)
+		case .generateSelectCocktails:
+			EmptyView()
 		case .library:
 			LibraryScreen(router: router)
 		case .search:
