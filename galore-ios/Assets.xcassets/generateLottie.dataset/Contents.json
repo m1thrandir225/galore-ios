@@ -1,0 +1,12 @@
+{
+  "data" : [
+    {
+      "filename" : "generateLottie.json",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

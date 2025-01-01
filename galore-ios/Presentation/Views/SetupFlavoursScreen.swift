@@ -22,7 +22,7 @@ struct SetupFlavoursScreen : View {
 				.frame(width: 400)
 			if viewModel.isLoading {
 				ProgressView()
-					.accentColor(Color("Main"))
+					.accentColor(Color("MainColor"))
 			} else {
 				if let flavours = viewModel.flavours {
 					LazyVGrid(columns: columns, alignment: .center, spacing: 12) {
@@ -94,6 +94,7 @@ struct SetupFlavoursScreen : View {
 			
 			
 		}
+		.navigationBarBackButtonHidden(true)
 		.background(Color("Background"))
 		.task {
 			await viewModel.loadData()
