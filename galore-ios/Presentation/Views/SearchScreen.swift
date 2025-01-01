@@ -69,9 +69,9 @@ struct SearchScreen: View {
 				.animation(.easeInOut, value: searchText.isEmpty)
 			
 			ScrollView(showsIndicators: false) {
-				CocktailGrid(items: $viewModel.results, onCardPress: { id in
+				CocktailGrid(items: $viewModel.results) { id in
 					router.routeTo(.cocktailDetails(CocktailDetailsArgs(id: id, rootSentFrom: TabRoutes.search)))
-				})
+				}
 				.animation(.easeInOut, value: viewModel.results)
 			}
 			

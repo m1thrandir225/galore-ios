@@ -20,13 +20,17 @@ struct CocktailSectionArgs : Equatable {
 	let title: String
 }
 
+struct GenerateSelectCocktailArgs : Equatable {
+	let selectedFlavours: [String]
+}
+
 enum TabRoutes: Routable {
 	case home
 	case search
 	case library
 	case generate
 	case generateSelectFlavours
-	case generateSelectCocktails
+	case generateSelectCocktails(GenerateSelectCocktailArgs)
 	case help
 	case privacyPolicy
 	case termsAndConditions
@@ -41,6 +45,7 @@ enum TabRoutes: Routable {
 		case none
 		case cocktailDetails(CocktailDetailsArgs)
 		case cocktailSection(CocktailSectionArgs)
+		case generateSelectCocktails(GenerateSelectCocktailArgs)
 	}
 	
 	var arguments: RouteArgs {
@@ -49,6 +54,8 @@ enum TabRoutes: Routable {
 			return .cocktailDetails(args)
 		case .cocktailSection(let args):
 			return .cocktailSection(args)
+		case .generateSelectCocktails(let args):
+			return .generateSelectCocktails(args)
 		default:
 			return .none
 		}
@@ -85,8 +92,8 @@ enum TabRoutes: Routable {
 			GenerateScreen(router: router)
 		case .generateSelectFlavours:
 			GenerateFlavourSelectionScreen(router: router)
-		case .generateSelectCocktails:
-			EmptyView()
+		case .generateSelectCocktails(let args):
+			GenerateCocktailSelectionScreen(router: router, selectedFlavours: args.selectedFlavours)
 		case .library:
 			LibraryScreen(router: router)
 		case .search:

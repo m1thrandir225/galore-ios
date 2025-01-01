@@ -32,9 +32,9 @@ struct CocktailSectionScreen: View {
 			ScrollView(.vertical, showsIndicators: false) {
 				VStack (alignment: .leading) {
 					TitleVisibilityCheckerView(title: title, titleVisible: $titleVisible)
-					CocktailGrid(items: $cocktails, onCardPress: { id in
+					CocktailGrid(items: $cocktails)  { id in
 						router.routeTo(.cocktailDetails(CocktailDetailsArgs(id: id,rootSentFrom: nil)))
-					})
+					}
 				}
 				
 			}

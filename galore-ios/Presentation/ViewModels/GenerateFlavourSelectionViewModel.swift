@@ -29,24 +29,24 @@ class GenerateFlavourSelectionViewModel : ObservableObject {
 		}
 	}
 	
-	func addOrRemoveFlavourToSelected(_ flavourId: String) {
-		if isFlavourSelected(flavourId) {
-			removeFlavourFromSelected(flavourId)
+	func addOrRemoveFlavourToSelected(_ flavourName: String) {
+		if isFlavourSelected(flavourName) {
+			removeFlavourFromSelected(flavourName)
 		} else {
-			addFlavourToSelected(flavourId)
+			addFlavourToSelected(flavourName)
 		}
 	}
 	
-	func addFlavourToSelected(_ flavourId: String) {
-		selectedFlavours.insert(flavourId)
+	func addFlavourToSelected(_ flavourName: String) {
+		selectedFlavours.insert(flavourName)
 	}
 	
-	func removeFlavourFromSelected(_ flavourId: String) {
-		selectedFlavours.remove(flavourId)
+	func removeFlavourFromSelected(_ flavourName: String) {
+		selectedFlavours.remove(flavourName)
 	}
 	
-	func isFlavourSelected(_ flavourId: String) -> Bool {
-		return selectedFlavours.contains(flavourId)
+	func isFlavourSelected(_ flavourName: String) -> Bool {
+		return selectedFlavours.contains(flavourName)
 	}
 	
 	
