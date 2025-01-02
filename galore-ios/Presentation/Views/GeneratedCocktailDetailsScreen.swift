@@ -13,6 +13,8 @@ struct GeneratedCocktailDetailsScreen : View {
 	
 	@State var currentTabIndex = 0
 	
+	let cocktailId: String
+	
 	var body: some View {
 		VStack(alignment: .leading) {
 			if viewModel.isLoading {
@@ -26,13 +28,13 @@ struct GeneratedCocktailDetailsScreen : View {
 						VStack {
 							ZStack (alignment: .topLeading) {
 								BackButton {
-									
+									router.dismiss()
 								}
 								.safeAreaPadding(.all)
 								.padding(.top, 24)
 								.zIndex(1)
 								
-								LazyImage(url: cocktail.mainImage.toUrl) { state in
+								LazyImage(url: "\(Config.baseURL)/\(cocktail.mainImage)".toUrl) { state in
 									if let image = state.image {
 										image
 											.resizable()
@@ -109,13 +111,13 @@ struct GeneratedCocktailDetailsScreen : View {
 								TabView(selection: $currentTabIndex) {
 									ForEach(cocktail.instructions.indices, id: \.self) { index in
 										let currentItem = cocktail.instructions[index]
-										VStack(spacing: 24) {
-											LazyImage(url: currentItem.instructionImage.toUrl) { state in
+										VStack(alignment: .leading, spacing: 24) {
+											LazyImage(url: "\(Config.baseURL)/\(currentItem.instructionImage)".toUrl) { state in
 												if let image = state.image {
 													image
 														.resizable()
-														.aspectRatio(contentMode: .fill)
-														.frame(maxWidth: .infinity, minHeight: 200, maxHeight: 250)
+														.frame(height: 250)
+														.scaledToFit()
 														.clipped()
 														.clipShape(RoundedRectangle(cornerRadius: 16))
 													
@@ -138,11 +140,12 @@ struct GeneratedCocktailDetailsScreen : View {
 										}
 										.padding(.horizontal, 24)
 										.tag(index)
+									
 									}
 								}
 								.frame(height: 400)
 								.tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-							}.padding(.vertical, 24)
+							}.padding(.vertical,24)
 							
 							Spacer()
 							VStack(alignment:  .leading, spacing: 12) {
@@ -163,13 +166,16 @@ struct GeneratedCocktailDetailsScreen : View {
 							
 						}
 					}
-					.transition(.push(from: .bottom))
+					.transition(.push(from: .trailing).combined(with: .slide))
 				}
 			}
 		}
 		.animation(.smooth, value: viewModel.isLoading)
 		.background(Color("Background"))
 		.navigationBarBackButtonHidden(true)
+		.task {
+			await viewModel.loadData(for: cocktailId)
+		}
 	}
 }
 
@@ -195,5 +201,5 @@ struct GeneratedCocktailDetailsScreen : View {
 			GeneratedInstruction(instruction: "Lorem ipsum odor amet, consectetuer adipiscing elit. Lacinia justo odio rutrum sodales cras phasellus, commodo vitae suspendisse.", instructionImage: "https://images.unsplash.com/photo-1620360290038-71942f99fa96?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
 		],
 		createdAt: Date().description)
-	GeneratedCocktailDetailsScreen(router: router)
+	GeneratedCocktailDetailsScreen(router: router, cocktailId: cocktail.id)
 }

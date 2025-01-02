@@ -39,7 +39,11 @@ struct LibraryScreen: View {
 									title: "Liked Cocktails",
 									isCarouselShowcase: false,
 									navigateToSection: {
-										router.routeTo(.cocktailSection(CocktailSectionArgs(cocktails: userLikedCocktails, title: "Your Liked Cocktails")))
+										router.routeTo(
+											.cocktailSection(
+												CocktailSectionArgs(cocktails: userLikedCocktails, title: "Your Liked Cocktails")
+											)
+										)
 									},
 									onCardPress: { id in
 										router.routeTo(
@@ -53,8 +57,25 @@ struct LibraryScreen: View {
 										
 									})
 							}
-							
-							
+						}
+						if !userCreatedCocktails.isEmpty {
+							VStack(alignment: .leading) {
+								GeneratedCocktailCarousel(
+									items: userCreatedCocktails,
+									title: "Your Generated Cocktails",
+									navigateToSection: {
+										router.routeTo(
+											.generatedCocktailSection(
+												GeneratedCocktailSectionArgs(cocktails: userCreatedCocktails, title: "Your Generated Cocktails")
+											)
+										)
+									},
+									onCardPress: { id in
+										router.routeTo(
+											.generatedCocktailDetails(GeneratedCocktailDetailsArgs(cocktailId: id))
+										)
+									})
+							}
 						}
 					}
 				} else {

@@ -28,7 +28,7 @@ class GenerateCocktailDetailsViewModel : ObservableObject {
 		}
 	}
 	
-	func fetchDetails(for id: String)async throws {
+	func fetchDetails(for id: String) async throws {
 		let request = GetGeneratedCocktail(cocktailId: id)
 		let response = try await networkService.execute(request)
 		

@@ -10,7 +10,6 @@ struct CocktailDetailsArgs : Equatable {
 	static func == (lhs: CocktailDetailsArgs, rhs: CocktailDetailsArgs) -> Bool {
 		return lhs.id == rhs.id
 	}
-	
 	let id: String
 	let rootSentFrom: (any Routable)?
 }
@@ -20,8 +19,18 @@ struct CocktailSectionArgs : Equatable {
 	let title: String
 }
 
+
 struct GenerateSelectCocktailArgs : Equatable {
 	let selectedFlavours: [String]
+}
+
+struct GeneratedCocktailDetailsArgs: Equatable {
+	let cocktailId: String
+}
+
+struct GeneratedCocktailSectionArgs : Equatable {
+	let cocktails: [GeneratedCocktail]
+	let title: String
 }
 
 enum TabRoutes: Routable {
@@ -39,13 +48,17 @@ enum TabRoutes: Routable {
 	case changePassword
 	case notificationSettings
 	case cocktailDetails(CocktailDetailsArgs)
+	case generatedCocktailDetails(GeneratedCocktailDetailsArgs)
 	case cocktailSection(CocktailSectionArgs)
+	case generatedCocktailSection(GeneratedCocktailSectionArgs)
 	
 	enum RouteArgs {
 		case none
 		case cocktailDetails(CocktailDetailsArgs)
 		case cocktailSection(CocktailSectionArgs)
 		case generateSelectCocktails(GenerateSelectCocktailArgs)
+		case generatedCocktailDetails(GeneratedCocktailDetailsArgs)
+		case generatedCocktailSection(GeneratedCocktailSectionArgs)
 	}
 	
 	var arguments: RouteArgs {
@@ -56,6 +69,10 @@ enum TabRoutes: Routable {
 			return .cocktailSection(args)
 		case .generateSelectCocktails(let args):
 			return .generateSelectCocktails(args)
+		case .generatedCocktailDetails(let args):
+			return .generatedCocktailDetails(args)
+		case .generatedCocktailSection(let args):
+			return .generatedCocktailSection(args)
 		default:
 			return .none
 		}
@@ -75,7 +92,9 @@ enum TabRoutes: Routable {
 				.updateProfile,
 				.changePassword,
 				.cocktailDetails,
+				.generatedCocktailDetails,
 				.cocktailSection,
+				.generatedCocktailSection,
 				.notificationSettings:
 					.push
 		case .help, .privacyPolicy, .termsAndConditions:
@@ -114,8 +133,12 @@ enum TabRoutes: Routable {
 			NotificationSettingsScreen(router: router)
 		case .cocktailDetails(let args):
 			CocktailDetailsScreen(router: router, cocktailId: args.id, rootSentFrom: args.rootSentFrom ?? nil)
+		case .generatedCocktailDetails(let args):
+			GeneratedCocktailDetailsScreen(router: router, cocktailId: args.cocktailId)
 		case .cocktailSection(let args):
 			CocktailSectionScreen(router: router, cocktails: args.cocktails, title: args.title)
+		case .generatedCocktailSection(let args):
+			GeneratedCocktailSectionScreen(router: router, cocktails: args.cocktails, title: args.title)
 		}
 	}
 	
