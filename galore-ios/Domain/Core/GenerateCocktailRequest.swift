@@ -6,7 +6,7 @@
 //
 import Foundation
 
-public final class GenerateCockltailRequest : Identifiable, Codable, Equatable {
+public final class GenerateCocktailRequest : Identifiable, Codable, Equatable {
 	public let id: String
 	public let userId: String
 	public let prompt: String
@@ -15,11 +15,22 @@ public final class GenerateCockltailRequest : Identifiable, Codable, Equatable {
 	public let updatedAt: String
 	public let createdAt: String
 	
-	public static func == (lhs: GenerateCockltailRequest, rhs: GenerateCockltailRequest) -> Bool {
+	public static func == (lhs: GenerateCocktailRequest, rhs: GenerateCocktailRequest) -> Bool {
 		lhs.id == rhs.id
 		&& lhs.userId == rhs.userId
 		&& lhs.prompt == rhs.prompt
 		&& lhs.createdAt == rhs.createdAt
+	}
+	
+	public enum CodingKeys: String, CodingKey {
+		case id = "id"
+		case userId = "user_id"
+		case prompt = "prompt"
+		case status = "status"
+		case errorMessage = "error_message"
+		case updatedAt = "updated_at"
+		case createdAt = "created_at"
+		
 	}
 	
 	public init(id: String, userId: String, prompt: String, status: String, errorMessage: String?, updatedAt: String, createdAt: String) {
