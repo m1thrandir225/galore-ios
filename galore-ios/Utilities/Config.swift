@@ -12,12 +12,12 @@ enum Environment {
 
 
 struct Config {
-	static let environment: Environment = .development
+	static let environment: Environment = .production
 	
 	static let baseURL: String = {
 		switch environment {
 		case .development: return "http://localhost:9090"
-		case .production: return ""
+		case .production: return "http://ivandscnas.ddns.net:80"
 		}
 	}()
 	

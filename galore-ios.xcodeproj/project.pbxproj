@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		0E2DD5FC2CD3F4CC001C837F /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 0E2DD5FB2CD3F4CC001C837F /* Lottie */; };
+		0E66F4F12D26FE6B00783F74 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0E66F4F02D26FE6B00783F74 /* GoogleService-Info.plist */; };
+		0E66F4F22D26FE6B00783F74 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0E66F4F02D26FE6B00783F74 /* GoogleService-Info.plist */; };
+		0E66F4F32D26FE6B00783F74 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0E66F4F02D26FE6B00783F74 /* GoogleService-Info.plist */; };
+		0E66F4F62D26FF0800783F74 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 0E66F4F52D26FF0800783F74 /* FirebaseMessaging */; };
 		0EC555342CE368C500F45B8F /* Nuke in Frameworks */ = {isa = PBXBuildFile; productRef = 0EC555332CE368C500F45B8F /* Nuke */; };
 		0EC555362CE368C500F45B8F /* NukeExtensions in Frameworks */ = {isa = PBXBuildFile; productRef = 0EC555352CE368C500F45B8F /* NukeExtensions */; };
 		0EC555382CE368C500F45B8F /* NukeUI in Frameworks */ = {isa = PBXBuildFile; productRef = 0EC555372CE368C500F45B8F /* NukeUI */; };
@@ -32,6 +36,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0E66F4F02D26FE6B00783F74 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		0EE7391C2CCA3B4E0075CBF6 /* galore-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "galore-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0EE7392C2CCA3B4F0075CBF6 /* galore-iosTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "galore-iosTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0EE739362CCA3B4F0075CBF6 /* galore-iosUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "galore-iosUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -73,6 +78,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0E66F4F62D26FF0800783F74 /* FirebaseMessaging in Frameworks */,
 				0E2DD5FC2CD3F4CC001C837F /* Lottie in Frameworks */,
 				0EC555342CE368C500F45B8F /* Nuke in Frameworks */,
 				0EC5553A2CE368C500F45B8F /* NukeVideo in Frameworks */,
@@ -113,6 +119,7 @@
 				0EE739392CCA3B4F0075CBF6 /* galore-iosUITests */,
 				0E2DD5FA2CD3F4CC001C837F /* Frameworks */,
 				0EE7391D2CCA3B4E0075CBF6 /* Products */,
+				0E66F4F02D26FE6B00783F74 /* GoogleService-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -151,6 +158,7 @@
 				0EC555352CE368C500F45B8F /* NukeExtensions */,
 				0EC555372CE368C500F45B8F /* NukeUI */,
 				0EC555392CE368C500F45B8F /* NukeVideo */,
+				0E66F4F52D26FF0800783F74 /* FirebaseMessaging */,
 			);
 			productName = "galore-ios";
 			productReference = 0EE7391C2CCA3B4E0075CBF6 /* galore-ios.app */;
@@ -237,6 +245,7 @@
 			packageReferences = (
 				0E2DD5F92CD3F051001C837F /* XCRemoteSwiftPackageReference "lottie-spm" */,
 				0EC555322CE368C500F45B8F /* XCRemoteSwiftPackageReference "Nuke" */,
+				0E66F4F42D26FF0800783F74 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 0EE7391D2CCA3B4E0075CBF6 /* Products */;
@@ -255,6 +264,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0E66F4F32D26FE6B00783F74 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -262,6 +272,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0E66F4F22D26FE6B00783F74 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -269,6 +280,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0E66F4F12D26FE6B00783F74 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -619,6 +631,14 @@
 				minimumVersion = 4.5.0;
 			};
 		};
+		0E66F4F42D26FF0800783F74 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.6.0;
+			};
+		};
 		0EC555322CE368C500F45B8F /* XCRemoteSwiftPackageReference "Nuke" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kean/Nuke";
@@ -634,6 +654,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 0E2DD5F92CD3F051001C837F /* XCRemoteSwiftPackageReference "lottie-spm" */;
 			productName = Lottie;
+		};
+		0E66F4F52D26FF0800783F74 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0E66F4F42D26FF0800783F74 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
 		};
 		0EC555332CE368C500F45B8F /* Nuke */ = {
 			isa = XCSwiftPackageProductDependency;
