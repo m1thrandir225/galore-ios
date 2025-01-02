@@ -19,7 +19,6 @@ struct LibraryScreen: View {
 	var body: some View {
 		VStack (alignment: .leading, spacing: 24) {
 			if let userLikedCocktails = viewModel.userLikedCocktails, let userCreatedCocktails = viewModel.userCreatedCocktails {
-				
 				if !userLikedCocktails.isEmpty || !userCreatedCocktails.isEmpty {
 					ScrollView(.vertical, showsIndicators: false){
 						HStack(alignment: .center ) {
@@ -27,7 +26,7 @@ struct LibraryScreen: View {
 								.font(.system(size: 42, weight: .bold))
 								.foregroundStyle(Color("MainColor"))
 								.multilineTextAlignment(.leading)
-								
+							
 							Spacer()
 						}
 						.frame(maxWidth: .infinity)
@@ -40,27 +39,11 @@ struct LibraryScreen: View {
 									title: "Liked Cocktails",
 									isCarouselShowcase: false,
 									navigateToSection: {
-										router.routeTo(.cocktailSection(CocktailSectionArgs(cocktails: userLikedCocktails, title: "Your Liked Cocktails")))
-									},
-									onCardPress: { id in
 										router.routeTo(
-											.cocktailDetails(
-												CocktailDetailsArgs(
-													id: id,
-													rootSentFrom: TabRoutes.library
-												)
+											.cocktailSection(
+												CocktailSectionArgs(cocktails: userLikedCocktails, title: "Your Liked Cocktails")
 											)
 										)
-										
-									})
-							}
-							if !userCreatedCocktails.isEmpty {
-								CocktailCarousel(
-									items: userCreatedCocktails,
-									title: "Your Generated Cocktails",
-									isCarouselShowcase: false,
-									navigateToSection: {
-										
 									},
 									onCardPress: { id in
 										router.routeTo(
@@ -75,7 +58,26 @@ struct LibraryScreen: View {
 									})
 							}
 						}
-				   }
+						if !userCreatedCocktails.isEmpty {
+							VStack(alignment: .leading) {
+								GeneratedCocktailCarousel(
+									items: userCreatedCocktails,
+									title: "Your Generated Cocktails",
+									navigateToSection: {
+										router.routeTo(
+											.generatedCocktailSection(
+												GeneratedCocktailSectionArgs(cocktails: userCreatedCocktails, title: "Your Generated Cocktails")
+											)
+										)
+									},
+									onCardPress: { id in
+										router.routeTo(
+											.generatedCocktailDetails(GeneratedCocktailDetailsArgs(cocktailId: id))
+										)
+									})
+							}
+						}
+					}
 				} else {
 					VStack(alignment: .center ,spacing: 24) {
 						LottieView(animation: .named("emptyLibrary"))
@@ -106,7 +108,7 @@ struct LibraryScreen: View {
 		}
 		.frame(maxWidth: .infinity, maxHeight: .infinity)
 		.background(Color("Background"))
-
+		
 		.refreshable {
 			Task {
 				await viewModel.loadData()
