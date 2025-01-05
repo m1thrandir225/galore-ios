@@ -78,7 +78,7 @@ struct CocktailDetailsScreen : View {
 							}
 							
 							VStack (alignment: .leading, spacing: 24) {
-								HStack (alignment: .center) {
+								VStack (alignment: .leading) {
 									Text(cocktail.name)
 										.font(.system(size: 32, weight: .bold))
 										.foregroundStyle(Color("OnBackground"))

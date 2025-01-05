@@ -15,7 +15,8 @@ struct TitleVisibilityCheckerView: View {
 	var body: some View {
 		GeometryReader { geometry in
 			Text(title)
-				.font(.system(size: 32, weight: .bold))
+				.font(.system(size: 28, weight: .bold))
+				.multilineTextAlignment(.leading)
 				.foregroundStyle(Color("OnBackground"))
 				.padding(24)
 				.opacity(titleVisible ? 1 : 0)
@@ -31,6 +32,11 @@ struct TitleVisibilityCheckerView: View {
 					}
 				}
 		}
-		.frame(height: 100) // Adjust the height as needed for the text
+		.frame(height: 100)
 	}
+}
+
+#Preview {
+	@Previewable @State var titleVisible = true
+	TitleVisibilityCheckerView(title: "Your Generated Cocktails", titleVisible: $titleVisible)
 }

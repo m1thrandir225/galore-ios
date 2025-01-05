@@ -72,125 +72,123 @@ struct UpdateProfileScreen: View {
 			BackButton {
 				router.dismiss()
 			}
-			SectionTitle(text: "User Preferences")
+			SectionTitle(text: "User Preferences", fontSize: 32)
 			
 			if viewModel.isLoadingInitialData {
 				ProgressView()
 			} else {
-				VStack (alignment: .center, spacing: 16){
-					if let imageModel = viewModel.imageModel {
-						VStack(alignment: .center, spacing: 12) {
-							EditableCircularProfileImage(viewModel: imageModel)
-								.onChange(of: imageModel.imageState) { oldState, newState in
-									switch newState {
-									case .success(_):
-										if let file = imageModel.networkFile {
-											viewModel.networkFile = file // Update Binding when image successfully loaded
+				ScrollView (.vertical, showsIndicators: false ){
+					VStack (alignment: .center, spacing: 16){
+						if let imageModel = viewModel.imageModel {
+							VStack(alignment: .center, spacing: 12) {
+								EditableCircularProfileImage(viewModel: imageModel)
+									.onChange(of: imageModel.imageState) { oldState, newState in
+										switch newState {
+										case .success(_):
+											if let file = imageModel.networkFile {
+												viewModel.networkFile = file // Update Binding when image successfully loaded
+											}
+										default:
+											break // Ignore in this context.
 										}
-									default:
-										break // Ignore in this context.
 									}
-								}
-							Text(profilePicturePrompt(imageViewModel: imageModel))
-								.font(.caption).foregroundStyle(Color("Error"))
-								.fontWeight(.semibold).transition(.scale)
+								Text(profilePicturePrompt(imageViewModel: imageModel))
+									.font(.caption).foregroundStyle(Color("Error"))
+									.fontWeight(.semibold).transition(.scale)
+							}
 						}
-					}
-					VStack (alignment: .leading, spacing: 12) {
-						Text("Name:")
-							.font(.system(size: 20, weight: .semibold))
-							.foregroundStyle(Color("MainColor"))
-						TextField(
-							"Your Name",
-							text: $viewModel.name
-						).padding(.all, 20)
-							.overlay(
-								RoundedRectangle(cornerRadius: 8)
-									.stroke(Color("Outline"), lineWidth: 1.5)
-							)
-							.keyboardType(.default)
-							.autocapitalization(.none)
-						
-						if !viewModel.name.isEmpty {
-							Text(namePrompt(name: viewModel.name))
-								.font(.caption).foregroundStyle(Color("Error"))
-								.fontWeight(.semibold).transition(.scale)
-						}
-					}
-					
-					VStack (alignment: .leading, spacing: 12) {
-						Text("Email:")
-							.font(.system(size: 20, weight: .semibold))
-							.foregroundStyle(Color("MainColor"))
-						TextField(
-							"Your Email",
-							text: $viewModel.email
-						).padding(.all, 20)
-							.overlay(
-								RoundedRectangle(cornerRadius: 8)
-									.stroke(Color("Outline"), lineWidth: 1.5)
-							)
-							.keyboardType(.emailAddress)
-							.textInputAutocapitalization(.never)
-						
-						if !viewModel.email.isEmpty {
-							Text(emailPrompt(email: viewModel.email))
-								.font(.caption).foregroundStyle(Color("Error"))
-								.fontWeight(.semibold).transition(.scale)
-						}
-					}
-					
-					if let birthday = viewModel.birthday {
 						VStack (alignment: .leading, spacing: 12) {
-							DatePickerOptional(
-								"Birthday",
-								prompt: "Add Date",
-								in: ...Date(),
-								selection: $viewModel.birthday,
-								showDate: true ,
-								initialDate: birthday,
-								allowClear: false
-							)
+							Text("Name:")
+								.font(.system(size: 20, weight: .semibold))
+								.foregroundStyle(Color("MainColor"))
+							TextField(
+								"Your Name",
+								text: $viewModel.name
+							).padding(.all, 20)
+								.overlay(
+									RoundedRectangle(cornerRadius: 8)
+										.stroke(Color("Outline"), lineWidth: 1.5)
+								)
+								.keyboardType(.default)
+								.autocapitalization(.none)
 							
-							
-							Text(birthdayPrompt(birthday: birthday))
-								.font(.caption).foregroundStyle(Color("Error"))
-								.fontWeight(.semibold).transition(.scale)
+							if !viewModel.name.isEmpty {
+								Text(namePrompt(name: viewModel.name))
+									.font(.caption).foregroundStyle(Color("Error"))
+									.fontWeight(.semibold).transition(.scale)
+							}
 						}
 						
-					}
-					
-					Button {
-						Task {
-							await viewModel.updateProfile {
-								router.dismiss()
+						VStack (alignment: .leading, spacing: 12) {
+							Text("Email:")
+								.font(.system(size: 20, weight: .semibold))
+								.foregroundStyle(Color("MainColor"))
+							TextField(
+								"Your Email",
+								text: $viewModel.email
+							).padding(.all, 20)
+								.overlay(
+									RoundedRectangle(cornerRadius: 8)
+										.stroke(Color("Outline"), lineWidth: 1.5)
+								)
+								.keyboardType(.emailAddress)
+								.textInputAutocapitalization(.never)
+							
+							if !viewModel.email.isEmpty {
+								Text(emailPrompt(email: viewModel.email))
+									.font(.caption).foregroundStyle(Color("Error"))
+									.fontWeight(.semibold).transition(.scale)
 							}
 						}
-					} label: {
-						ZStack {
-							if viewModel.isLoading {
-								// Show loading spinner
-								ProgressView()
-									.progressViewStyle(CircularProgressViewStyle(tint: (Color("OnMain"))))
-									.foregroundColor(Color("OnMain"))
+						
+						if let birthday = viewModel.birthday {
+							VStack (alignment: .leading, spacing: 12) {
+								DatePickerOptional(
+									"Birthday",
+									prompt: "Add Date",
+									in: ...Date(),
+									selection: $viewModel.birthday,
+									showDate: true ,
+									initialDate: birthday,
+									allowClear: false
+								)
 								
 								
-							} else {
-								// Show the button label
-								Text("Update profile")
-									.font(.system(size: 18, weight: .semibold))
+								Text(birthdayPrompt(birthday: birthday))
+									.font(.caption).foregroundStyle(Color("Error"))
+									.fontWeight(.semibold).transition(.scale)
 							}
+							
 						}
-						.frame(maxWidth: .infinity) // Keeps the button width consistent
-					
 					}
-					
-					.disabled(viewModel.isLoading)
-					.buttonStyle(
-						MainButtonStyle(isDisabled: viewModel.isLoading)
-					)
-					
 				}
+				Button {
+					Task {
+						await viewModel.updateProfile {
+							router.dismiss()
+						}
+					}
+				} label: {
+					ZStack {
+						if viewModel.isLoading {
+							// Show loading spinner
+							ProgressView()
+								.progressViewStyle(CircularProgressViewStyle(tint: (Color("OnMain"))))
+								.foregroundColor(Color("OnMain"))
+							
+							
+						} else {
+							// Show the button label
+							Text("Update profile")
+								.font(.system(size: 18, weight: .semibold))
+						}
+					}
+					.frame(maxWidth: .infinity) // Keeps the button width consistent
+				}
+				.disabled(viewModel.isLoading)
+				.buttonStyle(
+					MainButtonStyle(isDisabled: viewModel.isLoading)
+				)
 				if let errorMesage = viewModel.errorMesage {
 					ErrorMessage(text: errorMesage)
 				}
@@ -200,9 +198,6 @@ struct UpdateProfileScreen: View {
 						.foregroundStyle(Color("Teritary"))
 				}
 			}
-			
-			
-			Spacer()
 		}
 		.padding(24)
 		.background(Color("Background"))

@@ -17,7 +17,7 @@ struct NotificationSettingsScreen: View {
 			BackButton {
 				router.dismiss()
 			}
-			SectionTitle(text: "Notifications")
+			SectionTitle(text: "Notifications", fontSize: 32)
 			
 			if let pushNotificationsEnabled = $viewModel.pushNotificationsEnabled.optionalBinding(), let emailNotificationsEnabled = $viewModel.emailNotificationsEnabled.optionalBinding() {
 				Toggle(

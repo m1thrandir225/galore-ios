@@ -9,14 +9,13 @@ import Foundation
 
 @MainActor
 class LoginViewModel:  ObservableObject {
+	private let authService: AuthService = .shared
+	
 	@Published var email: String = ""
 	@Published var password: String = ""
 	@Published var isLoading: Bool = false
 	@Published var errorMessage: String?
 	
-	private let authService: AuthService = .shared
-	
-
 	
 	func canContinue() -> Bool {
 		return !email.isEmpty && !password.isEmpty

@@ -64,9 +64,11 @@ struct SearchScreen: View {
 					}.transition(.move(edge: .trailing).combined(with: .opacity))
 				}
 				
-			}.padding()
-				.animation(.easeInOut, value: viewModel.hasSearchResults)
-				.animation(.easeInOut, value: searchText.isEmpty)
+			}
+			.padding(.top, 8)
+			.padding(.horizontal, 16)
+			.animation(.easeInOut, value: viewModel.hasSearchResults)
+			.animation(.easeInOut, value: searchText.isEmpty)
 			
 			ScrollView(showsIndicators: false) {
 				CocktailGrid(items: $viewModel.results) { id in

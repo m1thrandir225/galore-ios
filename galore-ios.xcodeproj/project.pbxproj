@@ -8,9 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		0E2DD5FC2CD3F4CC001C837F /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 0E2DD5FB2CD3F4CC001C837F /* Lottie */; };
-		0E66F4F12D26FE6B00783F74 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0E66F4F02D26FE6B00783F74 /* GoogleService-Info.plist */; };
-		0E66F4F22D26FE6B00783F74 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0E66F4F02D26FE6B00783F74 /* GoogleService-Info.plist */; };
-		0E66F4F32D26FE6B00783F74 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0E66F4F02D26FE6B00783F74 /* GoogleService-Info.plist */; };
 		0E66F4F62D26FF0800783F74 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 0E66F4F52D26FF0800783F74 /* FirebaseMessaging */; };
 		0EC555342CE368C500F45B8F /* Nuke in Frameworks */ = {isa = PBXBuildFile; productRef = 0EC555332CE368C500F45B8F /* Nuke */; };
 		0EC555362CE368C500F45B8F /* NukeExtensions in Frameworks */ = {isa = PBXBuildFile; productRef = 0EC555352CE368C500F45B8F /* NukeExtensions */; };
@@ -36,7 +33,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0E66F4F02D26FE6B00783F74 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		0EE7391C2CCA3B4E0075CBF6 /* galore-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "galore-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0EE7392C2CCA3B4F0075CBF6 /* galore-iosTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "galore-iosTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0EE739362CCA3B4F0075CBF6 /* galore-iosUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "galore-iosUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -119,7 +115,6 @@
 				0EE739392CCA3B4F0075CBF6 /* galore-iosUITests */,
 				0E2DD5FA2CD3F4CC001C837F /* Frameworks */,
 				0EE7391D2CCA3B4E0075CBF6 /* Products */,
-				0E66F4F02D26FE6B00783F74 /* GoogleService-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -264,7 +259,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0E66F4F32D26FE6B00783F74 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -272,7 +266,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0E66F4F22D26FE6B00783F74 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -280,7 +273,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0E66F4F12D26FE6B00783F74 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -460,7 +452,6 @@
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "So you can upload a custom avatar";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -493,7 +484,6 @@
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "So you can upload a custom avatar";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (

@@ -5,7 +5,7 @@
 //  Created by Sebastijan Zindl on 2.1.25.
 //
 import SwiftUI
-struct ViewStatusView : View {
+struct GenerateStatusView : View {
 	@Binding var isLoading: Bool
 	@Binding var requests: [GenerateCocktailRequest]?
 	
@@ -83,5 +83,5 @@ struct ViewStatusView : View {
 	]
 	
 	
-	ViewStatusView(isLoading: $isLoading, requests: $dummyData)
+	GenerateStatusView(isLoading: $isLoading, requests: $dummyData)
 }

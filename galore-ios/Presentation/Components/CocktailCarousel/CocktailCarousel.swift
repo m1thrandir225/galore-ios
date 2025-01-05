@@ -101,8 +101,9 @@ struct SnapperView: View {
 				CocktailCard(
 					id: item.id,
 					title: item.name,
-					imageURL: item.imageUrl.toUrl!,
-					width: cardWidth,
+					imageURL: item.getMainImageURL(),
+					minWidth: cardWidth,
+					maxWidth: cardWidth,
 					onCardPress: onCardPress
 				)
 				
