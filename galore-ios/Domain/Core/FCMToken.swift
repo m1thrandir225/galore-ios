@@ -5,7 +5,7 @@
 //  Created by Sebastijan Zindl on 26.10.24.
 //
 
-public final class FCMToken: Identifiable, Codable, Equatable, Sendable {
+public struct FCMToken: Identifiable, Codable, Equatable, Sendable {
 	public static func == (lhs: FCMToken, rhs: FCMToken) -> Bool {
 		lhs.id == rhs.id &&
 		lhs.token == rhs.token &&

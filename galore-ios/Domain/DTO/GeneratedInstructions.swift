@@ -6,7 +6,7 @@
 //
 
 
-public final class  GeneratedInstructions: Codable {
+public struct GeneratedInstructions: Codable {
 	public let instructions: [GeneratedInstruction]
 	
 	public enum CodingKeys : String, CodingKey {
@@ -17,7 +17,7 @@ public final class  GeneratedInstructions: Codable {
 		self.instructions = instructions
 	}
 	
-	required public init(from decoder: any Decoder) throws {
+	public init(from decoder: any Decoder) throws {
 		let container = try decoder.container(keyedBy: CodingKeys.self)
 		self.instructions = try container.decode([GeneratedInstruction].self, forKey: .instructions)
 	}

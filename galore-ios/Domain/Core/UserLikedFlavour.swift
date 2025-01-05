@@ -5,7 +5,7 @@
 //  Created by Sebastijan Zindl on 26.10.24.
 //
 
-public final class UserLikedFlavour: Codable, Equatable {
+public struct UserLikedFlavour: Codable, Equatable {
 	public let flavourId: String
 	public let userId: String
 	

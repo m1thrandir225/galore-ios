@@ -6,7 +6,7 @@
 //
 import Foundation
 
-public final class GenerateCocktailRequest : Identifiable, Codable, Equatable {
+public struct GenerateCocktailRequest : Identifiable, Codable, Equatable {
 	public let id: String
 	public let userId: String
 	public let prompt: String

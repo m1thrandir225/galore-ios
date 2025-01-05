@@ -5,7 +5,7 @@
 //  Created by Sebastijan Zindl on 26.10.24.
 //
 
-public final class CocktailIngredientData: Codable, Sendable, Equatable {
+public struct CocktailIngredientData: Codable, Sendable, Equatable {
 	public static func == (lhs: CocktailIngredientData, rhs: CocktailIngredientData) -> Bool {
 		lhs.ingredients == rhs.ingredients
 	}

@@ -6,7 +6,7 @@
 //
 import Foundation
 
-public final class Notification : Identifiable, Equatable, Codable {
+public struct Notification : Identifiable, Equatable, Codable {
 	public static func == (lhs: Notification, rhs: Notification) -> Bool {
 		lhs.id == rhs.id
 		&& lhs.userId == rhs.userId

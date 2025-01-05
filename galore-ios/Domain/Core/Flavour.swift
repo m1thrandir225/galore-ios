@@ -6,7 +6,7 @@
 //
 import Foundation
 
-public final class Flavour: Identifiable, Codable, Equatable {
+public struct Flavour: Identifiable, Codable, Equatable {
 	public let id: String
 	public let name: String
 	public let createdAt: String
