@@ -14,7 +14,7 @@ class HomeViewModel: ObservableObject {
 	private var networkService: NetworkService = .shared
 	
 	@Published var errorMessage: String?
-	@Published var isLoading: Bool = false
+	@Published var isLoading: Bool = true
 	@Published var featuredCocktails: [Cocktail] = []
 	@Published var userRecommendedCocktails: [GetCocktailsForCategoryResponse] = []
 	@Published var homeSection: [GetHomescreenResponse] = []
@@ -79,8 +79,23 @@ class HomeViewModel: ObservableObject {
 				let results = try await cocktailService.getCocktailsForUserCategories(categories: categories)
 				userRecommendedCocktails = results
 			}
+		} catch let error as NetworkError {
+			switch error {
+			case .badRequest(let message):
+				errorMessage = message ?? "Status Code 400. Bad Request."
+			case .notFound(let message):
+				errorMessage = message ?? "Status Code 404. Content Not Found."
+			case .unauthorized(let message):
+				errorMessage = message ?? "Status Code 401. Unauthorized."
+			case .serverError(let message):
+				errorMessage = message ?? "Status Code 500. The server had an internal error."
+			case .requestFailed(let message):
+				errorMessage = message ?? "The request failed."
+			default:
+				errorMessage = "Something went wrong"
+			}
 		} catch {
-			errorMessage = error.localizedDescription
+			errorMessage = "Something went wrong. Please try again later."
 		}
 	}
 	
