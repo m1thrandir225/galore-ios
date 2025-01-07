@@ -22,7 +22,7 @@ struct LoginScreen: View {
 	}
 	
 	var body: some View {
-		ScrollView {
+		ScrollView(.vertical,showsIndicators: false) {
 			VStack(alignment: .center, spacing: 4) {
 				Text("galore")
 					.font(.system(size: 46))
