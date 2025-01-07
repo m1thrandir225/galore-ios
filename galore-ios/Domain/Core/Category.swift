@@ -6,7 +6,7 @@
 //
 import Foundation
 
-public final class Category: Identifiable, Codable, Equatable {
+public struct Category: Identifiable, Codable, Equatable {
 	
 	public static func == (lhs: Category, rhs: Category) -> Bool {
 		lhs.id == rhs.id

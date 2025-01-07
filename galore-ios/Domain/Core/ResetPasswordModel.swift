@@ -6,8 +6,8 @@
 //
 import Foundation
 
-public final class ResetPasswordModel: Identifiable, Codable, Equatable, Sendable {
-	
+public struct ResetPasswordModel: Identifiable, Codable, Equatable, Sendable {
+
 	public static func == (lhs: ResetPasswordModel, rhs: ResetPasswordModel) -> Bool {
 		lhs.id == rhs.id
 		&& lhs.userId == rhs.userId

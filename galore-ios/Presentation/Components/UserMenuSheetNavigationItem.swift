@@ -20,13 +20,12 @@ struct UserMenuSheetNavigationItem : View {
 						Image(systemName: iconName)
 							.resizable()
 							.scaledToFit()
-							.frame(width: 32, height: 32)
+							.frame(width: 24, height: 24)
 							.foregroundStyle(Color("MainColor"))
 					}
 					if let text {
 						Text(text)
-							.fontWeight(.medium)
-						
+							.font(.system(size: 16, weight: .medium))
 							.foregroundStyle(Color("MainColor"))
 							
 					}
@@ -36,7 +35,7 @@ struct UserMenuSheetNavigationItem : View {
 				}
 			}
 		}
-		.frame(maxWidth: 400)
+		.frame(maxWidth: .infinity)
 		.background(Color("MainContainer"))
 		.clipShape(RoundedRectangle(cornerRadius: 16))
 		.buttonStyle(UserSheetButtonStyle())

@@ -121,17 +121,19 @@ struct GeneratedCocktailDetailsScreen : View {
 														.clipped()
 														.clipShape(RoundedRectangle(cornerRadius: 16))
 													
-												} else if state.isLoading {
-													ProgressView()
-												} else {
-													Color.teritary
-														.frame(height: 200)
+												}  else {
+													Image("placeholderCocktail")
+														.resizable()
+														.scaledToFill()
+														.frame(height: 250)
+														.clipped()
 														.clipShape(.rect(
-															topLeadingRadius: 24,
+															topLeadingRadius: 12,
 															bottomLeadingRadius: 0,
 															bottomTrailingRadius: 0,
-															topTrailingRadius: 24
+															topTrailingRadius: 12
 														))
+														.transition(.opacity.combined(with: .opacity))
 												}
 												
 											}

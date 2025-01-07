@@ -4,7 +4,9 @@
 //
 //  Created by Sebastijan Zindl on 1.1.25.
 //
-public final class GeneratedCocktail : Identifiable, Equatable, Codable {
+import Foundation
+
+public struct GeneratedCocktail : Identifiable, Equatable, Codable {
 	public static func == (lhs: GeneratedCocktail, rhs: GeneratedCocktail) -> Bool {
 		lhs.id == rhs.id
 	}
@@ -59,6 +61,10 @@ public final class GeneratedCocktail : Identifiable, Equatable, Codable {
 		let decodedIns = try container.decode(GeneratedInstructions.self, forKey: .instructions)
 		self.instructions = decodedIns.instructions
 		self.createdAt = try container.decode(String.self, forKey: .createdAt)
+	}
+	
+	public func getMainImageURL() -> URL {
+		return "\(Config.baseURL)/\(self.mainImage)".toUrl!
 	}
 	
 	

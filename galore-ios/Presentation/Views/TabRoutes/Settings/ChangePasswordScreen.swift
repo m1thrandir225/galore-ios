@@ -44,7 +44,7 @@ struct ChangePasswordScreen: View {
 			BackButton {
 				router.dismiss()
 			}
-			SectionTitle(text: "Password & Security", fontSize: 38)
+			SectionTitle(text: "Password & Security", fontSize: 32)
 			VStack (alignment: .leading, spacing: 12) {
 				Text("New Password")
 					.foregroundStyle(Color("Secondary"))

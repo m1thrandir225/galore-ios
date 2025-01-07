@@ -6,11 +6,14 @@
 //
 import SwiftUI
 
-struct CocktailGrid : View {
+struct CocktailGrid: View {
 	@Binding var items: [Cocktail]
-
 	var onCardPress: (_: String) -> Void
-	let columns = [GridItem(.fixed(190)), GridItem(.fixed(190))]
+	
+	let columns = [
+		GridItem(.flexible(minimum: 150), spacing: 16),
+		GridItem(.flexible(minimum: 150), spacing: 16)
+	]
 	
 	init(items: Binding<[Cocktail]>, onCardPress: @escaping (_: String) -> Void) {
 		self._items = items
@@ -18,26 +21,32 @@ struct CocktailGrid : View {
 	}
 	
 	var body: some View {
-		LazyVGrid(columns: columns, alignment: .center){
-			ForEach(items, id: \.id) { item in
-				CocktailCard (
-					id: item.id,
-					title: item.name,
-					imageURL: item.imageUrl.toUrl!,
-					width: 190,
-					onCardPress: onCardPress
-				)
-				.transition(.opacity.combined(with: .blurReplace))
-				.animation(.smooth, value: items)
+		ScrollView {
+			LazyVGrid(
+				columns: columns,
+				alignment: .center,
+				spacing: 16
+			) {
+				ForEach(items, id: \.id) { item in
+					CocktailCard(
+						id: item.id,
+						title: item.name,
+						imageURL: item.getMainImageURL(),
+						minWidth: 150,
+						maxWidth: .infinity,
+						onCardPress: onCardPress
+					)
+					.transition(.opacity.combined(with: .blurReplace))
+					.animation(.smooth, value: items)
+				}
 			}
+			.padding(.horizontal, 16)
+			.padding(.vertical, 16)
 		}
 	}
-	
-	
 }
-
 #Preview {
-	let cocktails: [Cocktail] = [
+	@Previewable @State var cocktails: [Cocktail] = [
 		Cocktail(
 			id: "1",
 			name: "Mojito",
@@ -117,4 +126,7 @@ struct CocktailGrid : View {
 			instructions: "Combine all the ingredients in a highball glass with ice. Stir gently and garnish with celery."
 		)
 	]
+	
+	CocktailGrid(items: $cocktails, onCardPress: { id in
+	})
 }

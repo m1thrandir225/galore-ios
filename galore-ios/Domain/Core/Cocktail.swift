@@ -4,8 +4,9 @@
 //
 //  Created by Sebastijan Zindl on 26.10.24.
 //
+import Foundation
 
-public final class Cocktail: Identifiable, Codable, Equatable {
+public struct Cocktail: Identifiable, Codable, Equatable {
 	public static func == (lhs: Cocktail, rhs: Cocktail) -> Bool {
 		lhs.id == rhs.id &&
 		lhs.isAlchoholic == rhs.isAlchoholic &&
@@ -64,5 +65,9 @@ public final class Cocktail: Identifiable, Codable, Equatable {
 		
 		
 		self.instructions = try container.decode(String.self, forKey: .instructions)
+	}
+	
+	public func getMainImageURL() -> URL {
+		return self.imageUrl.toUrl!
 	}
 }

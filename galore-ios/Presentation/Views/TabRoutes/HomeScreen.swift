@@ -37,6 +37,7 @@ struct HomeScreen: View {
 			default:
 				EmptyView()
 			}
+			Spacer()
 		}
 		.background(Color("Background"))
 		.task {
@@ -84,8 +85,6 @@ struct HomeScreen: View {
 				.transition(.opacity.combined(with: .blurReplace))
 			}
 		}
-		.padding(.vertical)
-		
 	}
 }
 

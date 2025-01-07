@@ -99,7 +99,8 @@ struct GeneratedSnapperView: View {
 					id: item.id,
 					title: item.name,
 					imageURL: "\(Config.baseURL)/\(item.mainImage)".toUrl!,
-					width: cardWidth,
+					minWidth: cardWidth,
+					maxWidth: cardWidth,
 					onCardPress: onCardPress
 				)
 				

@@ -28,9 +28,12 @@ struct TabRoutesView : View {
 					Tab("Library", systemImage: "books.vertical") {
 						LibraryScreen(router: router)
 					}
-				}.accentColor(Color("MainColor"))
-					.background(Color(.background))
-			}.background(Color(.background))
+				}
+				.accentColor(Color("MainColor"))
+				.background(Color("Background"))
+				
+			}
+			.background(Color("Background"))
 			.sheet(isPresented: $isPresented) {
 				ZStack {
 					Color("Background").ignoresSafeArea(.all)

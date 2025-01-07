@@ -22,15 +22,12 @@ struct LibraryScreen: View {
 				if !userLikedCocktails.isEmpty || !userCreatedCocktails.isEmpty {
 					ScrollView(.vertical, showsIndicators: false){
 						HStack(alignment: .center ) {
-							Text("Your Library")
-								.font(.system(size: 42, weight: .bold))
-								.foregroundStyle(Color("MainColor"))
-								.multilineTextAlignment(.leading)
-							
+							SectionTitle(text: "Library", fontSize: 34)
 							Spacer()
 						}
 						.frame(maxWidth: .infinity)
-						.padding(24)
+						.padding(.horizontal, 24)
+						.padding(.vertical, 8)
 						
 						if !userLikedCocktails.isEmpty {
 							VStack(alignment: .leading) {
@@ -62,11 +59,11 @@ struct LibraryScreen: View {
 							VStack(alignment: .leading) {
 								GeneratedCocktailCarousel(
 									items: userCreatedCocktails,
-									title: "Your Generated Cocktails",
+									title: "Generated Cocktails",
 									navigateToSection: {
 										router.routeTo(
 											.generatedCocktailSection(
-												GeneratedCocktailSectionArgs(cocktails: userCreatedCocktails, title: "Your Generated Cocktails")
+												GeneratedCocktailSectionArgs(cocktails: userCreatedCocktails, title: "Generated Cocktails")
 											)
 										)
 									},

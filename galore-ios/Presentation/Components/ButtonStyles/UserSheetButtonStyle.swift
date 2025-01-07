@@ -11,8 +11,8 @@ struct UserSheetButtonStyle: ButtonStyle {
 		configuration.label
 			.fontWeight(.medium)
 			.foregroundStyle(Color("MainColor"))
-			.padding()
-			.cornerRadius(12)
+			.padding(16)
+			.cornerRadius(16)
 			.opacity(configuration.isPressed ? 0.3 : 1)
 			.overlay(
 				RoundedRectangle(cornerRadius: 16)

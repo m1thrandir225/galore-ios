@@ -38,7 +38,7 @@ struct UserMenuSheet: View {
 		self.dismissSheet = dismissSheet
 	}
 	var body: some View {
-		VStack(alignment: .center, spacing: 24) {
+		VStack(alignment: .center, spacing: 16) {
 			if let user = viewModel.user {
 				UserCard(
 					name: user.name,
@@ -46,7 +46,7 @@ struct UserMenuSheet: View {
 					imageURL: user.avatar != nil ? "\(Config.baseURL)/\(user.avatar!)" : ""
 				)
 			}
-			VStack(alignment: .leading, spacing: 12) {
+			VStack(alignment: .leading, spacing: 8) {
 				ForEach(UserMenuSheetItems.allCases, id: \.self) { item in
 					UserMenuSheetNavigationItem(iconName: item.menuItem.iconName, text: item.menuItem.title) {
 						switch item {

@@ -6,7 +6,7 @@
 //
 import Foundation
 
-public final class User: Codable, Equatable, Sendable, Identifiable {
+public struct User: Codable, Equatable, Sendable, Identifiable {
 	public static func == (lhs: User, rhs: User) -> Bool {
 		lhs.id == rhs.id &&
 		lhs.email == rhs.email &&

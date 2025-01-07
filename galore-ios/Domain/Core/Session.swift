@@ -6,7 +6,7 @@
 //
 import Foundation
 
-public final class Session: Codable, Identifiable, Equatable {
+public struct Session: Codable, Identifiable, Equatable {
 	public static func == (lhs: Session, rhs: Session) -> Bool {
 		lhs.id == rhs.id
 		&& lhs.email == rhs.email
