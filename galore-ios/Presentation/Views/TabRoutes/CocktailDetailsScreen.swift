@@ -24,6 +24,9 @@ struct CocktailDetailsScreen : View {
 		VStack(alignment: .leading) {
 			if viewModel.isLoading {
 				ProgressView()
+					.tint(Color("MainColor"))
+					.frame(maxWidth: .infinity, maxHeight: .infinity)
+					.transition(.push(from: .bottom))
 			} else {
 				if let cocktail = viewModel.cocktail {
 					ScrollView(.vertical, showsIndicators: false) {
@@ -127,6 +130,9 @@ struct CocktailDetailsScreen : View {
 										}
 									}
 								}
+								Text("Cocktail provided by: TheCocktailDB")
+									.font(.footnote)
+									.foregroundStyle(Color("Outline"))
 								if let similar = viewModel.similar {
 									Text("Simillar")
 										.font(.system(size: 24, weight: .semibold))
@@ -147,10 +153,12 @@ struct CocktailDetailsScreen : View {
 							
 						}
 					}
+					.transition(.push(from: .trailing).combined(with: .slide))
 				}
 				
 			}
 		}
+		.animation(.smooth, value: viewModel.isLoading)
 		.background(Color.background)
 		.navigationBarBackButtonHidden(true)
 		.task {

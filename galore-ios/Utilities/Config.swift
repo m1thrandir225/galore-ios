@@ -17,7 +17,7 @@ struct Config {
 	static let baseURL: String = {
 		switch environment {
 		case .development: return "http://localhost:9090"
-		case .production: return "http://ivandscnas.ddns.net:80"
+		case .production: return "http://galore-services.sebastijanzindl.me"
 		}
 	}()
 	

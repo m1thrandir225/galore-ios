@@ -10,45 +10,44 @@ import SwiftUI
 struct HomeScreen: View {
 	@StateObject var router: Router<TabRoutes>
 	@StateObject var viewModel: HomeViewModel = HomeViewModel()
-	@Namespace private var animation
-	
 	
 	var body: some View {
-		ScrollView (.vertical, showsIndicators: false) {
+		VStack {
 			switch(viewModel.isLoading, viewModel.errorMessage) {
 			case(true, _):
 				ProgressView()
 					.progressViewStyle(CircularProgressViewStyle(tint: Color("MainColor")))
 					.frame(maxWidth: .infinity, maxHeight: .infinity)
-				
-				
+					.transition(.move(edge: .leading).combined(with: .opacity))
 			case (_, .some(let error)):
 				VStack(alignment: .leading) {
 					Text(error)
 						.font(.system(size: 16, weight: .semibold))
 						.foregroundStyle(Color("Error"))
+						.transition(.move(edge: .leading).combined(with: .opacity))
 				}.frame(maxWidth: .infinity, maxHeight: .infinity)
-				
-				
 			case (false, nil):
-				contentView
-				
+				ScrollView (.vertical, showsIndicators: false) {
+					contentView
+						.transition(.move(edge: .leading).combined(with: .opacity))
+				}.refreshable {
+					Task {
+						viewModel.clearCurrentData()
+						await viewModel.loadData()
+					}
+				}
 				
 			default:
 				EmptyView()
 			}
-			Spacer()
 		}
 		.background(Color("Background"))
+		.animation(.smooth, value: viewModel.isLoading)
+		.animation(.smooth, value: viewModel.errorMessage)
 		.task {
 			await viewModel.loadData()
 		}
-		.refreshable {
-			Task {
-				viewModel.clearCurrentData()
-				await viewModel.loadData()
-			}
-		}
+		
 	}
 	
 	private var contentView: some View {
