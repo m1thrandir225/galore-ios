@@ -50,11 +50,11 @@ struct CocktailCard: View {
 							bottomTrailingRadius: 0,
 							topTrailingRadius: 12
 						))
-				} else if state.isLoading {
-					ProgressView()
-						.frame(height: 200)
+						.transition(.opacity.combined(with: .opacity))
 				} else {
-					Color.teritary
+					Image("placeholderCocktail")
+						.resizable()
+						.scaledToFill()
 						.frame(height: 200)
 						.clipShape(.rect(
 							topLeadingRadius: 12,
@@ -62,6 +62,7 @@ struct CocktailCard: View {
 							bottomTrailingRadius: 0,
 							topTrailingRadius: 12
 						))
+						.transition(.opacity.combined(with: .opacity))
 				}
 			}
 			
