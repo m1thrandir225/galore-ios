@@ -30,10 +30,10 @@ struct GenerateScreen :  View {
 			headerButtons
 			
 			Spacer()
+			
 			switch currentView {
 			case .generate:
 					generateView
-		
 			case .viewStatus:
 				viewStatus
 			}
@@ -43,6 +43,18 @@ struct GenerateScreen :  View {
 		.frame(maxWidth: .infinity, maxHeight: .infinity)
 		.padding(24)
 		.background(Color("Background"))
+		.onAppear {
+			Task {
+				try await viewModel.fetchRequests()
+			}
+		}.onChange(of: viewModel.generateRequests) { oldValue, newValue in
+			if let requests = newValue {
+				if !requests.isEmpty {
+					currentView = .viewStatus
+				}
+			}
+			
+		}
 		
 	}
 	

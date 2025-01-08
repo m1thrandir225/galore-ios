@@ -16,7 +16,8 @@ struct ClickableCocktailCard: View {
 	@State var opacity = 1.0
 
 	let id: String
-	let width: CGFloat
+	let minWidth: CGFloat
+	let maxWidth: CGFloat
 	var onCardPress: (_: String) -> Void
 	var isSelected: Bool
 	var isDisabled: Bool
@@ -28,7 +29,8 @@ struct ClickableCocktailCard: View {
 		isSelected: Bool,
 		isDisabled: Bool,
 		imageURL: URL,
-		width: CGFloat = 300.0,
+		minWidth: CGFloat = 150.0,
+		maxWidth: CGFloat = 200.0,
 		onCardPress: @escaping (_: String) -> Void
 	) {
 		self.id = id
@@ -36,7 +38,8 @@ struct ClickableCocktailCard: View {
 		self.isSelected = isSelected
 		self.isDisabled = isDisabled
 		self.imageURL = imageURL
-		self.width = width
+		self.minWidth = minWidth
+		self.maxWidth = maxWidth
 		self.onCardPress = onCardPress
 	}
 	
@@ -78,7 +81,8 @@ struct ClickableCocktailCard: View {
 				.frame(height: 50)
 		}
 
-		.frame(width: width, height: 250)
+		.frame(minWidth: minWidth, maxWidth: maxWidth)
+		.frame(height: 250)
 		.background(isSelected ? Color("MainColor").opacity(0.75) : isDisabled ? Color("Secondary").opacity(0.5) :  Color("MainContainer").opacity(0.5))
 		.clipShape(RoundedRectangle(cornerRadius: 12))
 		.overlay(
@@ -115,7 +119,8 @@ struct ClickableCocktailCard: View {
 		isSelected: false,
 		isDisabled: true,
 		imageURL:"https://images.unsplash.com/photo-1726853546098-380e29da9e31?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D".toUrl!,
-		width: 250
+		minWidth: 250,
+		maxWidth: 250
 	) { _ in
 		print("hello world")
 	}

@@ -10,7 +10,11 @@ struct SetupFlavoursScreen : View {
 	@StateObject var router: Router<OnboardingRoutes>
 	@StateObject var viewModel: SetupFlavoursViewModel = SetupFlavoursViewModel()
 	
-	let columns = [GridItem(.fixed(190)), GridItem(.fixed(190))]
+	
+	let columns = [
+		GridItem(.flexible(minimum: 120)),
+		GridItem(.flexible(minimum: 120))
+	]
 	
 	var body: some View {
 		VStack (alignment: .center, spacing: 24) {
@@ -36,14 +40,12 @@ struct SetupFlavoursScreen : View {
 								HStack {
 									Image(systemName: viewModel.isFlavourLiked(flavour.id) ? "minus" : "plus" )
 									Text(flavour.name)
-										.font(.system(size: 18, weight: .semibold))
-										
+										.font(.system(size: 16, weight: .semibold))
 										
 								}
 								.foregroundStyle(viewModel.isFlavourLiked(flavour.id) ? Color("OnMain") : Color("MainColor"))
 								
-								.frame(minWidth: 0, maxWidth: .infinity)
-								
+								.frame(minWidth: 120, maxWidth: .infinity)
 								.padding()
 								.background(viewModel.isFlavourLiked(flavour.id) ? Color("MainColor") : Color("Background"))
 								.clipShape(RoundedRectangle(cornerRadius: 16))
@@ -94,6 +96,7 @@ struct SetupFlavoursScreen : View {
 			
 			
 		}
+		.padding(24)
 		.navigationBarBackButtonHidden(true)
 		.background(Color("Background"))
 		.task {

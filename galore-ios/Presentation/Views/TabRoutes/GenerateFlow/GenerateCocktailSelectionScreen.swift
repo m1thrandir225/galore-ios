@@ -18,7 +18,11 @@ struct GenerateCocktailSelectionScreen: View {
 	@State var searchText: String = ""
 	@FocusState private var focus: Field?
 	
-	let columns = [GridItem(.fixed(190)), GridItem(.fixed(190))]
+	
+	let columns = [
+		GridItem(.flexible(minimum: 150), spacing: 16),
+		GridItem(.flexible(minimum: 150), spacing: 16)
+	]
 	
 	let selectedFlavours: [String]
 	
@@ -30,7 +34,7 @@ struct GenerateCocktailSelectionScreen: View {
 			Text("Please select up to 3 cocktails.")
 				.font(.system(size: 28, weight: .semibold))
 				.multilineTextAlignment(.center)
-				.frame(width: 400)
+				.frame(maxWidth: .infinity)
 			VStack {
 				HStack {
 					if viewModel.hasSearchResults {
@@ -80,30 +84,37 @@ struct GenerateCocktailSelectionScreen: View {
 				
 			}.background(Color("Background"))
 			
-			ScrollView(showsIndicators: false) {
-				LazyVGrid(columns: columns, alignment: .center){
+			ScrollView(.vertical, showsIndicators: false) {
+				LazyVGrid(
+					columns: columns,
+					alignment: .center,
+					spacing: 16
+				){
 					ForEach(viewModel.cocktails, id: \.id) { item in
-						let shouldBeDisabled = !viewModel.isCocktailSelected(item.name) && viewModel.selectedCocktails.count >= 3
+						let shouldBeDisabled =
+						!viewModel.isCocktailSelected(item.name) && viewModel.selectedCocktails.count >= 3
 						ClickableCocktailCard (
 							id: item.id,
 							title: item.name,
 							isSelected: viewModel.isCocktailSelected(item.name),
 							isDisabled: shouldBeDisabled,
 							imageURL: item.imageUrl.toUrl!,
-							width: 190,
-							onCardPress: { name in
-								viewModel.addOrRemoveToSelected(name: name)
-							}
-						)
+							minWidth: 150,
+							maxWidth: .infinity
+						) { name in
+							viewModel.addOrRemoveToSelected(name: name)
+						}
 						.transition(.opacity.combined(with: .blurReplace))
 					}
 				}
+				.padding(.horizontal, 16)
+				.padding(.vertical, 16)
 			}
 			
 			Button {
 				Task {
 					 await viewModel.createGenerateRequest(selectedFlavours: selectedFlavours) {
-						router.popUntil(.generate)
+						 router.popUntil(.generate)
 					}
 				}
 				
