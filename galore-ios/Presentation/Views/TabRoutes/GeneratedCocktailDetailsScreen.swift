@@ -165,6 +165,7 @@ struct GeneratedCocktailDetailsScreen : View {
 								RoundedRectangle(cornerRadius: 16)
 									.stroke(Color("OnMainContainer"), lineWidth: 1)
 							)
+							.padding(24)
 							
 						}
 					}

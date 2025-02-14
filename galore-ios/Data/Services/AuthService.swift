@@ -20,7 +20,51 @@ class AuthService : ObservableObject {
 	@Published var isRefreshing: Bool = false
 	@Published var isNewUser: Bool = false
 	
+	private var tokenExpirationTimer: Timer?
+	private var defaultTokenExpiration: TimeInterval = 45 * 60
+	
 	private init() {}
+	
+	private func setupTokenExpirationTimer(expirationDate: Date? = nil) {
+		tokenExpirationTimer?.invalidate()
+		
+		let expiration: Date
+		if let expirationDate = expirationDate {
+			expiration = expirationDate
+		} else {
+			expiration = Date().addingTimeInterval(defaultTokenExpiration)
+		}
+		
+		let timeUntilExpiration = expiration.timeIntervalSinceNow - 60
+		
+		guard timeUntilExpiration > 0 else {
+			Task {
+				await handleTokenExpiration()
+			}
+			return
+		}
+		
+		tokenExpirationTimer = Timer.scheduledTimer(withTimeInterval: timeUntilExpiration, repeats: false)  { [weak self] _ in
+			Task {
+				await self?.handleTokenExpiration()
+			}
+		}
+	}
+	
+	private func handleTokenExpiration() async {
+		do {
+			try await refreshSession()
+		} catch {
+			self.isLoggedIn = false
+			self.isRefreshing = false
+			print("Token refresh failed: \(error.localizedDescription)")
+		}
+	}
+	
+	private func clearTokenExpirationTimer() {
+		tokenExpirationTimer?.invalidate()
+		tokenExpirationTimer = nil
+	}
 	
 	func checkAuthentication() async {
 		let hasToken = authenticationRepository.isAuthenticated()
@@ -71,6 +115,8 @@ class AuthService : ObservableObject {
 			authenticationRepository.login(with: response)
 			userRepository.setUser(response.user)
 			
+			setupTokenExpirationTimer(expirationDate: response.accessTokenExpiresAt)
+			
 			let userCategories = try await self.fetchCategoriesForLikedFlavours(userId: response.user.id)
 			let userFlavours = try await self.fetchLikedFlavours(userId: response.user.id)
 			userRepository.setCategoriesForUser(userCategories)
@@ -116,6 +162,7 @@ class AuthService : ObservableObject {
 			
 			authenticationRepository.register(with: response)
 			userRepository.setUser(response.user)
+			setupTokenExpirationTimer(expirationDate: response.accessTokenExpiresAt)
 			
 			self.isLoggedIn = true
 			self.isNewUser = true
@@ -163,6 +210,8 @@ class AuthService : ObservableObject {
 			
 			let request = RefreshTokenRequest(refreshToken: refreshToken, sessionId: sessionId)
 			let response = try await networkService.execute(request)
+			
+			setupTokenExpirationTimer()
 			
 			authenticationRepository.setAccessToken(response.accessToken)
 			
